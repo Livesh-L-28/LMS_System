@@ -1,22 +1,19 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
-import { getOAuth2Client } from '@/lib/googleDrive';
+import { getOAuth2ClientAsync } from '@/lib/googleDrive';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await requireAuth(['ADMIN']);
 
-    const clientId = process.env.GOOGLE_CLIENT_ID;
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    const oauth2Client = await getOAuth2ClientAsync(request.url);
 
-    if (!clientId || !clientSecret) {
+    if (!oauth2Client._clientId || !oauth2Client._clientSecret) {
       return NextResponse.json(
-        { error: 'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured in environment variables.' },
+        { error: 'Please enter and save your Google Client ID and Client Secret below before connecting.' },
         { status: 400 }
       );
     }
-
-    const oauth2Client = getOAuth2Client();
 
     const authUrl = oauth2Client.generateAuthUrl({
       access_type: 'offline',

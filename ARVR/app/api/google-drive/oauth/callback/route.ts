@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { prisma } from '@/lib/prisma';
-import { getOAuth2Client, encryptToken } from '@/lib/googleDrive';
+import { getOAuth2ClientAsync, encryptToken } from '@/lib/googleDrive';
 
 export async function GET(request: Request) {
   try {
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL('/?drive_error=no_code#settings', request.url));
     }
 
-    const oauth2Client = getOAuth2Client();
+    const oauth2Client = await getOAuth2ClientAsync(request.url);
 
     // Exchange authorization code for tokens
     const { tokens } = await oauth2Client.getToken(code);

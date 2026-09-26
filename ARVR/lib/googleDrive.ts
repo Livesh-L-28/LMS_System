@@ -35,12 +35,41 @@ export function decryptToken(text: string): string {
 }
 
 /**
- * Returns configured OAuth2 Client instance using server-side secrets
+ * Returns configured OAuth2 Client instance using database settings or environment variables
  */
+export async function getOAuth2ClientAsync(reqUrl?: string) {
+  let clientId = process.env.GOOGLE_CLIENT_ID || '';
+  let clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+
+  if (!clientId || !clientSecret) {
+    try {
+      const idSetting = await prisma.systemSetting.findUnique({ where: { key: 'GOOGLE_CLIENT_ID' } });
+      const secSetting = await prisma.systemSetting.findUnique({ where: { key: 'GOOGLE_CLIENT_SECRET' } });
+      if (idSetting?.value) clientId = idSetting.value.trim();
+      if (secSetting?.value) clientSecret = secSetting.value.trim();
+    } catch (e) {
+      console.error('Failed to read Google credentials from SystemSetting:', e);
+    }
+  }
+
+  let redirectUri = process.env.GOOGLE_REDIRECT_URI || '';
+  if (!redirectUri && reqUrl) {
+    try {
+      const parsedUrl = new URL(reqUrl);
+      redirectUri = `${parsedUrl.origin}/api/google-drive/oauth/callback`;
+    } catch {}
+  }
+  if (!redirectUri) {
+    redirectUri = 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+  }
+
+  return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+}
+
 export function getOAuth2Client() {
   const clientId = process.env.GOOGLE_CLIENT_ID || '';
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/api/google-drive/oauth/callback';
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
 
   return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 }
@@ -94,7 +123,7 @@ export async function getDriveClientForAdmin() {
   }
 
   try {
-    const oauth2Client = getOAuth2Client();
+    const oauth2Client = await getOAuth2ClientAsync();
     oauth2Client.setCredentials({
       refresh_token: conn.refreshToken,
     });

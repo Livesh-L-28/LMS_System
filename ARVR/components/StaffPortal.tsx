@@ -486,11 +486,19 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     connectedAccount?: string | null;
     status: string;
     message?: string;
+    clientId?: string;
+    hasSecret?: boolean;
+    redirectUri?: string;
   } | null>(null);
   const [loadingDriveSettings, setLoadingDriveSettings] = useState<boolean>(false);
   const [testingDriveConn, setTestingDriveConn] = useState<boolean>(false);
   const [disconnectingDrive, setDisconnectingDrive] = useState<boolean>(false);
   const [connectingDrive, setConnectingDrive] = useState<boolean>(false);
+  const [savingDriveCreds, setSavingDriveCreds] = useState<boolean>(false);
+  const [googleClientIdInput, setGoogleClientIdInput] = useState<string>('');
+  const [googleClientSecretInput, setGoogleClientSecretInput] = useState<string>('');
+  const [driveCredsSuccessMsg, setDriveCredsSuccessMsg] = useState<string | null>(null);
+  const [driveCredsErrorMsg, setDriveCredsErrorMsg] = useState<string | null>(null);
   const [testResultMsg, setTestResultMsg] = useState<string | null>(null);
   const [testResultSuccess, setTestResultSuccess] = useState<boolean>(true);
 
@@ -876,11 +884,45 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         connectedAccount: data.connectedAccount,
         status: data.status || (data.isConnected ? 'Connected ✓' : 'Not Connected'),
         message: data.message,
+        clientId: data.clientId,
+        hasSecret: data.hasSecret,
+        redirectUri: data.redirectUri,
       });
+      if (data.clientId && !googleClientIdInput) {
+        setGoogleClientIdInput(data.clientId);
+      }
     } catch (err) {
       console.warn('Failed to load Google Drive connection status:', err);
     } finally {
       setLoadingDriveSettings(false);
+    }
+  };
+
+  const handleSaveDriveCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingDriveCreds(true);
+    setDriveCredsSuccessMsg(null);
+    setDriveCredsErrorMsg(null);
+
+    try {
+      const res = await fetch('/api/admin/settings/drive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId: googleClientIdInput,
+          clientSecret: googleClientSecretInput,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save Google credentials');
+
+      setDriveCredsSuccessMsg('✓ Google OAuth credentials saved successfully in database!');
+      setGoogleClientSecretInput('');
+      fetchDriveSettings();
+    } catch (err: any) {
+      setDriveCredsErrorMsg(err.message || 'Failed to save credentials');
+    } finally {
+      setSavingDriveCreds(false);
     }
   };
 

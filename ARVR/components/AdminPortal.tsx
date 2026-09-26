@@ -32,6 +32,11 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
   const [connectingDrive, setConnectingDrive] = useState(false);
   const [testMsg, setTestMsg] = useState<string | null>(null);
   const [testSuccess, setTestSuccess] = useState(true);
+  const [clientIdInput, setClientIdInput] = useState('');
+  const [clientSecretInput, setClientSecretInput] = useState('');
+  const [savingCredentials, setSavingCredentials] = useState(false);
+  const [credSaveMsg, setCredSaveMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [copiedRedirect, setCopiedRedirect] = useState(false);
 
   // Selected Batch for operations
   const [selectedBatchId, setSelectedBatchId] = useState('');
@@ -69,11 +74,41 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
     try {
       const res = await fetch('/api/admin/settings/drive');
       const data = await res.json();
-      if (res.ok) setDriveInfo(data);
+      if (res.ok) {
+        setDriveInfo(data);
+        if (data.clientId && !clientIdInput) {
+          setClientIdInput(data.clientId);
+        }
+      }
     } catch (e) {
       console.error('Error fetching drive info', e);
     } finally {
       setLoadingDrive(false);
+    }
+  };
+
+  const handleSaveCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingCredentials(true);
+    setCredSaveMsg(null);
+    try {
+      const res = await fetch('/api/admin/settings/drive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId: clientIdInput,
+          clientSecret: clientSecretInput,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save credentials');
+      setCredSaveMsg({ type: 'success', text: '✓ API Credentials saved in database successfully!' });
+      setClientSecretInput('');
+      fetchDriveInfo();
+    } catch (err: any) {
+      setCredSaveMsg({ type: 'error', text: err.message || 'Failed to save credentials' });
+    } finally {
+      setSavingCredentials(false);
     }
   };
 
@@ -814,6 +849,100 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
               </div>
             </div>
 
+            {/* Credentials Configuration Box */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <KeyRound className="w-3.5 h-3.5 text-cyan-400" />
+                  Google Cloud Console Credentials
+                </span>
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                  driveInfo?.hasSecret && driveInfo?.clientId 
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                    : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                }`}>
+                  {driveInfo?.hasSecret && driveInfo?.clientId ? 'Credentials Saved ✓' : 'Setup Required'}
+                </span>
+              </div>
+
+              {/* Redirect URI with copy button */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-semibold text-slate-400">
+                  Authorized Redirect URI (Copy & paste into Google Cloud Console):
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={driveInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback'}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-cyan-300 select-all focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const uri = driveInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+                      navigator.clipboard.writeText(uri);
+                      setCopiedRedirect(true);
+                      setTimeout(() => setCopiedRedirect(false), 2500);
+                    }}
+                    className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 rounded-lg whitespace-nowrap transition-colors"
+                  >
+                    {copiedRedirect ? 'Copied! ✓' : 'Copy URI'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Form to save Client ID & Secret */}
+              <form onSubmit={handleSaveCredentials} className="space-y-3 pt-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-semibold text-slate-400">Google Client ID</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 123456789-xyz.apps.googleusercontent.com"
+                      value={clientIdInput}
+                      onChange={(e) => setClientIdInput(e.target.value)}
+                      required
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-semibold text-slate-400">
+                      Google Client Secret {driveInfo?.hasSecret && <span className="text-emerald-400 text-[10px]">(Already Saved)</span>}
+                    </label>
+                    <input
+                      type="password"
+                      placeholder={driveInfo?.hasSecret ? '••••••••••••••••••••••••' : 'Enter Client Secret'}
+                      value={clientSecretInput}
+                      onChange={(e) => setClientSecretInput(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500"
+                    />
+                  </div>
+                </div>
+
+                {credSaveMsg && (
+                  <div className={`p-2.5 rounded-lg border text-xs font-semibold ${
+                    credSaveMsg.type === 'success'
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                      : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                  }`}>
+                    {credSaveMsg.text}
+                  </div>
+                )}
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={savingCredentials}
+                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
+                  >
+                    {savingCredentials ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                    <span>Save API Credentials</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
             {loadingDrive ? (
               <div className="py-8 text-center text-slate-400 flex items-center justify-center gap-2">
                 <RefreshCw className="w-5 h-5 animate-spin text-cyan-400" />
@@ -872,12 +1001,16 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
 
                 <button
                   type="button"
-                  disabled={connectingDrive}
+                  disabled={connectingDrive || !driveInfo?.hasSecret || !driveInfo?.clientId}
                   onClick={handleConnectDrive}
-                  className="py-3 px-6 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-cyan-600/20 hover:from-cyan-500 hover:to-indigo-500 transition-all flex items-center gap-2"
+                  className={`py-3 px-6 rounded-xl font-bold text-xs shadow-lg transition-all flex items-center gap-2 ${
+                    !driveInfo?.hasSecret || !driveInfo?.clientId
+                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                      : 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-cyan-600/20 hover:from-cyan-500 hover:to-indigo-500'
+                  }`}
                 >
                   {connectingDrive ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
-                  <span>Connect Google Drive</span>
+                  <span>{(!driveInfo?.hasSecret || !driveInfo?.clientId) ? 'Save Credentials Above to Connect' : 'Connect Google Drive'}</span>
                 </button>
               </div>
             )}
