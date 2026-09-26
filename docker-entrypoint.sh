@@ -45,6 +45,9 @@ if [ "$SKIP_MIGRATIONS" != "true" ] && [ -n "$DATABASE_URL" ]; then
   echo "[Entrypoint] Applying database schema migrations..."
   if npx prisma migrate deploy; then
     echo "✅ [Entrypoint] Database migrations applied successfully."
+    # Seed default system settings and admin account if newly deployed
+    echo "[Entrypoint] Verifying default administrative seed data..."
+    node prisma/seed.js || true
   else
     echo "⚠️  [Entrypoint] Migration attempt failed. Continuing startup..."
   fi
