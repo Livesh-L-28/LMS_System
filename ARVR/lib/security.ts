@@ -94,11 +94,14 @@ export function logSecurityEvent(event: SecurityEvent): void {
 /**
  * Formats a safe production error message to prevent database/schema information leakage.
  */
-export function formatSafeError(error: any, contextDescription?: string): { error: string } {
+export function formatSafeError(error: any, contextDescription?: string): { error: string; details?: string } {
+  const errMsg = error?.message || (typeof error === 'string' ? error : 'Unknown error');
   console.error(`[SERVER_ERROR] ${contextDescription || 'Unhandled Exception'}:`, error);
-  // Never expose raw database queries, schema names, or stack traces in production
   return {
-    error: 'An internal server error occurred. Please try again later.',
+    error: errMsg.includes('connect ECONNREFUSED')
+      ? 'Database connection failed. Please verify DATABASE_URL.'
+      : errMsg || 'An internal server error occurred. Please try again later.',
+    details: process.env.NODE_ENV !== 'production' ? errMsg : undefined,
   };
 }
 
