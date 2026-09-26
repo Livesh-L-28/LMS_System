@@ -1,0 +1,56 @@
+# Dependency & Cache Directories
+node_modules
+.pnp
+.pnp.js
+.npm
+
+# Next.js Build Artifacts
+.next
+out
+build
+dist
+
+# Environment & Secrets (NEVER bake into image)
+.env
+.env.*
+.env.local
+.env.development
+.env.test
+.env.production
+*.pem
+*.key
+*.cert
+credentials*
+
+# Database & Storage Local Artifacts
+*.db
+*.db-journal
+*.db.backup
+dev.db*
+.postgres-data
+.s3-data
+
+# Version Control & IDE
+.git
+.gitignore
+.gitattributes
+.vscode
+.idea
+.gemini
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs & Diagnostics
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Scratch & Temporary Testing Files
+scratch
+coverage
+.system_generated
+*.tsbuildinfo
