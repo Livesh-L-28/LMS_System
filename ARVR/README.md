@@ -110,5 +110,64 @@ arvrweb/
 
 ---
 
+## ☁️ Google Drive Storage Integration Setup
+
+The platform supports automated student task screenshot uploads directly to the Admin's Google Drive inside an organized directory hierarchy (`ARVR_Student_Submissions/{Batch_Name}/`).
+
+You can configure Google Drive API credentials **directly from the web application** without having to edit environment variables or redeploy backend containers.
+
+### Step-by-Step Google Cloud Console Configuration
+
+#### Step 1: Create a Google Cloud Project
+1. Navigate to the **[Google Cloud Console](https://console.cloud.google.com/)** and log in with your desired Google account.
+2. In the top toolbar, click the **Project Dropdown** and select **New Project**.
+3. Enter a project name (e.g. `ARVR-LMS-Drive`) and click **Create**.
+4. Ensure your new project is selected in the top bar project selector.
+
+#### Step 2: Enable the Google Drive API
+1. In the search box at the top, search for **`Google Drive API`**.
+2. Click on **Google Drive API** under Marketplace results.
+3. Click the blue **Enable** button.
+
+#### Step 3: Configure the OAuth Consent Screen
+1. In the left navigation menu, click **APIs & Services** > **OAuth consent screen** (or search for it).
+2. Choose **External** for User Type and click **Create**.
+3. **App Information**:
+   - **App name**: `ARVR LMS` (or any custom name)
+   - **User support email**: Choose your email address
+   - **Developer contact information**: Enter your email address
+4. Click **Save and Continue**.
+5. **Scopes** step: Click **Save and Continue** (the required scopes `drive` and `drive.file` are requested by the platform during the connect step).
+6. **Test Users** step:
+   - Click **+ ADD USERS**.
+   - **Critical**: Enter your Google email address (the account whose Google Drive will hold the uploads).
+   - Click **Save and Continue**.
+7. Click **Back to Dashboard**.
+
+#### Step 4: Generate OAuth 2.0 Client ID & Secret
+1. In the left menu, select **APIs & Services** > **Credentials**.
+2. At the top, click **+ CREATE CREDENTIALS** and choose **OAuth client ID**.
+3. Under **Application type**, choose **Web application**.
+4. **Name**: `ARVR LMS Web Client` (or any label).
+5. Scroll down to **Authorized redirect URIs**:
+   - Click **+ ADD URI**.
+   - Paste the exact callback URI:
+     ```text
+     https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback
+     ```
+     *(Note: If running locally or on a custom domain, use `http://localhost:3000/api/google-drive/oauth/callback` or your custom domain).*
+6. Click **Create**.
+7. A dialog will appear displaying your **Client ID** (ends with `.apps.googleusercontent.com`) and **Client Secret**. Keep this window open or copy both values.
+
+#### Step 5: Save & Connect in the LMS Web UI
+1. Log into the LMS Admin/Staff portal as an Administrator (`admin@arvr.com`).
+2. Go to the **Settings** / **Google Drive Storage Integration** tab.
+3. Paste your **Google Client ID** and **Google Client Secret** into the form.
+4. Click **Save API Credentials** (this securely stores them in the PostgreSQL `SystemSetting` table).
+5. Click **Connect Google Drive** — Google's consent screen will open. Select your Google account and grant permissions.
+6. The status badge will switch to **Connected ✓**, and all subsequent student submissions will automatically sync to your Drive.
+
+---
+
 ## 📄 License
 This project is licensed under the MIT License.
