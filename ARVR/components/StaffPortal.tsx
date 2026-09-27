@@ -5042,6 +5042,111 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </div>
                 </div>
 
+                {/* Google Cloud API Credentials Configuration Form */}
+                <div className="rounded-2xl p-5 bg-purple-50/70 border border-purple-200 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-purple-100">
+                    <div className="flex items-center gap-2">
+                      <KeyRound className="w-4 h-4 text-purple-700" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-purple-950">
+                        Google Cloud OAuth Credentials
+                      </span>
+                    </div>
+                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold border w-fit ${
+                      driveStorageInfo?.hasSecret && driveStorageInfo?.clientId
+                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                        : 'bg-amber-100 text-amber-800 border-amber-300'
+                    }`}>
+                      {driveStorageInfo?.hasSecret && driveStorageInfo?.clientId ? 'Credentials Saved ✓' : 'Configuration Required'}
+                    </span>
+                  </div>
+
+                  {/* Redirect URI Display with Copy */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      Authorized Redirect URI (Copy & paste into Google Cloud Console):
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={driveStorageInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback'}
+                        className="w-full pro-input rounded-xl px-3 py-2 text-xs font-mono font-bold text-purple-950 bg-white border border-purple-200 select-all focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const uri = driveStorageInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+                          navigator.clipboard.writeText(uri);
+                          showSuccess('Redirect URI copied to clipboard!');
+                        }}
+                        className="px-3.5 py-2 bg-purple-900 hover:bg-purple-800 text-white rounded-xl text-xs font-bold whitespace-nowrap transition-colors"
+                      >
+                        Copy URI
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium">
+                      Add this exact URL under <em>"Authorized redirect URIs"</em> in your Google Cloud Console OAuth 2.0 Client.
+                    </p>
+                  </div>
+
+                  {/* Inputs for Client ID & Secret */}
+                  <form onSubmit={handleSaveDriveCredentials} className="space-y-3 pt-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">
+                          Google Client ID <span className="text-rose-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={googleClientIdInput}
+                          onChange={(e) => setGoogleClientIdInput(e.target.value)}
+                          placeholder="e.g. 123456789-xyz.apps.googleusercontent.com"
+                          className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-purple-200 focus:outline-none focus:border-purple-600"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">
+                          Google Client Secret {driveStorageInfo?.hasSecret && <span className="text-emerald-700 font-bold text-[10px]">(Already Saved ✓)</span>}
+                        </label>
+                        <input
+                          type="password"
+                          value={googleClientSecretInput}
+                          onChange={(e) => setGoogleClientSecretInput(e.target.value)}
+                          placeholder={driveStorageInfo?.hasSecret ? '••••••••••••••••••••••••' : 'Enter Client Secret'}
+                          className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-purple-200 focus:outline-none focus:border-purple-600"
+                        />
+                      </div>
+                    </div>
+
+                    {driveCredsSuccessMsg && (
+                      <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-xs font-bold text-emerald-800 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                        <span>{driveCredsSuccessMsg}</span>
+                      </div>
+                    )}
+
+                    {driveCredsErrorMsg && (
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-300 text-xs font-bold text-rose-800 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                        <span>{driveCredsErrorMsg}</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-end pt-1">
+                      <button
+                        type="submit"
+                        disabled={savingDriveCreds}
+                        className="py-2.5 px-5 rounded-xl bg-purple-900 hover:bg-purple-800 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-xs"
+                      >
+                        {savingDriveCreds ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        <span>Save API Credentials</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
                 {loadingDriveSettings ? (
                   <div className="py-12 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
                     <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
