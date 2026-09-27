@@ -147,10 +147,6 @@ export default function StudentPortal({ user, onLoginSuccess }: StudentPortalPro
     }
   };
 
-  const handleDemoFill = () => {
-    setRegisterNo('21CS001');
-    setPin('123456');
-  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -432,14 +428,6 @@ export default function StudentPortal({ user, onLoginSuccess }: StudentPortalPro
                   <span>Sign In as Student</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleDemoFill}
-                  className="w-full py-2.5 px-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 hover:bg-purple-100 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                  <span>Demo Fill: 21CS001 / PIN: 123456</span>
-                </button>
               </div>
 
               <div className="text-center pt-4 border-t border-purple-100">

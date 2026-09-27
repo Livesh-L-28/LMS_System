@@ -1730,10 +1730,6 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     }
   };
 
-  const handleDemoFillAdmin = () => {
-    setEmail('admin@arvr.com');
-    setPassword('admin123');
-  };
 
   const fetchStats = async () => {
     try {
@@ -2194,16 +2190,6 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <span>Sign In to Staff Portal</span>
               </button>
 
-              <div className="pt-1">
-                <button
-                  type="button"
-                  onClick={handleDemoFillAdmin}
-                  className="w-full py-2.5 px-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 hover:bg-purple-100 text-xs font-bold transition-colors flex items-center justify-center gap-1"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                  <span>Demo Fill: admin@arvr.com / admin123</span>
-                </button>
-              </div>
             </div>
           </form>
 

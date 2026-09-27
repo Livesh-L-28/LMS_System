@@ -61,10 +61,6 @@ export default function TrainerPortal({ user, onLoginSuccess }: TrainerPortalPro
     }
   };
 
-  const handleDemoFill = () => {
-    setEmail('trainer@arvr.com');
-    setPassword('trainer123');
-  };
 
   const fetchTrainerBatches = async () => {
     try {
@@ -212,14 +208,6 @@ export default function TrainerPortal({ user, onLoginSuccess }: TrainerPortalPro
                 <span>Sign In as Trainer</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleDemoFill}
-                className="w-full py-2 px-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-slate-300 hover:text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Demo Fill: trainer@arvr.com / trainer123</span>
-              </button>
             </div>
           </form>
 
