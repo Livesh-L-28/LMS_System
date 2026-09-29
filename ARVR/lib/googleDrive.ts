@@ -56,11 +56,13 @@ export async function getOAuth2ClientAsync(reqUrl?: string) {
   if (!redirectUri && reqUrl) {
     try {
       const parsedUrl = new URL(reqUrl);
-      redirectUri = `${parsedUrl.origin}/api/google-drive/oauth/callback`;
+      if (!parsedUrl.origin.includes('0.0.0.0') && !parsedUrl.origin.includes('127.0.0.1')) {
+        redirectUri = `${parsedUrl.origin}/api/google-drive/oauth/callback`;
+      }
     } catch {}
   }
-  if (!redirectUri) {
-    redirectUri = 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+  if (!redirectUri || redirectUri.includes('0.0.0.0')) {
+    redirectUri = 'https://lms.xarc.online/api/google-drive/oauth/callback';
   }
 
   return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
@@ -69,7 +71,7 @@ export async function getOAuth2ClientAsync(reqUrl?: string) {
 export function getOAuth2Client() {
   const clientId = process.env.GOOGLE_CLIENT_ID || '';
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://lms.xarc.online/api/google-drive/oauth/callback';
 
   return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 }

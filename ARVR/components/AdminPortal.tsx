@@ -862,13 +862,20 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
                   <input
                     type="text"
                     readOnly
-                    value={driveInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback'}
+                    value={
+                      driveInfo?.redirectUri && !driveInfo.redirectUri.includes('0.0.0.0')
+                        ? driveInfo.redirectUri
+                        : 'https://lms.xarc.online/api/google-drive/oauth/callback'
+                    }
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-cyan-300 select-all focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => {
-                      const uri = driveInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+                      const uri =
+                        driveInfo?.redirectUri && !driveInfo.redirectUri.includes('0.0.0.0')
+                          ? driveInfo.redirectUri
+                          : 'https://lms.xarc.online/api/google-drive/oauth/callback';
                       navigator.clipboard.writeText(uri);
                       setCopiedRedirect(true);
                       setTimeout(() => setCopiedRedirect(false), 2500);

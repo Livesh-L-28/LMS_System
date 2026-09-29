@@ -34,10 +34,24 @@ export async function GET(request: Request) {
     const hasSecret = Boolean(secSetting?.value || process.env.GOOGLE_CLIENT_SECRET);
 
     let redirectUri = process.env.GOOGLE_REDIRECT_URI || '';
-    try {
-      const origin = new URL(request.url).origin;
-      redirectUri = `${origin}/api/google-drive/oauth/callback`;
-    } catch {}
+    if (!redirectUri) {
+      try {
+        const forwardedHost = request.headers.get('x-forwarded-host') || request.headers.get('host');
+        const proto = request.headers.get('x-forwarded-proto') || 'https';
+        if (forwardedHost && !forwardedHost.includes('0.0.0.0') && !forwardedHost.includes('127.0.0.1')) {
+          redirectUri = `${proto}://${forwardedHost}/api/google-drive/oauth/callback`;
+        } else {
+          const origin = new URL(request.url).origin;
+          if (!origin.includes('0.0.0.0') && !origin.includes('127.0.0.1')) {
+            redirectUri = `${origin}/api/google-drive/oauth/callback`;
+          }
+        }
+      } catch {}
+    }
+
+    if (!redirectUri || redirectUri.includes('0.0.0.0')) {
+      redirectUri = 'https://lms.xarc.online/api/google-drive/oauth/callback';
+    }
 
     return NextResponse.json({
       success: true,

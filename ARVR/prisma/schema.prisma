@@ -8,24 +8,23 @@ datasource db {
 }
 
 model Student {
-  id            String   @id @default(cuid())
+  id            String             @id @default(cuid())
   name          String
-  registerNo    String   @unique
+  registerNo    String             @unique
   contactNumber String
-  email         String   @unique
+  email         String             @unique
   department    String
   year          String
   section       String
   batchId       String
-  batch         Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
   pinHash       String
-  createdAt     DateTime @default(now())
-
-  attendances Attendance[]
-  tasks       TaskSubmission[]
-  evaluations Evaluation[]
-  feedback    Feedback[]
-  certificate CertificateRecord?
+  createdAt     DateTime           @default(now())
+  attendances   Attendance[]
+  certificate   CertificateRecord?
+  evaluations   Evaluation[]
+  feedback      Feedback[]
+  batch         Batch              @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  tasks         TaskSubmission[]
 
   @@index([batchId])
   @@index([department])
@@ -57,7 +56,6 @@ model Batch {
 model TrainingDay {
   id              String           @id @default(cuid())
   batchId         String
-  batch           Batch            @relation(fields: [batchId], references: [id], onDelete: Cascade)
   dayNumber       Int
   date            DateTime
   taskTitle       String
@@ -67,6 +65,7 @@ model TrainingDay {
   hasForenoon     Boolean          @default(true)
   hasAfternoon    Boolean          @default(true)
   submissions     TaskSubmission[]
+  batch           Batch            @relation(fields: [batchId], references: [id], onDelete: Cascade)
 
   @@unique([batchId, dayNumber])
   @@index([batchId])
@@ -76,10 +75,10 @@ model TrainingDay {
 model Attendance {
   id        String   @id @default(cuid())
   studentId String
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   date      DateTime
   session   String
   markedAt  DateTime @default(now())
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, date, session])
   @@index([studentId])
@@ -89,9 +88,7 @@ model Attendance {
 model TaskSubmission {
   id                  String      @id @default(cuid())
   studentId           String
-  student             Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
   trainingDayId       String
-  trainingDay         TrainingDay @relation(fields: [trainingDayId], references: [id], onDelete: Cascade)
   screenshotUrl       String
   description         String?
   s3Key               String?
@@ -107,6 +104,8 @@ model TaskSubmission {
   status              String      @default("SUBMITTED")
   submittedAt         DateTime    @default(now())
   evaluation          Evaluation?
+  student             Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  trainingDay         TrainingDay @relation(fields: [trainingDayId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, trainingDayId])
   @@index([studentId])
@@ -119,14 +118,14 @@ model TaskSubmission {
 model Evaluation {
   id            String         @id @default(cuid())
   studentId     String
-  student       Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
   taskId        String         @unique
-  task          TaskSubmission @relation(fields: [taskId], references: [id], onDelete: Cascade)
   score         Int
   grade         String
   trainingLevel String
   comments      String?
   evaluatedAt   DateTime       @default(now())
+  student       Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  task          TaskSubmission @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
   @@index([evaluatedAt])
@@ -135,9 +134,9 @@ model Evaluation {
 model Feedback {
   id        String   @id @default(cuid())
   studentId String
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   message   String
   createdAt DateTime @default(now())
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
   @@index([createdAt])
@@ -146,7 +145,6 @@ model Feedback {
 model CertificateRecord {
   id                   String    @id @default(cuid())
   studentId            String    @unique
-  student              Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
   certificateNo        String    @unique
   finalGrade           String
   finalLevel           String
@@ -156,6 +154,7 @@ model CertificateRecord {
   isManualOverride     Boolean   @default(false)
   overrideReason       String?
   attendancePctAtIssue Int?
+  student              Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
   @@index([completedAt])

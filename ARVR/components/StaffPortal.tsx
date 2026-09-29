@@ -5055,13 +5055,20 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       <input
                         type="text"
                         readOnly
-                        value={driveStorageInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback'}
+                        value={
+                          driveStorageInfo?.redirectUri && !driveStorageInfo.redirectUri.includes('0.0.0.0')
+                            ? driveStorageInfo.redirectUri
+                            : 'https://lms.xarc.online/api/google-drive/oauth/callback'
+                        }
                         className="w-full pro-input rounded-xl px-3 py-2 text-xs font-mono font-bold text-purple-950 bg-white border border-purple-200 select-all focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => {
-                          const uri = driveStorageInfo?.redirectUri || 'https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback';
+                          const uri =
+                            driveStorageInfo?.redirectUri && !driveStorageInfo.redirectUri.includes('0.0.0.0')
+                              ? driveStorageInfo.redirectUri
+                              : 'https://lms.xarc.online/api/google-drive/oauth/callback';
                           navigator.clipboard.writeText(uri);
                           showSuccess('Redirect URI copied to clipboard!');
                         }}
