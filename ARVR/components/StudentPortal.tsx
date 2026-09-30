@@ -367,8 +367,12 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
               <GraduationCap className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Student Portal</h2>
-              <p className="text-xs text-slate-600 font-medium">Access Daily VR Tasks & Attendance</p>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+                {isRegistering ? 'Student Registration' : 'Student Login'}
+              </h2>
+              <p className="text-xs text-slate-600 font-medium">
+                {isRegistering ? 'Create your academy student profile' : 'Access Daily VR Tasks & Attendance'}
+              </p>
             </div>
           </div>
 

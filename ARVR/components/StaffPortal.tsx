@@ -2164,7 +2164,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Staff & Trainer Portal</h2>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Staff & Trainer Login</h2>
               <p className="text-xs text-slate-600 font-medium">Trainer Evaluation Workspace & System Administration</p>
             </div>
           </div>
