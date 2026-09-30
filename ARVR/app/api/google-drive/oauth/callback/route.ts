@@ -3,6 +3,26 @@ import { google } from 'googleapis';
 import { prisma } from '@/lib/prisma';
 import { getOAuth2ClientAsync, encryptToken } from '@/lib/googleDrive';
 
+function getRedirectUrl(request: Request, pathWithQuery: string): URL {
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+  const host = request.headers.get('host');
+
+  let baseUrl = '';
+  if (forwardedHost && !forwardedHost.includes('0.0.0.0')) {
+    baseUrl = `${forwardedProto}://${forwardedHost}`;
+  } else if (host && !host.includes('0.0.0.0') && !host.includes('10000')) {
+    const proto = host.includes('localhost') ? 'http' : 'https';
+    baseUrl = `${proto}://${host}`;
+  } else if (process.env.NEXT_PUBLIC_APP_URL) {
+    baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+  } else {
+    baseUrl = 'https://lms.xarc.online';
+  }
+
+  return new URL(pathWithQuery, baseUrl);
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -11,11 +31,11 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('Google OAuth authorization error:', error);
-      return NextResponse.redirect(new URL('/?drive_error=auth_denied#settings', request.url));
+      return NextResponse.redirect(getRedirectUrl(request, `/?drive_error=${encodeURIComponent(error)}#settings`));
     }
 
     if (!code) {
-      return NextResponse.redirect(new URL('/?drive_error=no_code#settings', request.url));
+      return NextResponse.redirect(getRedirectUrl(request, '/?drive_error=no_code#settings'));
     }
 
     const oauth2Client = await getOAuth2ClientAsync(request.url);
@@ -70,9 +90,11 @@ export async function GET(request: Request) {
     }
 
     // Redirect to Admin Settings UI
-    return NextResponse.redirect(new URL('/?drive_connected=true#settings', request.url));
+    return NextResponse.redirect(getRedirectUrl(request, '/?drive_connected=true#settings'));
   } catch (err: any) {
     console.error('Google OAuth callback handler error:', err);
-    return NextResponse.redirect(new URL('/?drive_error=callback_failed#settings', request.url));
+    const errorDetail = err?.response?.data?.error_description || err?.message || 'callback_failed';
+    return NextResponse.redirect(getRedirectUrl(request, `/?drive_error=${encodeURIComponent(errorDetail)}#settings`));
   }
 }
+

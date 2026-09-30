@@ -208,6 +208,26 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     };
 
     handleHashChange();
+
+    // Check for drive OAuth callback query params
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('drive_connected') === 'true') {
+        setStaffTab('settings');
+        showSuccess('Google Drive connected successfully!');
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+      } else if (searchParams.get('drive_error')) {
+        setStaffTab('settings');
+        const errParam = searchParams.get('drive_error') || '';
+        showError(
+          errParam === 'callback_failed' || errParam.includes('invalid_client')
+            ? 'Google Drive connection failed: Invalid Google Client ID or Secret. In Google Cloud Console, ensure you copied the OAuth Client Secret (starts with GOCSPX-), not your LMS password.'
+            : `Google Drive connection error: ${decodeURIComponent(errParam)}`
+        );
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+      }
+    }
+
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
@@ -903,6 +923,12 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     setSavingDriveCreds(true);
     setDriveCredsSuccessMsg(null);
     setDriveCredsErrorMsg(null);
+
+    if (googleClientSecretInput && (googleClientSecretInput.toLowerCase().includes('admin') || googleClientSecretInput.length < 15)) {
+      setDriveCredsErrorMsg('Warning: Google Client Secret must be from Google Cloud Console (starts with GOCSPX-), not your LMS admin password.');
+      setSavingDriveCreds(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/admin/settings/drive', {
@@ -5107,9 +5133,12 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           type="password"
                           value={googleClientSecretInput}
                           onChange={(e) => setGoogleClientSecretInput(e.target.value)}
-                          placeholder={driveStorageInfo?.hasSecret ? '••••••••••••••••••••••••' : 'Enter Client Secret'}
+                          placeholder={driveStorageInfo?.hasSecret ? '••••••••••••••••••••••••' : 'Enter Google Client Secret (starts with GOCSPX-)'}
                           className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-purple-200 focus:outline-none focus:border-purple-600"
                         />
+                        <p className="text-[10px] text-slate-500 font-medium mt-1">
+                          From Google Cloud Console (starts with <code className="text-purple-700 bg-purple-50 px-1 py-0.5 rounded font-mono">GOCSPX-</code>). Do not enter your admin password here.
+                        </p>
                       </div>
                     </div>
 

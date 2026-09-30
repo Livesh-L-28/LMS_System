@@ -38,30 +38,31 @@ export function decryptToken(text: string): string {
  * Returns configured OAuth2 Client instance using database settings or environment variables
  */
 export async function getOAuth2ClientAsync(reqUrl?: string) {
-  let clientId = process.env.GOOGLE_CLIENT_ID || '';
-  let clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+  let clientId = '';
+  let clientSecret = '';
 
-  if (!clientId || !clientSecret) {
-    try {
-      const idSetting = await prisma.systemSetting.findUnique({ where: { key: 'GOOGLE_CLIENT_ID' } });
-      const secSetting = await prisma.systemSetting.findUnique({ where: { key: 'GOOGLE_CLIENT_SECRET' } });
-      if (idSetting?.value) clientId = idSetting.value.trim();
-      if (secSetting?.value) clientSecret = secSetting.value.trim();
-    } catch (e) {
-      console.error('Failed to read Google credentials from SystemSetting:', e);
-    }
+  try {
+    const idSetting = await prisma.systemSetting.findUnique({ where: { key: 'GOOGLE_CLIENT_ID' } });
+    const secSetting = await prisma.systemSetting.findUnique({ where: { key: 'GOOGLE_CLIENT_SECRET' } });
+    if (idSetting?.value) clientId = idSetting.value.trim();
+    if (secSetting?.value) clientSecret = secSetting.value.trim();
+  } catch (e) {
+    console.error('Failed to read Google credentials from SystemSetting:', e);
   }
+
+  if (!clientId) clientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
+  if (!clientSecret) clientSecret = (process.env.GOOGLE_CLIENT_SECRET || '').trim();
 
   let redirectUri = process.env.GOOGLE_REDIRECT_URI || '';
   if (!redirectUri && reqUrl) {
     try {
       const parsedUrl = new URL(reqUrl);
-      if (!parsedUrl.origin.includes('0.0.0.0') && !parsedUrl.origin.includes('127.0.0.1')) {
+      if (!parsedUrl.origin.includes('0.0.0.0') && !parsedUrl.origin.includes('127.0.0.1') && !parsedUrl.origin.includes('10000')) {
         redirectUri = `${parsedUrl.origin}/api/google-drive/oauth/callback`;
       }
     } catch {}
   }
-  if (!redirectUri || redirectUri.includes('0.0.0.0')) {
+  if (!redirectUri || redirectUri.includes('0.0.0.0') || redirectUri.includes('10000')) {
     redirectUri = 'https://lms.xarc.online/api/google-drive/oauth/callback';
   }
 
