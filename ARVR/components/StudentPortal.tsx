@@ -437,7 +437,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
               </div>
 
-              <div className="text-center pt-4 border-t border-purple-100 flex flex-col gap-2">
+              <div className="text-center pt-4 border-t border-purple-100">
                 <button
                   type="button"
                   onClick={() => setIsRegistering(true)}
@@ -445,15 +445,6 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 >
                   New Student? Create Account Here &rarr;
                 </button>
-                {onSwitchToStaff && (
-                  <button
-                    type="button"
-                    onClick={onSwitchToStaff}
-                    className="text-[11px] text-slate-500 hover:text-purple-900 transition-colors font-medium"
-                  >
-                    Staff & Trainer Portal &rarr;
-                  </button>
-                )}
               </div>
             </form>
           ) : (
