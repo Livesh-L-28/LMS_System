@@ -4,15 +4,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   GraduationCap, KeyRound, Clock, CheckCircle2, AlertCircle,
   Upload, Send, Award, FileText, BarChart3, UserCheck, Sparkles, RefreshCw, ChevronRight, ExternalLink, BookOpen, Compass, Lock, Layers, Download,
-  Paperclip, ListChecks, X
+  Paperclip, ListChecks, X, LogOut
 } from 'lucide-react';
 
 interface StudentPortalProps {
   user: any;
   onLoginSuccess: (user: any) => void;
+  onLogout?: () => void;
+  onSwitchToStaff?: () => void;
 }
 
-export default function StudentPortal({ user, onLoginSuccess }: StudentPortalProps) {
+export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitchToStaff }: StudentPortalProps) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [activeBatches, setActiveBatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -430,7 +432,7 @@ export default function StudentPortal({ user, onLoginSuccess }: StudentPortalPro
 
               </div>
 
-              <div className="text-center pt-4 border-t border-purple-100">
+              <div className="text-center pt-4 border-t border-purple-100 flex flex-col gap-2">
                 <button
                   type="button"
                   onClick={() => setIsRegistering(true)}
@@ -438,6 +440,15 @@ export default function StudentPortal({ user, onLoginSuccess }: StudentPortalPro
                 >
                   New Student? Create Account Here &rarr;
                 </button>
+                {onSwitchToStaff && (
+                  <button
+                    type="button"
+                    onClick={onSwitchToStaff}
+                    className="text-[11px] text-slate-500 hover:text-purple-900 transition-colors font-medium"
+                  >
+                    Staff & Trainer Portal &rarr;
+                  </button>
+                )}
               </div>
             </form>
           ) : (
@@ -718,6 +729,18 @@ export default function StudentPortal({ user, onLoginSuccess }: StudentPortalPro
               <span className="text-[10px] text-purple-800 font-bold uppercase tracking-wider block">Assigned Batch</span>
               <span className="text-sm font-bold text-purple-950">{student.batchName || 'AR/VR Development'}</span>
             </div>
+
+            {onLogout && (
+              <button
+                type="button"
+                onClick={onLogout}
+                title="Sign Out"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-purple-200/90 shadow-sm text-xs font-bold text-slate-600 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5 text-slate-500" />
+                <span>Logout</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

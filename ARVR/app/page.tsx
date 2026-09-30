@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
 import StudentPortal from '@/components/StudentPortal';
 import StaffPortal from '@/components/StaffPortal';
 import { Box } from 'lucide-react';
@@ -25,6 +24,26 @@ export default function Home() {
     checkSession();
     fetchBranding();
 
+    // Check hash for direct navigation to staff portal
+    const handleHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (
+        hash.includes('staff') ||
+        hash.includes('admin') ||
+        hash.includes('settings') ||
+        hash.includes('batches') ||
+        hash.includes('tasks') ||
+        hash.includes('curriculum') ||
+        hash.includes('evaluations') ||
+        hash.includes('students') ||
+        hash.includes('certificates')
+      ) {
+        setActiveTab('staff');
+      }
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+
     const handleBrandingUpdate = (e: any) => {
       if (e.detail) {
         setBranding((prev: any) => ({ ...prev, ...e.detail }));
@@ -34,7 +53,10 @@ export default function Home() {
       }
     };
     window.addEventListener('branding-updated', handleBrandingUpdate);
-    return () => window.removeEventListener('branding-updated', handleBrandingUpdate);
+    return () => {
+      window.removeEventListener('branding-updated', handleBrandingUpdate);
+      window.removeEventListener('hashchange', handleHash);
+    };
   }, []);
 
   useEffect(() => {
@@ -68,6 +90,12 @@ export default function Home() {
         else setActiveTab('staff');
       } else {
         setUser(null);
+        const hash = window.location.hash.toLowerCase();
+        if (hash.includes('staff') || hash.includes('admin')) {
+          setActiveTab('staff');
+        } else {
+          setActiveTab('student');
+        }
       }
     } catch (e) {
       console.error('Session check failed', e);
@@ -80,6 +108,8 @@ export default function Home() {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
+      setActiveTab('student');
+      window.location.hash = '';
     } catch (e) {
       console.error('Logout error', e);
     }
@@ -104,20 +134,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#f4f3f8] text-slate-900 flex flex-col font-sans selection:bg-purple-500 selection:text-white">
-      
-      {/* Top Navbar */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        user={user}
-        onLogout={handleLogout}
-        branding={branding}
-      />
-
       {/* Main Content Area */}
       <main id="portal-content" className="flex-1">
         {activeTab === 'student' && (
-          <StudentPortal user={user} onLoginSuccess={handleLoginSuccess} />
+          <StudentPortal
+            user={user}
+            onLoginSuccess={handleLoginSuccess}
+            onLogout={handleLogout}
+            onSwitchToStaff={() => {
+              setActiveTab('staff');
+              window.location.hash = 'staff';
+            }}
+          />
         )}
 
         {activeTab === 'staff' && (
@@ -126,22 +154,23 @@ export default function Home() {
             onLoginSuccess={handleLoginSuccess}
             branding={branding}
             onUpdateBranding={setBranding}
+            onSwitchToStudent={() => {
+              setActiveTab('student');
+              window.location.hash = '';
+            }}
           />
         )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-purple-200/80 bg-white/80 backdrop-blur-md py-8 px-4 sm:px-6 mt-12">
+      <footer className="border-t border-purple-200/80 bg-white/80 backdrop-blur-md py-6 px-4 sm:px-6 mt-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-          
           <div className="flex items-center gap-2">
             <Box className="w-4 h-4 text-purple-600" />
             <span className="font-bold text-slate-900">{branding?.footerText || 'AR/VR Spatial Computing Academy © 2026'}</span>
           </div>
-
         </div>
       </footer>
-
     </div>
   );
 }

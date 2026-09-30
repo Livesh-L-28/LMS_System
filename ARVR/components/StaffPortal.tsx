@@ -14,9 +14,10 @@ interface StaffPortalProps {
   onLoginSuccess: (user: any) => void;
   branding?: any;
   onUpdateBranding?: (branding: any) => void;
+  onSwitchToStudent?: () => void;
 }
 
-export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBranding }: StaffPortalProps) {
+export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBranding, onSwitchToStudent }: StaffPortalProps) {
   // Login form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -2216,6 +2217,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <span>Sign In to Staff Portal</span>
               </button>
 
+              {onSwitchToStudent && (
+                <div className="text-center pt-2 border-t border-purple-100">
+                  <button
+                    type="button"
+                    onClick={onSwitchToStudent}
+                    className="text-xs text-slate-500 hover:text-purple-900 transition-colors font-semibold"
+                  >
+                    &larr; Back to Student Portal
+                  </button>
+                </div>
+              )}
             </div>
           </form>
 
