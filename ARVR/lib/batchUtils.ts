@@ -5,7 +5,6 @@ export interface LevelConfigItem {
 }
 
 export const LEVEL_CONFIG: Record<string, LevelConfigItem> = {
-  'Level 0': { days: 10, code: 'L0', name: 'Level 0' },
   'Level 1': { days: 10, code: 'L1', name: 'Level 1' },
   'Level 2': { days: 10, code: 'L2', name: 'Level 2' },
   'Level 3': { days: 10, code: 'L3', name: 'Level 3' },
@@ -75,7 +74,6 @@ const createEmptyCurriculum = (days: number): DefaultCurriculumItem[] =>
   }));
 
 export const DEFAULT_CURRICULUM_BY_LEVEL: Record<string, DefaultCurriculumItem[]> = {
-  'Level 0': createEmptyCurriculum(10),
   'Level 1': createEmptyCurriculum(10),
   'Level 2': createEmptyCurriculum(10),
   'Level 3': createEmptyCurriculum(10),

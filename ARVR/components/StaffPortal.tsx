@@ -467,18 +467,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const [supportEmail, setSupportEmail] = useState(branding?.supportEmail || 'support@arvr.com');
   const [loadingPageSettings, setLoadingPageSettings] = useState(false);
   const [savingPageSettings, setSavingPageSettings] = useState(false);
-  const [configuredLevels, setConfiguredLevels] = useState<string[]>(['Level 0', 'Level 1', 'Level 2']);
-  const [levelDisplayNames, setLevelDisplayNames] = useState<Record<string, string>>({
-    'Level 0': 'Orientation & Spatial Computing Fundamentals',
-    'Level 1': 'AR/VR Development & Unity XR Toolkit',
-    'Level 2': 'Advanced Immersive Engineering & Passthrough',
-    'Level 3': 'Enterprise Multiplayer XR Architecture',
-  });
+  const [configuredLevels, setConfiguredLevels] = useState<string[]>([]);
+  const [levelDisplayNames, setLevelDisplayNames] = useState<Record<string, string>>({});
   const [showAddLevelModal, setShowAddLevelModal] = useState<boolean>(false);
   const [newLevelForm, setNewLevelForm] = useState<{ name: string; days: number }>({ name: '', days: 10 });
   const [newLevelError, setNewLevelError] = useState<string>('');
   const [creatingLevel, setCreatingLevel] = useState<boolean>(false);
-  const [settingsActiveLevel, setSettingsActiveLevel] = useState<string>('Level 0');
+  const [settingsActiveLevel, setSettingsActiveLevel] = useState<string>('');
   const [settingsLevelName, setSettingsLevelName] = useState<string>('');
   const [settingsLevelTasks, setSettingsLevelTasks] = useState<{
     dayNumber: number;
@@ -583,12 +578,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
   const handleOpenCreateBatchModal = () => {
     const autoNo = getNextBatchNo(batches);
-    setCreateLevel('Level 1');
+    const initialLvl = configuredLevels.length > 0 ? configuredLevels[0] : 'Level 1';
+    setCreateLevel(initialLvl);
     setCreateNoMode('automatic');
     setCreateBatchNo(autoNo);
     const todayStr = new Date().toISOString().split('T')[0];
     setCreateStartDate(todayStr);
-    fetchLevelConfigForCreate('Level 1', todayStr, autoNo);
+    fetchLevelConfigForCreate(initialLvl, todayStr, autoNo);
     setShowCreateBatchModal(true);
   };
 
@@ -716,7 +712,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     try {
       const res = await fetch('/api/admin/settings/tasks?action=levels');
       const data = await res.json();
-      if (data.configuredLevels && Array.isArray(data.configuredLevels) && data.configuredLevels.length > 0) {
+      if (data.configuredLevels && Array.isArray(data.configuredLevels)) {
         setConfiguredLevels(data.configuredLevels);
       }
       if (data.levelDisplayNames && typeof data.levelDisplayNames === 'object') {
@@ -725,18 +721,27 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     } catch (e) {}
   };
 
-  const fetchSettingsTasks = async (level: string) => {
+  const fetchSettingsTasks = async (level?: string) => {
     setLoadingSettingsTasks(true);
     try {
-      const res = await fetch(`/api/admin/settings/tasks?level=${encodeURIComponent(level)}`);
+      const url = level ? `/api/admin/settings/tasks?level=${encodeURIComponent(level)}` : '/api/admin/settings/tasks';
+      const res = await fetch(url);
       const data = await parseResponseJson(res, 'Failed to load level task configuration');
       if (!res.ok) return;
-      if (data.configuredLevels && Array.isArray(data.configuredLevels) && data.configuredLevels.length > 0) {
+      if (data.configuredLevels && Array.isArray(data.configuredLevels)) {
         setConfiguredLevels(data.configuredLevels);
+        if (data.configuredLevels.length === 0) {
+          setSettingsActiveLevel('');
+          setSettingsLevelName('');
+          setSettingsLevelTasks([]);
+          return;
+        }
       }
       if (data.levelDisplayNames && typeof data.levelDisplayNames === 'object') {
         setLevelDisplayNames((prev) => ({ ...prev, ...data.levelDisplayNames }));
       }
+      const activeLvl = data.level || level || (data.configuredLevels?.[0] || '');
+      setSettingsActiveLevel(activeLvl);
       if (data.tasks) {
         const normalized = data.tasks.map((t: any) => ({
           ...t,
@@ -746,10 +751,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           resources: Array.isArray(t.resources) ? t.resources : [],
         }));
         setSettingsLevelTasks(normalized);
-        const resolvedName = data.levelName || levelDisplayNames[level] || LEVEL_CONFIG[level]?.name || level;
+        const resolvedName = data.levelName || levelDisplayNames[activeLvl] || LEVEL_CONFIG[activeLvl]?.name || activeLvl;
         setSettingsLevelName(resolvedName);
-        if (data.levelName) {
-          setLevelDisplayNames((prev) => ({ ...prev, [level]: data.levelName }));
+        if (data.levelName && activeLvl) {
+          setLevelDisplayNames((prev) => ({ ...prev, [activeLvl]: data.levelName }));
         }
       }
     } catch (err) {
@@ -1026,7 +1031,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     }
     setErrorMsg('');
     setSuccessMsg('');
-    const lvl = settingsActiveLevel || 'Level 0';
+    const lvl = settingsActiveLevel || (configuredLevels.length > 0 ? configuredLevels[0] : '');
     setSettingsActiveLevel(lvl);
     fetchSettingsTasks(lvl);
     handleTabSwitch('curriculum');
@@ -1041,7 +1046,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
   useEffect(() => {
     if (staffTab === 'curriculum') {
-      fetchSettingsTasks(settingsActiveLevel || 'Level 0');
+      fetchSettingsTasks(settingsActiveLevel);
     } else if (staffTab === 'settings') {
       fetchAttendanceSettings();
       fetchDriveSettings();
@@ -1075,15 +1080,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       const isExam = dayNum === days;
       return {
         dayNumber: dayNum,
-        taskTitle: isExam ? `Final Examination: ${name} Comprehensive Practical Assessment` : `${name} • Day ${dayNum} Practical Assignment`,
-        taskDescription: isExam
-          ? `Final practical examination and capstone assessment for ${name}. Complete the required exam module, build and test your solution, and submit your final execution output for grading. Your instructor will evaluate this exam and assign your final certificate grade.`
-          : `Hands-on practical development assignment for ${name} Day ${dayNum}. Follow the curriculum guidelines, implement required components, and commit code.`,
+        taskTitle: isExam ? `Final Examination: ${name} Practical Assessment` : `Day ${dayNum} Assignment`,
+        taskDescription: '',
         tasks: [
           {
             id: `task-${dayNum}-1`,
-            title: isExam ? `Final Exam Practical Evaluation` : `Core Implementation & Exercise`,
-            description: isExam ? `Complete the final practical examination assessment and submit output.` : `Complete Day ${dayNum} practical exercises and test your work.`,
+            title: isExam ? `Final Exam Practical Evaluation` : `Day ${dayNum} Assignment`,
+            description: '',
           },
         ],
         resources: [],
@@ -1128,10 +1131,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   const handleRemoveSettingsLevel = async () => {
-    if (configuredLevels.length <= 1) {
-      showError('At least one training level configuration must remain.');
-      return;
-    }
+    if (!settingsActiveLevel || configuredLevels.length === 0) return;
     const levelToRemove = settingsActiveLevel;
     const levelLabel = levelDisplayNames[levelToRemove] || levelToRemove;
     if (!window.confirm(`Are you sure you want to remove the level "${levelLabel}"? This will delete its curriculum settings.`)) {
@@ -1155,9 +1155,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         return next;
       });
 
-      const nextActive = updatedLevels[updatedLevels.length - 1] || updatedLevels[0];
+      const nextActive = updatedLevels.length > 0 ? (updatedLevels[updatedLevels.length - 1] || updatedLevels[0]) : '';
       setSettingsActiveLevel(nextActive);
-      fetchSettingsTasks(nextActive);
+      if (nextActive) {
+        fetchSettingsTasks(nextActive);
+      } else {
+        setSettingsLevelName('');
+        setSettingsLevelTasks([]);
+      }
 
       showSuccess(`✓ Level "${levelLabel}" removed from configuration.`);
     } catch (err: any) {
@@ -1367,6 +1372,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   const handleSaveSettingsTasks = async () => {
+    if (!settingsActiveLevel) {
+      showError('Please select or add a training level first.');
+      return;
+    }
     setSavingSettingsTasks(true);
     setErrorMsg('');
     setSuccessMsg('');
@@ -4018,59 +4027,68 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <button
                 type="button"
                 onClick={() => handleTabSwitch('batches')}
-                className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors flex items-center gap-1.5 shadow-2xs"
+                className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Back to Batches</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleClearCurriculum}
-                className="py-2.5 px-4 rounded-xl bg-white border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold shadow-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                title="Clear all tasks and descriptions to start fresh"
-              >
-                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                <span>Clear Curriculum</span>
-              </button>
+              {configuredLevels.length > 0 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleClearCurriculum}
+                    className="py-2.5 px-4 rounded-xl bg-white border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold shadow-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    title="Clear all tasks and descriptions to start fresh"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Clear Curriculum</span>
+                  </button>
 
-              <button
-                type="button"
-                disabled={savingSettingsTasks}
-                onClick={handleSaveSettingsTasks}
-                className="py-2.5 px-5 rounded-xl pro-button-primary text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 hover:scale-[1.01] transition-all"
-              >
-                {savingSettingsTasks ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                <span>Save Tasks & Days</span>
-              </button>
+                  <button
+                    type="button"
+                    disabled={savingSettingsTasks}
+                    onClick={handleSaveSettingsTasks}
+                    className="py-2.5 px-5 rounded-xl pro-button-primary text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 hover:scale-[1.01] transition-all cursor-pointer"
+                  >
+                    {savingSettingsTasks ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    <span>Save Tasks & Days</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
           {/* Level Sub-tabs Selector & Total Days Control */}
           <div className="pro-card rounded-2xl p-3 bg-gradient-to-r from-purple-50/70 to-indigo-50/70 border-purple-200/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
-                <div className="flex items-center gap-2 flex-1 overflow-x-auto pb-1 sm:pb-0">
-                  {configuredLevels.map((lvl) => {
-                    const displayName = (settingsActiveLevel === lvl ? settingsLevelName : levelDisplayNames[lvl]) || LEVEL_CONFIG[lvl]?.name || lvl;
-                    return (
-                      <button
-                        key={lvl}
-                        type="button"
-                        onClick={() => handleSettingsLevelSwitch(lvl)}
-                        title={displayName}
-                        className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 max-w-[260px] ${
-                          settingsActiveLevel === lvl
-                            ? 'bg-purple-900 text-white shadow-md scale-[1.02]'
-                            : 'bg-white text-slate-700 hover:bg-purple-100/70 hover:text-purple-950 border border-purple-200/80 shadow-2xs'
-                        }`}
-                      >
-                        <Layers className={`w-3.5 h-3.5 shrink-0 ${settingsActiveLevel === lvl ? 'text-purple-300' : 'text-purple-500'}`} />
-                        <span className="truncate">{displayName}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+            <div className="flex items-center gap-2 flex-1 overflow-x-auto pb-1 sm:pb-0">
+              {configuredLevels.length === 0 && (
+                <span className="text-xs font-semibold text-purple-900/60 italic px-2">No levels configured yet</span>
+              )}
+              {configuredLevels.map((lvl) => {
+                const displayName = (settingsActiveLevel === lvl ? settingsLevelName : levelDisplayNames[lvl]) || LEVEL_CONFIG[lvl]?.name || lvl;
+                return (
+                  <button
+                    key={lvl}
+                    type="button"
+                    onClick={() => handleSettingsLevelSwitch(lvl)}
+                    title={displayName}
+                    className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 max-w-[260px] ${
+                      settingsActiveLevel === lvl
+                        ? 'bg-purple-900 text-white shadow-md scale-[1.02]'
+                        : 'bg-white text-slate-700 hover:bg-purple-100/70 hover:text-purple-950 border border-purple-200/80 shadow-2xs'
+                    }`}
+                  >
+                    <Layers className={`w-3.5 h-3.5 shrink-0 ${settingsActiveLevel === lvl ? 'text-purple-300' : 'text-purple-500'}`} />
+                    <span className="truncate">{displayName}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-                <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 flex-wrap">
+            <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 flex-wrap">
+              {configuredLevels.length > 0 && (
+                <>
                   <span className="text-xs font-mono font-extrabold text-purple-950 bg-white border border-purple-200 px-3 py-1.5 rounded-xl shadow-2xs">
                     {settingsLevelTasks.length} Training Days
                   </span>
@@ -4081,28 +4099,28 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     </span>
                   )}
 
-                  {configuredLevels.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={handleRemoveSettingsLevel}
-                      className="py-1.5 px-3 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-900 border border-rose-200 text-xs font-bold transition-colors shadow-2xs flex items-center gap-1"
-                      title={`Remove ${levelDisplayNames[settingsActiveLevel] || settingsActiveLevel}`}
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                      <span className="max-w-[140px] truncate">Remove {levelDisplayNames[settingsActiveLevel] || settingsActiveLevel}</span>
-                    </button>
-                  )}
-
                   <button
                     type="button"
-                    onClick={handleOpenAddLevelModal}
-                    className="py-1.5 px-3.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-colors shadow-xs flex items-center gap-1"
+                    onClick={handleRemoveSettingsLevel}
+                    className="py-1.5 px-3 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-900 border border-rose-200 text-xs font-bold transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
+                    title={`Remove ${levelDisplayNames[settingsActiveLevel] || settingsActiveLevel}`}
                   >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add Level</span>
+                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                    <span className="max-w-[140px] truncate">Remove Level</span>
                   </button>
-                </div>
-              </div>
+                </>
+              )}
+
+              <button
+                type="button"
+                onClick={handleOpenAddLevelModal}
+                className="py-1.5 px-3.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-colors shadow-xs flex items-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add Level</span>
+              </button>
+            </div>
+          </div>
 
               {/* ADD NEW TRAINING LEVEL MODAL OVERLAY */}
               {showAddLevelModal && (
@@ -4216,30 +4234,53 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 </div>
               )}
 
-              {/* Level Title / Custom Name Field */}
-              <div className="pro-card rounded-2xl p-5 bg-gradient-to-r from-purple-50/80 via-white to-indigo-50/80 border border-purple-200 space-y-2.5 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-extrabold text-purple-950 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-purple-700" />
-                    <span>Level Name / Curriculum Title</span>
-                  </label>
-                  <span className="text-[11px] font-semibold text-purple-700">Appears on Level Tabs, Batch Creation & Certificates</span>
+              {/* Empty state when no levels configured */}
+              {configuredLevels.length === 0 ? (
+                <div className="pro-card rounded-3xl p-16 text-center flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-purple-50/40 via-white to-indigo-50/30 border-2 border-dashed border-purple-200/80 shadow-xs">
+                  <div className="p-4 rounded-3xl bg-purple-100/80 text-purple-700 shadow-2xs border border-purple-200/60">
+                    <Layers className="w-10 h-10" />
+                  </div>
+                  <div className="space-y-1.5 max-w-md">
+                    <h3 className="text-lg font-extrabold text-slate-800">No Training Levels Configured</h3>
+                    <p className="text-xs text-slate-500 font-medium">
+                      There are currently no curriculum levels. Click below to add your first level (e.g. Level 1).
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleOpenAddLevelModal}
+                    className="pro-button-primary px-6 py-3 rounded-2xl text-xs font-extrabold text-white shadow-md flex items-center gap-2 hover:scale-[1.02] transition-transform cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Level</span>
+                  </button>
                 </div>
-                <input
-                  type="text"
-                  value={settingsLevelName}
-                  onChange={(e) => {
-                    const newTitle = e.target.value;
-                    setSettingsLevelName(newTitle);
-                    setLevelDisplayNames((prev) => ({
-                      ...prev,
-                      [settingsActiveLevel]: newTitle,
-                    }));
-                  }}
-                  placeholder="e.g. Orientation & Spatial Computing Fundamentals"
-                  className="w-full pro-input rounded-xl px-4 py-2.5 text-xs font-bold text-slate-900 bg-white border-purple-300"
-                />
-              </div>
+              ) : (
+                <>
+                  {/* Level Title / Custom Name Field */}
+                  <div className="pro-card rounded-2xl p-5 bg-gradient-to-r from-purple-50/80 via-white to-indigo-50/80 border border-purple-200 space-y-2.5 shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-extrabold text-purple-950 uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-purple-700" />
+                        <span>Level Name / Curriculum Title</span>
+                      </label>
+                      <span className="text-[11px] font-semibold text-purple-700">Appears on Level Tabs, Batch Creation & Certificates</span>
+                    </div>
+                    <input
+                      type="text"
+                      value={settingsLevelName}
+                      onChange={(e) => {
+                        const newTitle = e.target.value;
+                        setSettingsLevelName(newTitle);
+                        setLevelDisplayNames((prev) => ({
+                          ...prev,
+                          [settingsActiveLevel]: newTitle,
+                        }));
+                      }}
+                      placeholder="e.g. AR/VR Core Fundamentals or Advanced WebXR"
+                      className="w-full pro-input rounded-xl px-4 py-2.5 text-xs font-bold text-slate-900 bg-white border-purple-300"
+                    />
+                  </div>
 
               {/* Task Editor List */}
               {loadingSettingsTasks ? (
@@ -4595,6 +4636,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </button>
                 </div>
               </div>
+            </>
+          )}
         </div>
       )}
 

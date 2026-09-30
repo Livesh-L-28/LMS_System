@@ -7,18 +7,17 @@ export async function GET(request: Request) {
   try {
     await requireAuth(['ADMIN']);
     const { searchParams } = new URL(request.url);
-    const level = searchParams.get('level') || 'Level 0';
 
     // Retrieve global configured levels list
     const levelsSetting = await prisma.systemSetting.findUnique({
       where: { key: 'CONFIGURED_LEVELS' },
     });
 
-    let configuredLevels: string[] = ['Level 0', 'Level 1', 'Level 2'];
+    let configuredLevels: string[] = [];
     if (levelsSetting?.value) {
       try {
         const parsed = JSON.parse(levelsSetting.value);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           configuredLevels = parsed;
         }
       } catch (e) {}
@@ -29,12 +28,7 @@ export async function GET(request: Request) {
       where: { key: { startsWith: 'TASK_CONFIG_' } },
     });
 
-    const levelDisplayNames: Record<string, string> = {
-      'Level 0': 'Level 0',
-      'Level 1': 'Level 1',
-      'Level 2': 'Level 2',
-      'Level 3': 'Level 3',
-    };
+    const levelDisplayNames: Record<string, string> = {};
 
     allTaskSettings.forEach((s) => {
       try {
@@ -57,6 +51,33 @@ export async function GET(request: Request) {
         success: true,
         configuredLevels,
         levelDisplayNames,
+      });
+    }
+
+    const requestedLevel = searchParams.get('level');
+    // If no level requested and no configured levels exist, return clean empty response
+    if (!requestedLevel && configuredLevels.length === 0) {
+      return NextResponse.json({
+        success: true,
+        level: '',
+        levelName: '',
+        days: 0,
+        tasks: [],
+        configuredLevels: [],
+        levelDisplayNames: {},
+      });
+    }
+
+    const level = requestedLevel || (configuredLevels.length > 0 ? configuredLevels[0] : '');
+    if (!level) {
+      return NextResponse.json({
+        success: true,
+        level: '',
+        levelName: '',
+        days: 0,
+        tasks: [],
+        configuredLevels: [],
+        levelDisplayNames: {},
       });
     }
 
@@ -154,7 +175,7 @@ export async function POST(request: Request) {
 
     // Keep CONFIGURED_LEVELS list updated in database
     const levelsSetting = await prisma.systemSetting.findUnique({ where: { key: 'CONFIGURED_LEVELS' } });
-    let currentLevels: string[] = ['Level 0', 'Level 1', 'Level 2'];
+    let currentLevels: string[] = [];
     if (levelsSetting?.value) {
       try {
         const parsed = JSON.parse(levelsSetting.value);
@@ -162,7 +183,7 @@ export async function POST(request: Request) {
       } catch (e) {}
     }
 
-    if (Array.isArray(updateLevelsList) && updateLevelsList.length > 0) {
+    if (Array.isArray(updateLevelsList)) {
       currentLevels = updateLevelsList;
       await prisma.systemSetting.upsert({
         where: { key: 'CONFIGURED_LEVELS' },
@@ -209,15 +230,16 @@ export async function DELETE(request: Request) {
     });
 
     const levelsSetting = await prisma.systemSetting.findUnique({ where: { key: 'CONFIGURED_LEVELS' } });
-    let updatedLevels: string[] = ['Level 0', 'Level 1', 'Level 2'];
+    let updatedLevels: string[] = [];
     if (levelsSetting?.value) {
       try {
         const parsed = JSON.parse(levelsSetting.value);
         if (Array.isArray(parsed)) {
           updatedLevels = parsed.filter((l) => l !== level);
-          await prisma.systemSetting.update({
+          await prisma.systemSetting.upsert({
             where: { key: 'CONFIGURED_LEVELS' },
-            data: { value: JSON.stringify(updatedLevels) },
+            update: { value: JSON.stringify(updatedLevels) },
+            create: { key: 'CONFIGURED_LEVELS', value: JSON.stringify(updatedLevels) },
           });
         }
       } catch (e) {}
