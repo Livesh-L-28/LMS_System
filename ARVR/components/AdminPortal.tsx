@@ -5,6 +5,7 @@ import {
   ShieldCheck, KeyRound, CheckCircle2, AlertCircle, Sparkles, RefreshCw, 
   Users, Layers, Award, FileSpreadsheet, Plus, Calendar, Settings, Search, Download
 } from 'lucide-react';
+import { StatsCardsSkeleton, BatchCardsSkeleton, TableSkeleton, CurriculumSkeleton } from './LoadingSkeletons';
 
 interface AdminPortalProps {
   user: any;
@@ -23,6 +24,12 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
   const [stats, setStats] = useState<any>(null);
   const [batches, setBatches] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
+
+  // Loading States for Admin Portal tabs
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [loadingBatches, setLoadingBatches] = useState(true);
+  const [loadingStudents, setLoadingStudents] = useState(true);
+  const [loadingCalendar, setLoadingCalendar] = useState(false);
 
   // Google Drive OAuth Connection State
   const [driveInfo, setDriveInfo] = useState<any>(null);
@@ -191,16 +198,20 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
 
 
   const fetchStats = async () => {
+    setLoadingStats(true);
     try {
       const res = await fetch('/api/admin/stats');
       const data = await res.json();
       if (res.ok) setStats(data);
     } catch (e) {
       console.error('Error fetching stats', e);
+    } finally {
+      setLoadingStats(false);
     }
   };
 
   const fetchBatches = async () => {
+    setLoadingBatches(true);
     try {
       const res = await fetch('/api/admin/batches');
       const data = await res.json();
@@ -212,28 +223,34 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
       }
     } catch (e) {
       console.error('Error fetching batches', e);
+    } finally {
+      setLoadingBatches(false);
     }
   };
 
-
-
   const fetchStudents = async () => {
+    setLoadingStudents(true);
     try {
       const res = await fetch('/api/admin/students');
       const data = await res.json();
       if (res.ok && data.students) setStudents(data.students);
     } catch (e) {
       console.error('Error fetching students', e);
+    } finally {
+      setLoadingStudents(false);
     }
   };
 
   const fetchCalendar = async (batchId: string) => {
+    setLoadingCalendar(true);
     try {
       const res = await fetch(`/api/admin/batches/${batchId}/calendar`);
       const data = await res.json();
       if (res.ok && data.calendar) setBatchCalendar(data.calendar);
     } catch (e) {
       console.error('Error fetching calendar', e);
+    } finally {
+      setLoadingCalendar(false);
     }
   };
 
@@ -468,39 +485,43 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
       {/* TAB 1: OVERVIEW */}
       {adminTab === 'overview' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Total Registered Students</span>
-                <Users className="w-5 h-5 text-cyan-400" />
+          {loadingStats ? (
+            <StatsCardsSkeleton count={4} theme="dark" />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-slate-400 uppercase font-semibold">Total Registered Students</span>
+                  <Users className="w-5 h-5 text-cyan-400" />
+                </div>
+                <div className="text-3xl font-extrabold text-white">{stats?.totalStudents ?? students.length}</div>
               </div>
-              <div className="text-3xl font-extrabold text-white">{stats?.totalStudents ?? students.length}</div>
-            </div>
 
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Active Batches</span>
-                <Layers className="w-5 h-5 text-indigo-400" />
+              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-slate-400 uppercase font-semibold">Active Batches</span>
+                  <Layers className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div className="text-3xl font-extrabold text-white">{stats?.totalBatches ?? batches.length}</div>
               </div>
-              <div className="text-3xl font-extrabold text-white">{stats?.totalBatches ?? batches.length}</div>
-            </div>
 
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Certified Graduates</span>
-                <Award className="w-5 h-5 text-amber-400" />
+              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-slate-400 uppercase font-semibold">Certified Graduates</span>
+                  <Award className="w-5 h-5 text-amber-400" />
+                </div>
+                <div className="text-3xl font-extrabold text-white">{stats?.certifiedCount ?? 0}</div>
               </div>
-              <div className="text-3xl font-extrabold text-white">{stats?.certifiedCount ?? 0}</div>
-            </div>
 
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Avg Program Attendance</span>
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-slate-400 uppercase font-semibold">Avg Program Attendance</span>
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                </div>
+                <div className="text-3xl font-extrabold text-white">{stats?.avgAttendancePct ?? 100}%</div>
               </div>
-              <div className="text-3xl font-extrabold text-white">{stats?.avgAttendancePct ?? 100}%</div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -581,21 +602,37 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
               <span>Active & Registered Batches ({batches.length})</span>
             </h2>
 
-            <div className="space-y-3">
-              {batches.map((b) => (
-                <div key={b.id} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-bold text-white text-sm">{b.name}</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Training Days: <span className="text-slate-200">{b.trainingDays}</span>
-                    </p>
+            {loadingBatches ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between animate-pulse">
+                    <div className="space-y-2">
+                      <div className="w-40 h-4 bg-slate-800 rounded" />
+                      <div className="w-24 h-3 bg-slate-800/60 rounded" />
+                    </div>
+                    <div className="w-16 h-6 bg-slate-850 rounded-full bg-slate-800" />
                   </div>
-                  <span className="px-3 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
-                    {b.status}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : batches.length === 0 ? (
+              <p className="text-slate-500 text-xs py-4 text-center">No batches configured yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {batches.map((b) => (
+                  <div key={b.id} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-bold text-white text-sm">{b.name}</h3>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Training Days: <span className="text-slate-200">{b.trainingDays}</span>
+                      </p>
+                    </div>
+                    <span className="px-3 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
+                      {b.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>
@@ -672,17 +709,32 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
 
           <div className="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl space-y-4">
             <h2 className="text-lg font-bold text-white">Configured Days ({batchCalendar.length})</h2>
-            <div className="space-y-3">
-              {batchCalendar.map((day) => (
-                <div key={day.id} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-cyan-400">Day {day.dayNumber}</span>
+            
+            {loadingCalendar ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-2.5 animate-pulse">
+                    <div className="w-16 h-3 bg-cyan-950/80 border border-cyan-800/30 rounded" />
+                    <div className="w-48 h-4 bg-slate-800 rounded" />
+                    <div className="w-full h-8 bg-slate-800/50 rounded-lg" />
                   </div>
-                  <h3 className="font-bold text-white text-sm">{day.taskTitle}</h3>
-                  <p className="text-xs text-slate-300">{day.taskDescription}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : batchCalendar.length === 0 ? (
+              <p className="text-slate-500 text-xs py-4 text-center">No tasks configured for this batch yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {batchCalendar.map((day) => (
+                  <div key={day.id} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-cyan-400">Day {day.dayNumber}</span>
+                    </div>
+                    <h3 className="font-bold text-white text-sm">{day.taskTitle}</h3>
+                    <p className="text-xs text-slate-300">{day.taskDescription}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>
@@ -769,38 +821,50 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
-                <tr>
-                  <th className="p-3">Student Name</th>
-                  <th className="p-3">Reg Number</th>
-                  <th className="p-3">Contact</th>
-                  <th className="p-3">Department</th>
-                  <th className="p-3">Certificate Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                {filteredStudents.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-800/40">
-                    <td className="p-3 font-bold text-white">{s.name}</td>
-                    <td className="p-3 font-mono text-cyan-400">{s.registerNo}</td>
-                    <td className="p-3 text-slate-400">{s.contactNumber}</td>
-                    <td className="p-3">{s.department} ({s.year}, {s.section})</td>
-                    <td className="p-3">
-                      {s.certificate ? (
-                        <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">
-                          {s.certificate.certificateNo} ({s.certificate.finalGrade})
-                        </span>
-                      ) : (
-                        <span className="text-slate-500">In Progress</span>
-                      )}
-                    </td>
+          {loadingStudents ? (
+            <TableSkeleton rows={6} columns={5} theme="dark" headerTitle="Loading registered students..." />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-300">
+                <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+                  <tr>
+                    <th className="p-3">Student Name</th>
+                    <th className="p-3">Reg Number</th>
+                    <th className="p-3">Contact</th>
+                    <th className="p-3">Department</th>
+                    <th className="p-3">Certificate Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {filteredStudents.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="p-8 text-center text-slate-500">
+                        No students found matching your query.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredStudents.map((s) => (
+                      <tr key={s.id} className="hover:bg-slate-800/40">
+                        <td className="p-3 font-bold text-white">{s.name}</td>
+                        <td className="p-3 font-mono text-cyan-400">{s.registerNo}</td>
+                        <td className="p-3 text-slate-400">{s.contactNumber}</td>
+                        <td className="p-3">{s.department} ({s.year}, {s.section})</td>
+                        <td className="p-3">
+                          {s.certificate ? (
+                            <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">
+                              {s.certificate.certificateNo} ({s.certificate.finalGrade})
+                            </span>
+                          ) : (
+                            <span className="text-slate-500">In Progress</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 

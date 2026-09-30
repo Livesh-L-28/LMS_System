@@ -8,6 +8,7 @@ import {
   Paperclip, FileUp, Link as LinkIcon, Download, ListChecks, XCircle, Globe
 } from 'lucide-react';
 import { LEVEL_CONFIG, generateBatchName, calculateEndDate, calculateExamDate, generateTrainingDaysCalendar, DEFAULT_CURRICULUM_BY_LEVEL, formatDateDisplay } from '@/lib/batchUtils';
+import { StatsCardsSkeleton, BatchCardsSkeleton, TableSkeleton, CurriculumSkeleton } from '@/components/LoadingSkeletons';
 
 interface StaffPortalProps {
   user: any;
@@ -78,6 +79,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
   // Task Submissions Review state
   const [studentsSubmissions, setStudentsSubmissions] = useState<any[]>([]);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
   const [selectedDayNumber, setSelectedDayNumber] = useState<string>('');
 
   // Evaluation Modal state
@@ -517,6 +519,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const [driveCredsErrorMsg, setDriveCredsErrorMsg] = useState<string | null>(null);
   const [testResultMsg, setTestResultMsg] = useState<string | null>(null);
   const [testResultSuccess, setTestResultSuccess] = useState<boolean>(true);
+  const [loadingStats, setLoadingStats] = useState<boolean>(true);
+  const [loadingBatches, setLoadingBatches] = useState<boolean>(true);
+  const [loadingStudents, setLoadingStudents] = useState<boolean>(false);
 
   // Manual Date Edit State in Curriculum Modal
   const [isEditingDates, setIsEditingDates] = useState(false);
@@ -1784,16 +1789,20 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
 
   const fetchStats = async () => {
+    setLoadingStats(true);
     try {
       const res = await fetch('/api/admin/stats');
       const data = await res.json();
       if (res.ok) setStats(data);
     } catch (e) {
       console.error('Error fetching stats', e);
+    } finally {
+      setLoadingStats(false);
     }
   };
 
   const fetchBatches = async () => {
+    setLoadingBatches(true);
     try {
       const res = await fetch('/api/admin/batches');
       const data = await res.json();
@@ -1805,6 +1814,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       }
     } catch (e) {
       console.error('Error fetching batches', e);
+    } finally {
+      setLoadingBatches(false);
     }
   };
 
@@ -1827,6 +1838,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   const fetchStudents = async () => {
+    setLoadingStudents(true);
     try {
       const res = await fetch('/api/admin/students');
       const data = await res.json();
@@ -1836,6 +1848,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       }
     } catch (e) {
       console.error('Error fetching students', e);
+    } finally {
+      setLoadingStudents(false);
     }
     return null;
   };
@@ -1851,6 +1865,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   const fetchBatchSubmissions = async (batchId: string, day: string) => {
+    setLoadingSubmissions(true);
     try {
       let url = `/api/trainer/batches/${batchId}/tasks`;
       if (day) url += `?day=${day}`;
@@ -1861,6 +1876,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       }
     } catch (e) {
       console.error('Error fetching batch tasks', e);
+    } finally {
+      setLoadingSubmissions(false);
     }
   };
 
@@ -2540,42 +2557,46 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       {/* SUB-TAB 1: EXECUTIVE OVERVIEW */}
       {staffTab === 'overview' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Students</span>
-                <span className="p-2.5 rounded-xl bg-purple-100 text-purple-700">
-                  <Users className="w-5 h-5" />
-                </span>
+          {loadingStats && !stats ? (
+            <StatsCardsSkeleton count={3} />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Students</span>
+                  <span className="p-2.5 rounded-xl bg-purple-100 text-purple-700">
+                    <Users className="w-5 h-5" />
+                  </span>
+                </div>
+                <div className="text-3xl font-extrabold text-slate-900">{stats?.totalStudents ?? students.length}</div>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium">Registered system database total</p>
               </div>
-              <div className="text-3xl font-extrabold text-slate-900">{stats?.totalStudents ?? students.length}</div>
-              <p className="text-[11px] text-slate-500 mt-1 font-medium">Registered system database total</p>
-            </div>
 
-            <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Batches</span>
-                <span className="p-2.5 rounded-xl bg-indigo-100 text-indigo-700">
-                  <Layers className="w-5 h-5" />
-                </span>
+              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Batches</span>
+                  <span className="p-2.5 rounded-xl bg-indigo-100 text-indigo-700">
+                    <Layers className="w-5 h-5" />
+                  </span>
+                </div>
+                <div className="text-3xl font-extrabold text-slate-900">
+                  {stats?.activeBatches ?? batches.filter((b) => b.status === 'ACTIVE' && new Date(b.endDate) >= new Date()).length}
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium">Currently active training cohorts</p>
               </div>
-              <div className="text-3xl font-extrabold text-slate-900">
-                {stats?.activeBatches ?? batches.filter((b) => b.status === 'ACTIVE' && new Date(b.endDate) >= new Date()).length}
-              </div>
-              <p className="text-[11px] text-slate-500 mt-1 font-medium">Currently active training cohorts</p>
-            </div>
 
-            <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Certified Graduates</span>
-                <span className="p-2.5 rounded-xl bg-amber-100 text-amber-700">
-                  <Award className="w-5 h-5" />
-                </span>
+              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Certified Graduates</span>
+                  <span className="p-2.5 rounded-xl bg-amber-100 text-amber-700">
+                    <Award className="w-5 h-5" />
+                  </span>
+                </div>
+                <div className="text-3xl font-extrabold text-slate-900">{stats?.stats?.completedCertificates ?? stats?.certifiedCount ?? 0}</div>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium">Students satisfying completion criteria</p>
               </div>
-              <div className="text-3xl font-extrabold text-slate-900">{stats?.stats?.completedCertificates ?? stats?.certifiedCount ?? 0}</div>
-              <p className="text-[11px] text-slate-500 mt-1 font-medium">Students satisfying completion criteria</p>
             </div>
-          </div>
+          )}
 
           {/* Recent System Activity Area */}
           <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
@@ -2598,7 +2619,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
             <div className="divide-y divide-purple-100/60 text-xs font-medium space-y-2">
               {loadingActivities && recentActivities.length === 0 ? (
-                <div className="py-6 text-center text-slate-400 font-medium">Loading real-time activities...</div>
+                <div className="py-6 space-y-3 animate-pulse">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-xl bg-purple-100" />
+                      <div className="flex-1 space-y-1">
+                        <div className="w-48 h-3 bg-purple-100 rounded" />
+                        <div className="w-24 h-2 bg-slate-100 rounded" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : recentActivities.length === 0 ? (
                 <div className="py-6 text-center text-slate-400 font-medium">No recent system activity recorded yet.</div>
               ) : (
@@ -2956,13 +2987,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
             {/* Student Submissions List */}
-            <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-purple-700" />
-                  <span>Student Submissions Roster ({filteredTaskStudents.length})</span>
-                </h3>
-              </div>
+            {loadingSubmissions && studentsSubmissions.length === 0 ? (
+              <TableSkeleton rows={6} columns={8} headerTitle="Loading Submissions & Attendance..." />
+            ) : (
+              <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-purple-700" />
+                    <span>Student Submissions Roster ({filteredTaskStudents.length})</span>
+                  </h3>
+                </div>
 
               {/* Desktop Table View */}
               <div className="hidden md:block overflow-x-auto">
@@ -3145,6 +3179,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </div>
 
             </div>
+          )}
 
           </div>
         );
@@ -3251,13 +3286,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {/* Professional Table View for Existing Batches */}
-          <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-purple-700" />
-                <span>Registered Batches Roster ({batches.length})</span>
-              </h3>
-            </div>
+          {loadingBatches && batches.length === 0 ? (
+            <BatchCardsSkeleton count={3} />
+          ) : (
+            <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-purple-700" />
+                  <span>Registered Batches Roster ({batches.length})</span>
+                </h3>
+              </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
@@ -3425,6 +3463,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </table>
             </div>
           </div>
+          )}
 
         </div>
       )}
@@ -4284,10 +4323,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
               {/* Task Editor List */}
               {loadingSettingsTasks ? (
-                <div className="pro-card rounded-3xl p-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-                  <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
-                  <span className="text-xs font-bold text-slate-700">Loading {settingsActiveLevel} task configuration...</span>
-                </div>
+                <CurriculumSkeleton count={3} />
               ) : (
                 <div className="space-y-5">
                   {settingsLevelTasks.map((day, idx) => {
@@ -6699,11 +6735,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {/* Student Roster Table & Cards */}
-          <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Users className="w-4 h-4 text-purple-700" />
-                <span>Registered Students Directory ({students.filter((s) => {
+          {loadingStudents && students.length === 0 ? (
+            <TableSkeleton rows={6} headerTitle="Loading Academy Students..." />
+          ) : (
+            <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-purple-700" />
+                  <span>Registered Students Directory ({students.filter((s) => {
                   const matchesSearch =
                     !studentSearch ||
                     s.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
@@ -6937,6 +6976,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
           </div>
+          )}
 
         </div>
       )}

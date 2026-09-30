@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import StudentPortal from '@/components/StudentPortal';
 import StaffPortal from '@/components/StaffPortal';
+import { PageLoadingScreen } from '@/components/LoadingSkeletons';
 import { Box } from 'lucide-react';
 
 export default function Home() {
@@ -123,12 +124,11 @@ export default function Home() {
 
   if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-[#f4f3f8] text-purple-900 flex items-center justify-center">
-        <div className="flex items-center gap-3 text-sm font-semibold text-purple-800">
-          <Box className="w-6 h-6 text-purple-600 animate-spin" />
-          <span>Loading {branding?.pageTitle || 'AR/VR Training Platform'}...</span>
-        </div>
-      </div>
+      <PageLoadingScreen
+        title={branding?.pageTitle || 'AR/VR ACADEMY'}
+        subtitle={branding?.pageSubtitle || 'Spatial Computing & Immersive Training Hub'}
+        stage="Verifying secure session & enterprise services..."
+      />
     );
   }
 

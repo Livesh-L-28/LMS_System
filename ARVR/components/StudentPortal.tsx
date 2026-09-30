@@ -6,6 +6,7 @@ import {
   Upload, Send, Award, FileText, BarChart3, UserCheck, Sparkles, RefreshCw, ChevronRight, ExternalLink, BookOpen, Compass, Lock, Layers, Download,
   Paperclip, ListChecks, X, LogOut
 } from 'lucide-react';
+import { StatsCardsSkeleton } from '@/components/LoadingSkeletons';
 
 interface StudentPortalProps {
   user: any;
@@ -677,6 +678,20 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
           )}
 
         </div>
+      </div>
+    );
+  }
+
+  // Logged In Student Dashboard Loading State
+  if (user && user.role === 'STUDENT' && !progressData) {
+    return (
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8 animate-in fade-in duration-200">
+        <div className="pro-card rounded-3xl p-6 sm:p-8 bg-white border border-purple-200 shadow-xs space-y-4 animate-pulse">
+          <div className="w-40 h-4 bg-purple-100 rounded-full" />
+          <div className="w-72 h-8 bg-purple-200/80 rounded-xl" />
+          <div className="w-96 h-3 bg-slate-100 rounded-md" />
+        </div>
+        <StatsCardsSkeleton count={4} />
       </div>
     );
   }
@@ -1701,9 +1716,21 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
             </div>
 
             {loadingCurriculum ? (
-              <div className="py-12 text-center text-slate-500 flex items-center justify-center gap-2">
-                <RefreshCw className="w-5 h-5 animate-spin text-purple-600" />
-                <span>Loading curriculum days...</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="p-5 rounded-2xl border border-purple-100 bg-white shadow-xs space-y-3 animate-pulse">
+                    <div className="flex items-center justify-between">
+                      <div className="w-20 h-5 bg-purple-100 rounded-md" />
+                      <div className="w-16 h-5 bg-slate-100 rounded-full" />
+                    </div>
+                    <div className="w-3/4 h-4 bg-purple-200/70 rounded" />
+                    <div className="w-full h-12 bg-slate-50 rounded-xl" />
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="w-24 h-3 bg-purple-100 rounded" />
+                      <div className="w-16 h-6 bg-purple-100/70 rounded-lg" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
