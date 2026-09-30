@@ -1350,6 +1350,22 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     setSettingsLevelTasks(updated);
   };
 
+  const handleClearCurriculum = () => {
+    if (confirm(`Clear all curriculum tasks and details for '${settingsLevelName || settingsActiveLevel}'? This will reset all days to empty fields.`)) {
+      setSettingsLevelName(settingsActiveLevel);
+      setSettingsLevelTasks(
+        Array.from({ length: 1 }, (_, i) => ({
+          dayNumber: 1,
+          taskTitle: '',
+          taskDescription: '',
+          tasks: [{ id: 'task-1-1', title: '', description: '' }],
+          resources: [],
+        }))
+      );
+      showSuccess(`✓ All curriculum tasks for '${settingsActiveLevel}' have been cleared.`);
+    }
+  };
+
   const handleSaveSettingsTasks = async () => {
     setSavingSettingsTasks(true);
     setErrorMsg('');
@@ -4006,6 +4022,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Back to Batches</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleClearCurriculum}
+                className="py-2.5 px-4 rounded-xl bg-white border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold shadow-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                title="Clear all tasks and descriptions to start fresh"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                <span>Clear Curriculum</span>
               </button>
 
               <button

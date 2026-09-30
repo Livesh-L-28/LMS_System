@@ -5,10 +5,10 @@ export interface LevelConfigItem {
 }
 
 export const LEVEL_CONFIG: Record<string, LevelConfigItem> = {
-  'Level 0': { days: 10, code: 'L0', name: 'Level 0 - Orientation & Spatial Computing Fundamentals' },
-  'Level 1': { days: 15, code: 'L1', name: 'Level 1 - AR/VR Development & Unity XR Toolkit' },
-  'Level 2': { days: 20, code: 'L2', name: 'Level 2 - Advanced Immersive Engineering & Passthrough' },
-  'Level 3': { days: 25, code: 'L3', name: 'Level 3 - Enterprise Multiplayer XR Architecture' },
+  'Level 0': { days: 10, code: 'L0', name: 'Level 0' },
+  'Level 1': { days: 10, code: 'L1', name: 'Level 1' },
+  'Level 2': { days: 10, code: 'L2', name: 'Level 2' },
+  'Level 3': { days: 10, code: 'L3', name: 'Level 3' },
 };
 
 export interface TaskItem {
@@ -38,14 +38,14 @@ export function normalizeDayTasks(day: { taskTitle?: string; taskDescription?: s
   if (Array.isArray(day.tasks) && day.tasks.length > 0) {
     return day.tasks.map((t, idx) => ({
       id: t.id || `task-${idx + 1}`,
-      title: t.title || t.taskTitle || `Task ${idx + 1}`,
+      title: t.title || t.taskTitle || '',
       description: t.description || t.taskDescription || '',
     }));
   }
   return [
     {
       id: 'task-1',
-      title: day.taskTitle || 'Day Task',
+      title: day.taskTitle || '',
       description: day.taskDescription || '',
     },
   ];
@@ -65,85 +65,20 @@ export function normalizeDayResources(day: { resources?: any }): ResourceItem[] 
   return [];
 }
 
+const createEmptyCurriculum = (days: number): DefaultCurriculumItem[] =>
+  Array.from({ length: days }, (_, i) => ({
+    dayNumber: i + 1,
+    taskTitle: '',
+    taskDescription: '',
+    tasks: [{ id: `task-${i + 1}-1`, title: '', description: '' }],
+    resources: [],
+  }));
+
 export const DEFAULT_CURRICULUM_BY_LEVEL: Record<string, DefaultCurriculumItem[]> = {
-  'Level 0': [
-    { dayNumber: 1, taskTitle: 'AR/VR Orientation & Spatial Computing Fundamentals', taskDescription: 'Overview of AR/VR technology, headset hardware, and Unity development environment.' },
-    { dayNumber: 2, taskTitle: 'Unity Interface & 3D Workspace Navigation', taskDescription: 'Navigate Scene View, Game View, Inspector, Hierarchy, and Project Assets.' },
-    { dayNumber: 3, taskTitle: '3D Primitives, Positioning & Transform Operations', taskDescription: 'Create 3D shapes, adjust Position, Rotation, Scale, and parent-child objects.' },
-    { dayNumber: 4, taskTitle: 'Basic Color Materials & Environment Lighting', taskDescription: 'Apply simple colors, PBR shaders, and directional sunlight.' },
-    { dayNumber: 5, taskTitle: 'Introduction to Physics & Colliders', taskDescription: 'Add Rigidbodies and Box Colliders for basic physical gravity interactions.' },
-    { dayNumber: 6, taskTitle: 'C# Scripting Basics: Debug Logs & GameObjects', taskDescription: 'Write first C# script to log messages and modify object position.' },
-    { dayNumber: 7, taskTitle: 'VR Headset Setup & Camera Rig Basics', taskDescription: 'Configure main camera tracking and floor-standing XR Origin.' },
-    { dayNumber: 8, taskTitle: 'Simple Spatial UI Canvas', taskDescription: 'Create 3D World-Space UI text panel and static buttons.' },
-    { dayNumber: 9, taskTitle: 'Introductory Object Interaction & Grabbing', taskDescription: 'Configure simple ray casting and direct controller grab interactors.' },
-    { dayNumber: 10, taskTitle: 'Final Examination: Level 0 Spatial Computing Capstone Assessment', taskDescription: 'Final practical examination: Assemble basic 3D VR environment, build stand-alone project, and submit for instructor evaluation and final grade.' },
-  ],
-  'Level 1': [
-    { dayNumber: 1, taskTitle: 'Introduction to AR/VR Hardware & Unity Setup', taskDescription: 'Configure Unity Editor, XR Interaction Toolkit, and environment settings.' },
-    { dayNumber: 2, taskTitle: '3D Coordinate Systems, Vectors & Transform Basics', taskDescription: 'Understand 3D vector math, parent-child hierarchies, and spatial positioning.' },
-    { dayNumber: 3, taskTitle: 'Materials, Shaders & Lighting in Spatial Computing', taskDescription: 'Implement PBR materials, directional lighting, and lightmaps.' },
-    { dayNumber: 4, taskTitle: 'Unity Physics Engine, Rigidbodies & Colliders', taskDescription: 'Setup physical collisions, triggers, and gravity forces in 3D.' },
-    { dayNumber: 5, taskTitle: 'Introduction to C# Scripting for Interactive VR', taskDescription: 'Write C# scripts for object manipulation, events, and user triggers.' },
-    { dayNumber: 6, taskTitle: 'Event Systems & User Input Handling', taskDescription: 'Handle controller buttons, analog sticks, and spatial interaction events.' },
-    { dayNumber: 7, taskTitle: 'VR Headset Camera Rig & Tracking Systems', taskDescription: 'Configure XR Origin, main camera tracking, and floor offset.' },
-    { dayNumber: 8, taskTitle: 'Spatial Audio & Sound Propagation Setup', taskDescription: 'Implement 3D spatialized audio sources and ambient soundscapes.' },
-    { dayNumber: 9, taskTitle: 'UI Design Principles for Spatial Interfaces (World-Space Canvas)', taskDescription: 'Create interactive 3D UI panels, buttons, and head-locked overlays.' },
-    { dayNumber: 10, taskTitle: 'Raycasting & Object Selection in Virtual Space', taskDescription: 'Implement XR Ray Interactors for distant object selection and UI pointing.' },
-    { dayNumber: 11, taskTitle: 'Introduction to WebXR & Browser VR APIs', taskDescription: 'Deploy basic 3D scenes accessible via WebXR compliant browsers.' },
-    { dayNumber: 12, taskTitle: 'Basic Hand Tracking & Gesture Recognition', taskDescription: 'Enable direct hand tracking interactors and pinch gesture detection.' },
-    { dayNumber: 13, taskTitle: 'Scene Optimization & Target FPS Tuning', taskDescription: 'Optimize draw calls, static batching, and maintain target 90 FPS.' },
-    { dayNumber: 14, taskTitle: 'Capstone Project Assembly & Build Settings', taskDescription: 'Assemble multi-scene VR application and configure Android/Standalone builds.' },
-    { dayNumber: 15, taskTitle: 'Final Examination: Level 1 AR/VR Capstone & Comprehensive Assessment', taskDescription: 'Final practical examination: Submit completed Level 1 VR application build and project execution for instructor evaluation and final certificate grade.' },
-  ],
-  'Level 2': [
-    { dayNumber: 1, taskTitle: 'Introduction to AR/VR Hardware & Unity Setup', taskDescription: 'Configure Unity Editor, XR Interaction Toolkit, and environment settings.' },
-    { dayNumber: 2, taskTitle: '3D Coordinate Systems, Vectors & Transform Basics', taskDescription: 'Understand 3D vector math, parent-child hierarchies, and spatial positioning.' },
-    { dayNumber: 3, taskTitle: 'Materials, Shaders & Lighting in Spatial Computing', taskDescription: 'Implement PBR materials, directional lighting, and lightmaps.' },
-    { dayNumber: 4, taskTitle: 'Unity Physics Engine, Rigidbodies & Colliders', taskDescription: 'Setup physical collisions, triggers, and gravity forces in 3D.' },
-    { dayNumber: 5, taskTitle: 'Introduction to C# Scripting for Interactive VR', taskDescription: 'Write C# scripts for object manipulation, events, and user triggers.' },
-    { dayNumber: 6, taskTitle: 'Event Systems & User Input Handling', taskDescription: 'Handle controller buttons, analog sticks, and spatial interaction events.' },
-    { dayNumber: 7, taskTitle: 'VR Headset Camera Rig & Tracking Systems', taskDescription: 'Configure XR Origin, main camera tracking, and floor offset.' },
-    { dayNumber: 8, taskTitle: 'Spatial Audio & Sound Propagation Setup', taskDescription: 'Implement 3D spatialized audio sources and ambient soundscapes.' },
-    { dayNumber: 9, taskTitle: 'UI Design Principles for Spatial Interfaces', taskDescription: 'Create interactive 3D UI panels, buttons, and head-locked overlays.' },
-    { dayNumber: 10, taskTitle: 'Raycasting & Object Selection in Virtual Space', taskDescription: 'Implement XR Ray Interactors for distant object selection and UI pointing.' },
-    { dayNumber: 11, taskTitle: 'Introduction to WebXR & Browser VR APIs', taskDescription: 'Deploy basic 3D scenes accessible via WebXR compliant browsers.' },
-    { dayNumber: 12, taskTitle: 'Basic Hand Tracking & Gesture Recognition', taskDescription: 'Enable direct hand tracking interactors and pinch gesture detection.' },
-    { dayNumber: 13, taskTitle: 'Scene Optimization & Target FPS Tuning', taskDescription: 'Optimize draw calls, static batching, and maintain target 90 FPS.' },
-    { dayNumber: 14, taskTitle: 'Capstone Project Assembly & Build Settings', taskDescription: 'Assemble multi-scene VR application and configure Android/Standalone builds.' },
-    { dayNumber: 15, taskTitle: 'Level 1 Assessment & Refinement', taskDescription: 'Evaluate Level 1 baseline performance and refine interaction physics.' },
-    { dayNumber: 16, taskTitle: 'OpenXR Integration & Cross-Platform Toolkit', taskDescription: 'Implement OpenXR feature sets for multi-vendor headset compatibility.' },
-    { dayNumber: 17, taskTitle: 'Complex VR Locomotion Systems', taskDescription: 'Configure Teleportation Providers, Continuous Move, and Snap Turn.' },
-    { dayNumber: 18, taskTitle: 'Grabbing Dynamics & Custom Direct Interactors', taskDescription: 'Build two-handed object manipulation and physics-based door/lever handles.' },
-    { dayNumber: 19, taskTitle: 'AR Foundation & Real-World Plane Detection', taskDescription: 'Configure AR Session, Plane Manager, and Raycast Manager for AR placement.' },
-    { dayNumber: 20, taskTitle: 'Final Examination: Level 2 Comprehensive VR Developer Assessment', taskDescription: 'Final practical examination: Deploy complete Level 2 interactive VR experience with AR components and submit for instructor evaluation and final grade.' },
-  ],
-  'Level 3': [
-    { dayNumber: 1, taskTitle: 'Introduction to AR/VR Hardware & Unity Setup', taskDescription: 'Configure Unity Editor, XR Interaction Toolkit, and environment settings.' },
-    { dayNumber: 2, taskTitle: '3D Coordinate Systems, Vectors & Transform Basics', taskDescription: 'Understand 3D vector math, parent-child hierarchies, and spatial positioning.' },
-    { dayNumber: 3, taskTitle: 'Materials, Shaders & Lighting in Spatial Computing', taskDescription: 'Implement PBR materials, directional lighting, and lightmaps.' },
-    { dayNumber: 4, taskTitle: 'Unity Physics Engine, Rigidbodies & Colliders', taskDescription: 'Setup physical collisions, triggers, and gravity forces in 3D.' },
-    { dayNumber: 5, taskTitle: 'Introduction to C# Scripting for Interactive VR', taskDescription: 'Write C# scripts for object manipulation, events, and user triggers.' },
-    { dayNumber: 6, taskTitle: 'Event Systems & User Input Handling', taskDescription: 'Handle controller buttons, analog sticks, and spatial interaction events.' },
-    { dayNumber: 7, taskTitle: 'VR Headset Camera Rig & Tracking Systems', taskDescription: 'Configure XR Origin, main camera tracking, and floor offset.' },
-    { dayNumber: 8, taskTitle: 'Spatial Audio & Sound Propagation Setup', taskDescription: 'Implement 3D spatialized audio sources and ambient soundscapes.' },
-    { dayNumber: 9, taskTitle: 'UI Design Principles for Spatial Interfaces', taskDescription: 'Create interactive 3D UI panels, buttons, and head-locked overlays.' },
-    { dayNumber: 10, taskTitle: 'Raycasting & Object Selection in Virtual Space', taskDescription: 'Implement XR Ray Interactors for distant object selection and UI pointing.' },
-    { dayNumber: 11, taskTitle: 'Introduction to WebXR & Browser VR APIs', taskDescription: 'Deploy basic 3D scenes accessible via WebXR compliant browsers.' },
-    { dayNumber: 12, taskTitle: 'Basic Hand Tracking & Gesture Recognition', taskDescription: 'Enable direct hand tracking interactors and pinch gesture detection.' },
-    { dayNumber: 13, taskTitle: 'Scene Optimization & Target FPS Tuning', taskDescription: 'Optimize draw calls, static batching, and maintain target 90 FPS.' },
-    { dayNumber: 14, taskTitle: 'Capstone Project Assembly & Build Settings', taskDescription: 'Assemble multi-scene VR application and configure Android/Standalone builds.' },
-    { dayNumber: 15, taskTitle: 'Level 1 Assessment & Refinement', taskDescription: 'Evaluate Level 1 baseline performance and refine interaction physics.' },
-    { dayNumber: 16, taskTitle: 'OpenXR Integration & Cross-Platform Toolkit', taskDescription: 'Implement OpenXR feature sets for multi-vendor headset compatibility.' },
-    { dayNumber: 17, taskTitle: 'Complex VR Locomotion Systems', taskDescription: 'Configure Teleportation Providers, Continuous Move, and Snap Turn.' },
-    { dayNumber: 18, taskTitle: 'Grabbing Dynamics & Custom Direct Interactors', taskDescription: 'Build two-handed object manipulation and physics-based door/lever handles.' },
-    { dayNumber: 19, taskTitle: 'AR Foundation & Real-World Plane Detection', taskDescription: 'Configure AR Session, Plane Manager, and Raycast Manager for AR placement.' },
-    { dayNumber: 20, taskTitle: 'Level 2 Comprehensive VR Developer Evaluation', taskDescription: 'Deploy complete Level 2 interactive VR experience with AR components.' },
-    { dayNumber: 21, taskTitle: 'Multiplayer VR Networking & Synchronization', taskDescription: 'Implement Netcode for GameObjects, networked transforms, and multiplayer lobby.' },
-    { dayNumber: 22, taskTitle: 'Spatial Anchors & Cloud Anchors for Persistent AR', taskDescription: 'Implement ARCore/ARKit cloud anchors to persist 3D models across sessions.' },
-    { dayNumber: 23, taskTitle: 'Enterprise VR Simulator Architecture', taskDescription: 'Structure industrial training simulator with state machines and guided feedback.' },
-    { dayNumber: 24, taskTitle: 'Comprehensive Project Integration & Testing', taskDescription: 'Integrate multiplayer, spatial UI, physics, and conduct full regression test.' },
-    { dayNumber: 25, taskTitle: 'Final Examination: Level 3 Enterprise Multiplayer XR Capstone Assessment', taskDescription: 'Final practical examination: Present and submit enterprise multiplayer AR/VR spatial computing application for evaluation panel grading and final certificate grade.' },
-  ],
+  'Level 0': createEmptyCurriculum(10),
+  'Level 1': createEmptyCurriculum(10),
+  'Level 2': createEmptyCurriculum(10),
+  'Level 3': createEmptyCurriculum(10),
 };
 
 /**

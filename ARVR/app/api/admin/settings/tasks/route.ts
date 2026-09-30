@@ -30,10 +30,10 @@ export async function GET(request: Request) {
     });
 
     const levelDisplayNames: Record<string, string> = {
-      'Level 0': 'Level 0 - Orientation & Spatial Computing Fundamentals',
-      'Level 1': 'Level 1 - AR/VR Development & Unity XR Toolkit',
-      'Level 2': 'Level 2 - Advanced Immersive Engineering & Passthrough',
-      'Level 3': 'Level 3 - Enterprise Multiplayer XR Architecture',
+      'Level 0': 'Level 0',
+      'Level 1': 'Level 1',
+      'Level 2': 'Level 2',
+      'Level 3': 'Level 3',
     };
 
     allTaskSettings.forEach((s) => {
@@ -73,7 +73,7 @@ export async function GET(request: Request) {
       ...item,
       tasks: (item.tasks && Array.isArray(item.tasks) && item.tasks.length > 0)
         ? item.tasks
-        : [{ id: `task-${item.dayNumber}-1`, title: item.taskTitle || `Day ${item.dayNumber} Task`, description: item.taskDescription || '' }],
+        : [{ id: `task-${item.dayNumber}-1`, title: item.taskTitle || '', description: item.taskDescription || '' }],
       resources: Array.isArray(item.resources) ? item.resources : [],
     });
 
