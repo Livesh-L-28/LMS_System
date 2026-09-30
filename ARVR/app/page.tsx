@@ -165,10 +165,20 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-purple-200/80 bg-white/80 backdrop-blur-md py-6 px-4 sm:px-6 mt-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-          <div className="flex items-center gap-2">
-            <Box className="w-4 h-4 text-purple-600" />
-            <span className="font-bold text-slate-900">{branding?.footerText || 'AR/VR Spatial Computing Academy © 2026'}</span>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('staff');
+              window.location.hash = 'staff';
+            }}
+            title="Admin & Staff Portal Login"
+            className="flex items-center gap-2 text-left cursor-pointer group hover:opacity-80 transition-all select-none"
+          >
+            <Box className="w-4 h-4 text-purple-600 group-hover:text-purple-800 transition-colors" />
+            <span className="font-bold text-slate-900 group-hover:text-purple-700 transition-colors">
+              {branding?.footerText || 'AR/VR Spatial Computing Academy © 2026'}
+            </span>
+          </button>
         </div>
       </footer>
     </div>
