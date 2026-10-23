@@ -427,7 +427,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
         <div className="pro-card rounded-3xl p-8 shadow-xl">
 
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700">
+            <div className="w-12 h-12 rounded-2xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
               <GraduationCap className="w-6 h-6" />
             </div>
             <div>
@@ -442,20 +442,20 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
           {/* Access Policy Verification Badge */}
           {(accessPolicy?.geofenceEnabled || accessPolicy?.wifiEnabled) && (
-            <div className="mb-5 p-3.5 rounded-2xl bg-purple-50/90 border border-purple-200/90 text-xs text-purple-900 flex items-start gap-3">
-              <Shield className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+            <div className="mb-5 p-3.5 rounded-2xl bg-blue-50/90 border border-blue-200/90 text-xs text-blue-900 flex items-start gap-3">
+              <Shield className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
               <div className="space-y-1.5 w-full">
                 <div className="font-bold flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <span>Campus Network & Geofence Active</span>
                     {accessPolicy.isLocalhost && (
-                      <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-purple-200 text-purple-800">
+                      <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-blue-200 text-blue-800">
                         Localhost Bypass Active
                       </span>
                     )}
                   </div>
                 </div>
-                <p className="text-[11px] text-purple-700 leading-snug">
+                <p className="text-[11px] text-blue-700 leading-snug">
                   {accessPolicy.geofenceEnabled && accessPolicy.wifiEnabled
                     ? `Student sign-in requires physical presence on campus and connection to "${accessPolicy.wifiSsid || 'Academy WiFi'}".`
                     : accessPolicy.geofenceEnabled
@@ -558,11 +558,11 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
               </div>
 
-              <div className="text-center pt-4 border-t border-purple-100">
+              <div className="text-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsRegistering(true)}
-                  className="text-xs text-purple-700 hover:text-purple-900 transition-colors font-bold"
+                  className="text-xs text-blue-700 hover:text-blue-900 transition-colors font-bold"
                 >
                   New Student? Create Account Here &rarr;
                 </button>

@@ -133,7 +133,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f3f8] text-slate-900 flex flex-col font-sans selection:bg-purple-500 selection:text-white">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
       {/* Main Content Area */}
       <main id="portal-content" className="flex-1">
         {activeTab === 'student' && (
@@ -163,7 +163,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-purple-200/80 bg-white/80 backdrop-blur-md py-6 px-4 sm:px-6 mt-12">
+      <footer className="border-t border-slate-200/80 bg-white/80 backdrop-blur-md py-6 px-4 sm:px-6 mt-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <button
             type="button"
@@ -174,8 +174,8 @@ export default function Home() {
             title="Admin & Staff Portal Login"
             className="flex items-center gap-2 text-left cursor-pointer group hover:opacity-80 transition-all select-none"
           >
-            <Box className="w-4 h-4 text-purple-600 group-hover:text-purple-800 transition-colors" />
-            <span className="font-bold text-slate-900 group-hover:text-purple-700 transition-colors">
+            <Box className="w-4 h-4 text-blue-600 group-hover:text-blue-800 transition-colors" />
+            <span className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
               {branding?.footerText || 'AR/VR Spatial Computing Academy © 2026'}
             </span>
           </button>

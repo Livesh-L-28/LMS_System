@@ -2572,7 +2572,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         <div className="pro-card rounded-3xl p-8 shadow-xl">
           
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700">
+            <div className="w-12 h-12 rounded-2xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
@@ -2634,11 +2634,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </button>
 
               {onSwitchToStudent && (
-                <div className="text-center pt-2 border-t border-purple-100">
+                <div className="text-center pt-2 border-t border-slate-100">
                   <button
                     type="button"
                     onClick={onSwitchToStudent}
-                    className="text-xs text-slate-500 hover:text-purple-900 transition-colors font-semibold"
+                    className="text-xs text-slate-500 hover:text-blue-900 transition-colors font-semibold"
                   >
                     &larr; Back to Student Portal
                   </button>
