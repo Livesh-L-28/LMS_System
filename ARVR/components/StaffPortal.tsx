@@ -2663,20 +2663,20 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     <div className="min-h-screen bg-slate-50/50 pb-16">
       
       {/* MASTER TOP HEADER BAR */}
-      <header className="bg-white/95 backdrop-blur-xl border-b border-purple-200/80 sticky top-0 z-40 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between gap-4">
+      <header className="bg-white/95 backdrop-blur-xl border-b border-blue-200/80 sticky top-0 z-40 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-purple-900 text-white flex items-center justify-center font-bold text-xs shadow-sm">
-            <ShieldCheck className="w-5 h-5 text-purple-200" />
+          <div className="w-9 h-9 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+            <ShieldCheck className="w-5 h-5 text-blue-200" />
           </div>
           <div>
-            <div className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">AR/VR COE TRAINING MANAGEMENT</div>
+            <div className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">AR/VR COE TRAINING MANAGEMENT</div>
             <h1 className="text-sm font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
               <span>Admin Portal</span>
               <button
                 type="button"
                 onClick={() => setShowAdminProfileModal(true)}
                 title="View Admin Profile"
-                className="text-[10px] font-mono font-bold text-purple-800 bg-purple-100 hover:bg-purple-200 transition-colors border border-purple-200 px-2 py-0.5 rounded-full cursor-pointer"
+                className="text-[10px] font-mono font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 transition-colors border border-blue-200 px-2 py-0.5 rounded-full cursor-pointer"
               >
                 SYSTEM ADMIN
               </button>
@@ -2688,7 +2688,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         <button
           onClick={handleLogout}
           title="Logout of Admin Portal"
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-purple-200/90 shadow-sm shadow-purple-900/5 text-xs font-bold text-slate-600 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-blue-200/90 shadow-sm shadow-blue-900/5 text-xs font-bold text-slate-600 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
         >
           <KeyRound className="w-3.5 h-3.5 text-slate-500" />
           <span>Logout</span>
@@ -2702,7 +2702,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
           {/* Side Floating Dock Navigation Bar - Touch-accessible on mobile, icon-dock on desktop */}
           <aside className="w-full lg:w-20 lg:sticky lg:top-24 z-30 shrink-0">
-            <div className="bg-white/95 backdrop-blur-2xl border border-purple-200/90 rounded-3xl p-2 sm:p-2.5 lg:p-3 shadow-xl shadow-purple-900/10">
+            <div className="bg-white/95 backdrop-blur-2xl border border-blue-200/90 rounded-3xl p-2 sm:p-2.5 lg:p-3 shadow-xl shadow-blue-900/10">
               <nav className="grid grid-cols-5 sm:grid-cols-6 lg:flex lg:flex-col lg:space-y-2" aria-label="Staff Portal navigation">
                 {/* 1. Overview */}
                 <div className="relative group/btn flex-1">
@@ -2713,11 +2713,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     aria-current={staffTab === 'overview' ? 'page' : undefined}
                     className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                       staffTab === 'overview'
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                        : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                        : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                     }`}
                   >
-                    <LayoutDashboard className={`w-5 h-5 shrink-0 ${staffTab === 'overview' ? 'text-white' : 'text-purple-600'}`} />
+                    <LayoutDashboard className={`w-5 h-5 shrink-0 ${staffTab === 'overview' ? 'text-white' : 'text-blue-600'}`} />
                     <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                       Overview
                     </span>
@@ -2736,11 +2736,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     aria-current={staffTab === 'batches' || staffTab === 'calendar' ? 'page' : undefined}
                     className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                       staffTab === 'batches' || staffTab === 'calendar'
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                        : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                        : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                     }`}
                   >
-                    <Layers className={`w-5 h-5 shrink-0 ${staffTab === 'batches' || staffTab === 'calendar' ? 'text-white' : 'text-purple-600'}`} />
+                    <Layers className={`w-5 h-5 shrink-0 ${staffTab === 'batches' || staffTab === 'calendar' ? 'text-white' : 'text-blue-600'}`} />
                     <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                       Batches
                     </span>
@@ -2759,11 +2759,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     aria-current={staffTab === 'curriculum' ? 'page' : undefined}
                     className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                       staffTab === 'curriculum'
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                        : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                        : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                     }`}
                   >
-                    <BookOpen className={`w-5 h-5 shrink-0 ${staffTab === 'curriculum' ? 'text-white' : 'text-purple-600'}`} />
+                    <BookOpen className={`w-5 h-5 shrink-0 ${staffTab === 'curriculum' ? 'text-white' : 'text-blue-600'}`} />
                     <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                       Curriculum
                     </span>
@@ -2782,11 +2782,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     aria-current={staffTab === 'students' ? 'page' : undefined}
                     className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                       staffTab === 'students'
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                        : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                        : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                     }`}
                   >
-                    <Users className={`w-5 h-5 shrink-0 ${staffTab === 'students' ? 'text-white' : 'text-purple-600'}`} />
+                    <Users className={`w-5 h-5 shrink-0 ${staffTab === 'students' ? 'text-white' : 'text-blue-600'}`} />
                     <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                       Students
                     </span>
@@ -2805,11 +2805,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     aria-current={staffTab === 'evaluations' ? 'page' : undefined}
                     className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                       staffTab === 'evaluations'
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                        : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                        : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                     }`}
                   >
-                    <CheckSquare className={`w-5 h-5 shrink-0 ${staffTab === 'evaluations' ? 'text-white' : 'text-purple-600'}`} />
+                    <CheckSquare className={`w-5 h-5 shrink-0 ${staffTab === 'evaluations' ? 'text-white' : 'text-blue-600'}`} />
                     <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                       Tasks
                     </span>
@@ -2828,11 +2828,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     aria-current={staffTab === 'certificates' ? 'page' : undefined}
                     className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                       staffTab === 'certificates'
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                        : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                        : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                     }`}
                   >
-                    <Award className={`w-5 h-5 shrink-0 ${staffTab === 'certificates' ? 'text-white' : 'text-purple-600'}`} />
+                    <Award className={`w-5 h-5 shrink-0 ${staffTab === 'certificates' ? 'text-white' : 'text-blue-600'}`} />
                     <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                       Reports
                     </span>
@@ -2852,11 +2852,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       aria-current={staffTab === 'settings' ? 'page' : undefined}
                       className={`w-full flex flex-col lg:flex-row items-center justify-center p-2 sm:p-2.5 lg:p-3 rounded-2xl text-xs font-bold transition-all duration-200 min-h-[44px] ${
                         staffTab === 'settings'
-                          ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]'
-                          : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                          : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                       }`}
                     >
-                      <Settings className={`w-5 h-5 shrink-0 ${staffTab === 'settings' ? 'text-white' : 'text-purple-600'}`} />
+                      <Settings className={`w-5 h-5 shrink-0 ${staffTab === 'settings' ? 'text-white' : 'text-blue-600'}`} />
                       <span className="text-[10px] font-bold mt-1 lg:hidden leading-none truncate max-w-full text-center">
                         Settings
                       </span>
@@ -2874,10 +2874,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           <main className="flex-1 w-full min-w-0 space-y-6">
 
             {/* BREADCRUMB NAVIGATION */}
-            <div className="flex items-center justify-between border-b border-purple-100/80 pb-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-purple-900 font-mono">
+            <div className="flex items-center justify-between border-b border-blue-100/80 pb-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-900 font-mono">
                 <span className="text-slate-400 font-medium">Portal /</span>
-                <span className="px-3 py-1 rounded-xl bg-purple-100/80 border border-purple-200/80 text-purple-950 font-extrabold shadow-2xs">
+                <span className="px-3 py-1 rounded-xl bg-blue-100/80 border border-blue-200/80 text-blue-950 font-extrabold shadow-2xs">
                   {staffTab === 'overview' && 'Admin / Overview'}
                   {(staffTab === 'batches' || staffTab === 'calendar') && 'Admin / Batches'}
                   {staffTab === 'curriculum' && 'Admin / Curriculum & Tasks'}
@@ -2888,7 +2888,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 </span>
               </div>
               <div className="text-[11px] font-semibold text-slate-500 hidden sm:block">
-                System Control: <strong className="text-purple-900">ACTIVE SESSION</strong>
+                System Control: <strong className="text-blue-900">ACTIVE SESSION</strong>
               </div>
             </div>
 
@@ -2971,10 +2971,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             <StatsCardsSkeleton count={3} />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
+              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-blue-200">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Students</span>
-                  <span className="p-2.5 rounded-xl bg-purple-100 text-purple-700">
+                  <span className="p-2.5 rounded-xl bg-blue-100 text-blue-700">
                     <Users className="w-5 h-5" />
                   </span>
                 </div>
@@ -2982,7 +2982,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <p className="text-[11px] text-slate-500 mt-1 font-medium">Registered system database total</p>
               </div>
 
-              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
+              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-blue-200">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Batches</span>
                   <span className="p-2.5 rounded-xl bg-indigo-100 text-indigo-700">
@@ -2995,7 +2995,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <p className="text-[11px] text-slate-500 mt-1 font-medium">Currently active training cohorts</p>
               </div>
 
-              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-purple-200">
+              <div className="pro-card-interactive rounded-2xl p-6 bg-white border border-blue-200">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Certified Graduates</span>
                   <span className="p-2.5 rounded-xl bg-amber-100 text-amber-700">
@@ -3012,7 +3012,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-700" />
+                <Sparkles className="w-4 h-4 text-blue-700" />
                 <span>Recent System Activity</span>
               </h3>
               <div className="flex items-center gap-2">
@@ -3020,21 +3020,21 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <button
                   onClick={fetchActivities}
                   title="Refresh Activity Log"
-                  className="p-1 rounded-lg hover:bg-purple-50 text-purple-700 transition-colors"
+                  className="p-1 rounded-lg hover:bg-blue-50 text-blue-700 transition-colors"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loadingActivities ? 'animate-spin' : ''}`} />
                 </button>
               </div>
             </div>
 
-            <div className="divide-y divide-purple-100/60 text-xs font-medium space-y-2">
+            <div className="divide-y divide-blue-100/60 text-xs font-medium space-y-2">
               {loadingActivities && recentActivities.length === 0 ? (
                 <div className="py-6 space-y-3 animate-pulse">
                   {Array.from({ length: 3 }).map((_, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-xl bg-purple-100" />
+                      <div className="w-7 h-7 rounded-xl bg-blue-100" />
                       <div className="flex-1 space-y-1">
-                        <div className="w-48 h-3 bg-purple-100 rounded" />
+                        <div className="w-48 h-3 bg-blue-100 rounded" />
                         <div className="w-24 h-2 bg-slate-100 rounded" />
                       </div>
                     </div>
@@ -3051,21 +3051,21 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         act.type === 'EVALUATION' ? 'bg-emerald-100 text-emerald-800' :
                         act.type === 'ATTENDANCE' ? 'bg-amber-100 text-amber-800' :
                         act.type === 'DRIVE_CONNECT' ? 'bg-emerald-100 text-emerald-800' :
-                        act.type === 'BATCH_CREATE' ? 'bg-indigo-100 text-indigo-800' : 'bg-purple-100 text-purple-800'
+                        act.type === 'BATCH_CREATE' ? 'bg-indigo-100 text-indigo-800' : 'bg-blue-100 text-blue-800'
                       }`}>
                         {act.type === 'SUBMISSION' ? <UploadCloud className="w-3.5 h-3.5 text-blue-700" /> :
                          act.type === 'EVALUATION' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> :
                          act.type === 'ATTENDANCE' ? <Clock className="w-3.5 h-3.5 text-amber-700" /> :
                          act.type === 'DRIVE_CONNECT' ? <ExternalLink className="w-3.5 h-3.5 text-emerald-700" /> :
                          act.type === 'BATCH_CREATE' ? <Layers className="w-3.5 h-3.5 text-indigo-700" /> :
-                         <UserPlus className="w-3.5 h-3.5 text-purple-700" />}
+                         <UserPlus className="w-3.5 h-3.5 text-blue-700" />}
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-slate-900 truncate">{act.title}</p>
                         <span className="font-mono text-[11px] text-slate-500 block truncate">{act.subtitle}</span>
                       </div>
                     </div>
-                    <span className="text-[10px] text-purple-900 font-mono font-bold bg-purple-50 border border-purple-100 px-2 py-0.5 rounded-lg shrink-0">
+                    <span className="text-[10px] text-blue-900 font-mono font-bold bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-lg shrink-0">
                       {new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -3157,10 +3157,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           <div className="space-y-6">
             
             {/* Section Header Card */}
-            <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
-                  <CheckSquare className="w-4 h-4 text-purple-700" />
+                <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                  <CheckSquare className="w-4 h-4 text-blue-700" />
                   <span>Central Admin Evaluation Workspace</span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -3181,7 +3181,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       setSelectedBatchId(e.target.value);
                       setSelectedDayNumber('1');
                     }}
-                    className="pro-input text-xs font-bold text-purple-950 rounded-xl px-4 py-2.5 bg-white"
+                    className="pro-input text-xs font-bold text-blue-950 rounded-xl px-4 py-2.5 bg-white"
                   >
                     {batches.map((b) => (
                       <option key={b.id} value={b.id}>{b.name}</option>
@@ -3217,7 +3217,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
             {/* Task Summary Dashboard Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-              <div className="p-3.5 rounded-2xl bg-white border border-purple-200 text-center shadow-xs">
+              <div className="p-3.5 rounded-2xl bg-white border border-blue-200 text-center shadow-xs">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Students</span>
                 <span className="text-xl font-extrabold text-slate-900 mt-0.5 block">{totalBatchStudents}</span>
               </div>
@@ -3232,9 +3232,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <span className="text-xl font-extrabold text-indigo-900 mt-0.5 block">{submittedCount}</span>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-purple-50/60 border border-purple-200 text-center shadow-xs">
-                <span className="text-[10px] font-bold text-purple-800 uppercase tracking-wider block">Evaluated</span>
-                <span className="text-xl font-extrabold text-purple-900 mt-0.5 block">{evaluatedCount}</span>
+              <div className="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-200 text-center shadow-xs">
+                <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wider block">Evaluated</span>
+                <span className="text-xl font-extrabold text-blue-900 mt-0.5 block">{evaluatedCount}</span>
               </div>
 
               <div className="p-3.5 rounded-2xl bg-amber-50/60 border border-amber-200 text-center shadow-xs">
@@ -3258,17 +3258,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
             {/* Task Completion Progress Bar */}
-            <div className="p-4 rounded-2xl bg-white border border-purple-200/80 space-y-2">
+            <div className="p-4 rounded-2xl bg-white border border-blue-200/80 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-800">
-                <span className="flex items-center gap-1.5 text-purple-900">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600" />
+                <span className="flex items-center gap-1.5 text-blue-900">
+                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
                   <span>Task Completion</span>
                 </span>
-                <span className="font-mono text-purple-950">{taskCompletionPercent}% ({submittedCount} / {totalBatchStudents} Submissions)</span>
+                <span className="font-mono text-blue-950">{taskCompletionPercent}% ({submittedCount} / {totalBatchStudents} Submissions)</span>
               </div>
-              <div className="w-full bg-purple-100 h-3 rounded-full overflow-hidden p-0.5 border border-purple-200">
+              <div className="w-full bg-blue-100 h-3 rounded-full overflow-hidden p-0.5 border border-blue-200">
                 <div
-                  className="bg-gradient-to-r from-purple-600 to-indigo-600 h-full rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-500"
                   style={{ width: `${taskCompletionPercent}%` }}
                 />
               </div>
@@ -3282,7 +3282,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 currentDayTaskObj?.taskTitle?.toLowerCase().includes('examination');
               if (!isCurrentDayExam) return null;
               return (
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-purple-500/10 to-indigo-500/10 border-2 border-amber-400 text-slate-900 space-y-1.5 shadow-xs">
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-blue-500/10 to-indigo-500/10 border-2 border-amber-400 text-slate-900 space-y-1.5 shadow-xs">
                   <div className="flex items-center gap-2 text-amber-950 font-extrabold text-sm">
                     <GraduationCap className="w-5 h-5 text-amber-700 shrink-0" />
                     <span>Final Examination & Assessment Day (Day {currentDayNum})</span>
@@ -3298,10 +3298,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             })()}
 
             {/* Configured Task Information Card */}
-            <div className="pro-card rounded-2xl p-5 bg-white border-purple-200/80 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-3">
+            <div className="pro-card rounded-2xl p-5 bg-white border-blue-200/80 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-blue-100 pb-3">
                 <div>
-                  <span className="text-[10px] font-mono font-bold text-purple-700 uppercase tracking-widest">
+                  <span className="text-[10px] font-mono font-bold text-blue-700 uppercase tracking-widest">
                     DAY {String(currentDayNum).padStart(2, '0')} TASK DETAILS
                   </span>
                   <h3 className="text-base font-extrabold text-slate-900 mt-0.5">
@@ -3332,7 +3332,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       setEditTaskDesc(currentDayTaskObj?.taskDescription || '');
                       setShowEditTaskModal(true);
                     }}
-                    className="px-3.5 py-1.5 rounded-xl bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300 text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs"
+                    className="px-3.5 py-1.5 rounded-xl bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300 text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs"
                   >
                     <Edit className="w-3.5 h-3.5" />
                     <span>{currentDayTaskObj?.taskTitle ? 'Edit Task' : 'Configure Task'}</span>
@@ -3340,8 +3340,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 </div>
               </div>
 
-              <div className="text-xs text-slate-700 space-y-1 font-medium bg-purple-50/40 p-3.5 rounded-xl border border-purple-100">
-                <span className="font-bold text-purple-950 uppercase text-[10px] tracking-wider block">Description</span>
+              <div className="text-xs text-slate-700 space-y-1 font-medium bg-blue-50/40 p-3.5 rounded-xl border border-blue-100">
+                <span className="font-bold text-blue-950 uppercase text-[10px] tracking-wider block">Description</span>
                 <p className="leading-relaxed">
                   {currentDayTaskObj?.taskDescription ? (
                     currentDayTaskObj.taskDescription
@@ -3355,10 +3355,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
             {/* Filters & Search Control Bar */}
-            <div className="pro-card rounded-2xl p-4 bg-white/90 border-purple-200/80 flex flex-col lg:flex-row items-center justify-between gap-4">
+            <div className="pro-card rounded-2xl p-4 bg-white/90 border-blue-200/80 flex flex-col lg:flex-row items-center justify-between gap-4">
               {/* Search Field */}
               <div className="relative w-full lg:w-80">
-                <Search className="w-4 h-4 text-purple-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Search register no or name..."
@@ -3371,7 +3371,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               {/* Filter Dropdowns */}
               <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
                 <div className="flex items-center gap-1 text-xs text-slate-600 font-bold">
-                  <Filter className="w-3.5 h-3.5 text-purple-600" />
+                  <Filter className="w-3.5 h-3.5 text-blue-600" />
                   <span>Filters:</span>
                 </div>
 
@@ -3379,7 +3379,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={filterSubStatus}
                   onChange={(e) => setFilterSubStatus(e.target.value)}
-                  className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                  className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                 >
                   <option value="All">Task Status: All</option>
                   <option value="Locked">Locked</option>
@@ -3393,7 +3393,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={filterEvalStatus}
                   onChange={(e) => setFilterEvalStatus(e.target.value)}
-                  className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                  className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                 >
                   <option value="All">Evaluation: All</option>
                   <option value="Pending Evaluation">Pending Evaluation</option>
@@ -3404,7 +3404,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={filterSection}
                   onChange={(e) => setFilterSection(e.target.value)}
-                  className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                  className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                 >
                   <option value="All">All Sections</option>
                   <option value="A">Section A</option>
@@ -3421,7 +3421,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-purple-700" />
+                    <Users className="w-4 h-4 text-blue-700" />
                     <span>Student Submissions Roster ({filteredTaskStudents.length})</span>
                   </h3>
                 </div>
@@ -3430,7 +3430,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-purple-100 bg-purple-50/60 text-[11px] font-extrabold uppercase text-purple-900 tracking-wider">
+                    <tr className="border-b border-blue-100 bg-blue-50/60 text-[11px] font-extrabold uppercase text-blue-900 tracking-wider">
                       <th className="py-3 px-4 rounded-l-xl">Register No</th>
                       <th className="py-3 px-4">Student Name</th>
                       <th className="py-3 px-4">Section</th>
@@ -3442,7 +3442,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       <th className="py-3 px-4 text-right rounded-r-xl">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-purple-100/60 text-xs text-slate-700 font-medium">
+                  <tbody className="divide-y divide-blue-100/60 text-xs text-slate-700 font-medium">
                     {filteredTaskStudents.length === 0 ? (
                       <tr>
                         <td colSpan={9} className="py-10 text-center text-slate-500 font-medium">
@@ -3455,8 +3455,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         const submittedAt = item.dayTask?.submittedAt;
 
                         return (
-                          <tr key={item.id} className="hover:bg-purple-50/30 transition-colors">
-                            <td className="py-3.5 px-4 font-mono font-bold text-purple-900">
+                          <tr key={item.id} className="hover:bg-blue-50/30 transition-colors">
+                            <td className="py-3.5 px-4 font-mono font-bold text-blue-900">
                               {item.registerNo}
                             </td>
                             <td className="py-3.5 px-4 font-bold text-slate-900">
@@ -3481,7 +3481,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             </td>
                             <td className="py-3.5 px-4">
                               <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border ${
-                                item.status === 'Evaluated' ? 'bg-purple-100 text-purple-900 border-purple-300' :
+                                item.status === 'Evaluated' ? 'bg-blue-100 text-blue-900 border-blue-300' :
                                 item.status === 'Submitted' ? 'bg-indigo-100 text-indigo-900 border-indigo-300' :
                                 item.status === 'Available' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
                                 item.status === 'Missing' ? 'bg-rose-100 text-rose-800 border-rose-300' :
@@ -3495,7 +3495,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             </td>
                             <td className="py-3.5 px-4">
                               {item.evalStatus === 'Evaluated' ? (
-                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 border border-purple-300">
+                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-900 border border-blue-300">
                                   Evaluated ({item.dayTask?.evaluation?.score}/100)
                                 </span>
                               ) : item.evalStatus === 'Pending Evaluation' ? (
@@ -3529,7 +3529,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                   item.status === 'Locked' || item.status === 'Missing' || item.status === 'Available'
                                     ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
                                     : item.status === 'Evaluated'
-                                    ? 'bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300'
+                                    ? 'bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300'
                                     : 'pro-button-primary text-white shadow-sm'
                                 }`}
                               >
@@ -3552,14 +3552,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   const submittedAt = item.dayTask?.submittedAt;
 
                   return (
-                    <div key={item.id} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-200 space-y-3">
+                    <div key={item.id} className="p-4 rounded-2xl bg-blue-50/40 border border-blue-200 space-y-3">
                       <div className="flex items-start justify-between">
                         <div>
                           <h4 className="font-bold text-slate-900 text-sm">{item.name}</h4>
-                          <span className="font-mono font-bold text-purple-900 text-xs">{item.registerNo} • Section {cleanSec}</span>
+                          <span className="font-mono font-bold text-blue-900 text-xs">{item.registerNo} • Section {cleanSec}</span>
                         </div>
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
-                          item.status === 'Evaluated' ? 'bg-purple-100 text-purple-900 border-purple-300' :
+                          item.status === 'Evaluated' ? 'bg-blue-100 text-blue-900 border-blue-300' :
                           item.status === 'Submitted' ? 'bg-indigo-100 text-indigo-900 border-indigo-300' :
                           item.status === 'Available' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
                           item.status === 'Missing' ? 'bg-rose-100 text-rose-800 border-rose-300' :
@@ -3569,7 +3569,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between text-xs text-slate-700 font-semibold bg-white p-2.5 rounded-xl border border-purple-100">
+                      <div className="flex items-center justify-between text-xs text-slate-700 font-semibold bg-white p-2.5 rounded-xl border border-blue-100">
                         <span>Attendance: FN {item.fnPresent ? '✓' : '✗'} AN {item.anPresent ? '✓' : '✗'}</span>
                         <span className="font-mono">{submittedAt ? formatDateDisplay(submittedAt) : 'No Submission'}</span>
                       </div>
@@ -3618,10 +3618,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         <div className="space-y-6">
 
           {/* Section Header Card */}
-          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
-                <Layers className="w-4 h-4 text-purple-700" />
+              <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                <Layers className="w-4 h-4 text-blue-700" />
                 <span>Training Batches Hub</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -3636,9 +3636,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <button
                 type="button"
                 onClick={() => handleTabSwitch('curriculum')}
-                className="py-3 px-4 rounded-2xl bg-purple-50 text-purple-900 border border-purple-200 font-bold text-xs flex items-center gap-2 hover:bg-purple-100 transition-all shadow-xs"
+                className="py-3 px-4 rounded-2xl bg-blue-50 text-blue-900 border border-blue-200 font-bold text-xs flex items-center gap-2 hover:bg-blue-100 transition-all shadow-xs"
               >
-                <BookOpen className="w-4 h-4 text-purple-700" />
+                <BookOpen className="w-4 h-4 text-blue-700" />
                 <span>Curriculum & Tasks</span>
               </button>
 
@@ -3653,10 +3653,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {/* Search & Filter Control Bar */}
-          <div className="pro-card rounded-2xl p-4 bg-white/90 border-purple-200/80 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="pro-card rounded-2xl p-4 bg-white/90 border-blue-200/80 flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Search input */}
             <div className="relative w-full md:w-80">
-              <Search className="w-4 h-4 text-purple-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search by Batch Name or Batch No..."
@@ -3669,7 +3669,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {/* Filter Dropdowns */}
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
               <div className="flex items-center gap-1.5 text-xs text-slate-600 font-bold">
-                <Filter className="w-3.5 h-3.5 text-purple-600" />
+                <Filter className="w-3.5 h-3.5 text-blue-600" />
                 <span>Filters:</span>
               </div>
 
@@ -3677,7 +3677,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={filterLevel}
                 onChange={(e) => setFilterLevel(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Levels</option>
                 {configuredLevels.map((lvl) => (
@@ -3691,7 +3691,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Statuses</option>
                 <option value="ACTIVE">Active</option>
@@ -3703,7 +3703,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={filterCurriculumStatus}
                 onChange={(e) => setFilterCurriculumStatus(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">Curriculum: All</option>
                 <option value="Not Set">Curriculum: Not Set</option>
@@ -3720,7 +3720,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-purple-700" />
+                  <Layers className="w-4 h-4 text-blue-700" />
                   <span>Registered Batches Roster ({batches.length})</span>
                 </h3>
               </div>
@@ -3728,7 +3728,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-purple-100 bg-purple-50/60 text-[10px] sm:text-[11px] font-extrabold uppercase text-purple-900 tracking-wider whitespace-nowrap">
+                  <tr className="border-b border-blue-100 bg-blue-50/60 text-[10px] sm:text-[11px] font-extrabold uppercase text-blue-900 tracking-wider whitespace-nowrap">
                     <th className="py-2.5 px-2.5 sm:px-3 rounded-l-xl align-middle">Batch Name</th>
                     <th className="py-2.5 px-2 align-middle">No</th>
                     <th className="py-2.5 px-2 align-middle">Level</th>
@@ -3741,7 +3741,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <th className="py-2.5 px-2.5 sm:px-3 text-right rounded-r-xl align-middle">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-purple-100/60 text-[11px] sm:text-xs text-slate-700 font-medium">
+                <tbody className="divide-y divide-blue-100/60 text-[11px] sm:text-xs text-slate-700 font-medium">
                   {batches.filter((b) => {
                     const matchesSearch =
                       !batchSearchQuery ||
@@ -3818,15 +3818,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       else if (start > today) displayStatus = 'UPCOMING';
 
                       return (
-                        <tr key={b.id} className="hover:bg-purple-50/30 transition-colors border-b border-purple-50">
+                        <tr key={b.id} className="hover:bg-blue-50/30 transition-colors border-b border-blue-50">
                           <td className="py-3 px-2.5 sm:px-3 font-bold text-slate-900 font-mono whitespace-nowrap align-middle">
                             {b.name}
                           </td>
-                          <td className="py-3 px-2 font-mono font-bold text-purple-900 whitespace-nowrap align-middle">
+                          <td className="py-3 px-2 font-mono font-bold text-blue-900 whitespace-nowrap align-middle">
                             {bNo}
                           </td>
                           <td className="py-3 px-2 whitespace-nowrap align-middle">
-                            <span className="inline-block px-2 py-0.5 rounded-md bg-purple-100 text-purple-800 font-bold text-[10px] sm:text-[11px] border border-purple-200 shadow-2xs whitespace-nowrap">
+                            <span className="inline-block px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold text-[10px] sm:text-[11px] border border-blue-200 shadow-2xs whitespace-nowrap">
                               {bLevel}
                             </span>
                           </td>
@@ -3866,8 +3866,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                 onClick={() => handleOpenCurriculumModal(b)}
                                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1 shadow-2xs shrink-0 whitespace-nowrap ${
                                   currStatus === 'Not Set'
-                                    ? 'bg-purple-600 text-white hover:bg-purple-700'
-                                    : 'bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300'
                                 }`}
                               >
                                 <BookOpen className="w-3.5 h-3.5" />
@@ -3876,10 +3876,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                               <button
                                 onClick={() => handleOpenBatchDetails(b)}
-                                className="px-2 py-1 rounded-xl bg-purple-50 text-slate-700 hover:bg-purple-100 border border-purple-200 transition-colors text-[11px] font-semibold shrink-0"
+                                className="px-2 py-1 rounded-xl bg-blue-50 text-slate-700 hover:bg-blue-100 border border-blue-200 transition-colors text-[11px] font-semibold shrink-0"
                                 title="View Batch Details"
                               >
-                                <Eye className="w-3.5 h-3.5 text-purple-700" />
+                                <Eye className="w-3.5 h-3.5 text-blue-700" />
                               </button>
                             </div>
                           </td>
@@ -3904,17 +3904,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto cursor-default"
           >
             
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div>
-                <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">AR/VR COE</span>
+                <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">AR/VR COE</span>
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Create New Batch</h2>
               </div>
               <button
                 onClick={() => setShowCreateBatchModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -3930,7 +3930,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={createLevel}
                   onChange={(e) => handleLevelChange(e.target.value)}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-900 bg-purple-50/40"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-900 bg-blue-50/40"
                 >
                   {configuredLevels.map((lvl) => (
                     <option key={lvl} value={lvl}>
@@ -3946,14 +3946,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <label className="block text-xs font-bold text-slate-700">
                     Batch No <span className="text-rose-500">*</span>
                   </label>
-                  <div className="flex items-center gap-4 text-xs font-semibold text-purple-900">
+                  <div className="flex items-center gap-4 text-xs font-semibold text-blue-900">
                     <label className="flex items-center gap-1.5 cursor-pointer">
                       <input
                         type="radio"
                         name="createNoMode"
                         checked={createNoMode === 'automatic'}
                         onChange={() => handleNoModeChange('automatic')}
-                        className="accent-purple-600"
+                        className="accent-blue-600"
                       />
                       <span>Automatic</span>
                     </label>
@@ -3963,7 +3963,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         name="createNoMode"
                         checked={createNoMode === 'manual'}
                         onChange={() => handleNoModeChange('manual')}
-                        className="accent-purple-600"
+                        className="accent-blue-600"
                       />
                       <span>Manual</span>
                     </label>
@@ -3978,11 +3978,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   onChange={(e) => handleBatchNoChange(e.target.value)}
                   placeholder="e.g. 001"
                   className={`w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold ${
-                    createNoMode === 'automatic' ? 'bg-purple-100/60 text-purple-900 cursor-not-allowed border-purple-200' : 'bg-white text-slate-900'
+                    createNoMode === 'automatic' ? 'bg-blue-100/60 text-blue-900 cursor-not-allowed border-blue-200' : 'bg-white text-slate-900'
                   }`}
                 />
                 {createNoMode === 'automatic' && (
-                  <p className="text-[11px] text-purple-600 mt-1 font-medium">✓ System generated next available batch number</p>
+                  <p className="text-[11px] text-blue-600 mt-1 font-medium">✓ System generated next available batch number</p>
                 )}
               </div>
 
@@ -3990,13 +3990,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
                   <span>No. of Days</span>
-                  <span className="text-[11px] font-semibold text-purple-600">Fixed by Batch Level</span>
+                  <span className="text-[11px] font-semibold text-blue-600">Fixed by Batch Level</span>
                 </label>
                 <input
                   type="text"
                   readOnly
                   value={`${createDaysCount} Days`}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-purple-100/60 text-purple-900 cursor-not-allowed border-purple-200"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-blue-100/60 text-blue-900 cursor-not-allowed border-blue-200"
                 />
               </div>
 
@@ -4026,7 +4026,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   type="text"
                   readOnly
                   value={formatDateDisplay(createExamDate || createEndDate)}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-purple-100/60 text-purple-900 cursor-not-allowed border-purple-200"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-blue-100/60 text-blue-900 cursor-not-allowed border-blue-200"
                 />
               </div>
 
@@ -4034,7 +4034,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
                   <span>Exam Date</span>
-                  <span className="text-[11px] font-semibold text-purple-600">Day {createDaysCount} (Final Day of Batch)</span>
+                  <span className="text-[11px] font-semibold text-blue-600">Day {createDaysCount} (Final Day of Batch)</span>
                 </label>
                 <input
                   type="date"
@@ -4043,7 +4043,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     setCreateExamDate(e.target.value);
                     setCreateEndDate(e.target.value);
                   }}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-white text-purple-950 border-purple-200"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-white text-blue-950 border-blue-200"
                 />
               </div>
 
@@ -4051,13 +4051,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
                   <span>Generated Batch Name</span>
-                  <span className="text-[11px] font-semibold text-purple-600">System Formula</span>
+                  <span className="text-[11px] font-semibold text-blue-600">System Formula</span>
                 </label>
                 <input
                   type="text"
                   readOnly
                   value={createBatchName}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-950 border-purple-300 cursor-not-allowed"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-950 border-blue-300 cursor-not-allowed"
                 />
               </div>
 
@@ -4070,32 +4070,32 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   type="text"
                   readOnly
                   value="AR/VR COE Team"
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold bg-purple-100/60 text-purple-900 cursor-not-allowed border-purple-200"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold bg-blue-100/60 text-blue-900 cursor-not-allowed border-blue-200"
                 />
               </div>
 
               {/* Field 9: Batch Attendance Settings */}
-              <div className="p-4 rounded-2xl bg-purple-50/70 border border-purple-200 space-y-3.5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-purple-200/80 pb-3">
+              <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-blue-200/80 pb-3">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-purple-700" />
-                    <span className="text-xs font-extrabold text-purple-950 uppercase tracking-wide">
+                    <Clock className="w-4 h-4 text-blue-700" />
+                    <span className="text-xs font-extrabold text-blue-950 uppercase tracking-wide">
                       Attendance Window Schedule
                     </span>
                   </div>
 
                   {/* Toggle: Follow Default vs Batch Attendance Settings */}
-                  <div className="inline-flex p-1 rounded-xl bg-purple-200/70 border border-purple-300 text-xs font-bold shadow-2xs self-start sm:self-auto">
+                  <div className="inline-flex p-1 rounded-xl bg-blue-200/70 border border-blue-300 text-xs font-bold shadow-2xs self-start sm:self-auto">
                     <button
                       type="button"
                       onClick={() => setCreateAttendanceMode('default')}
                       className={`px-3 py-1.5 rounded-lg transition-all text-xs font-bold cursor-pointer flex items-center gap-1.5 ${
                         createAttendanceMode === 'default'
-                          ? 'bg-purple-700 text-white shadow-xs'
-                          : 'text-purple-900 hover:text-purple-950 hover:bg-purple-100/60'
+                          ? 'bg-blue-700 text-white shadow-xs'
+                          : 'text-blue-900 hover:text-blue-950 hover:bg-blue-100/60'
                       }`}
                     >
-                      <CheckCircle2 className={`w-3.5 h-3.5 ${createAttendanceMode === 'default' ? 'text-white' : 'text-purple-600'}`} />
+                      <CheckCircle2 className={`w-3.5 h-3.5 ${createAttendanceMode === 'default' ? 'text-white' : 'text-blue-600'}`} />
                       <span>Follow Default</span>
                     </button>
                     <button
@@ -4103,24 +4103,24 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       onClick={() => setCreateAttendanceMode('custom')}
                       className={`px-3 py-1.5 rounded-lg transition-all text-xs font-bold cursor-pointer flex items-center gap-1.5 ${
                         createAttendanceMode === 'custom'
-                          ? 'bg-purple-700 text-white shadow-xs'
-                          : 'text-purple-900 hover:text-purple-950 hover:bg-purple-100/60'
+                          ? 'bg-blue-700 text-white shadow-xs'
+                          : 'text-blue-900 hover:text-blue-950 hover:bg-blue-100/60'
                       }`}
                     >
-                      <Clock className={`w-3.5 h-3.5 ${createAttendanceMode === 'custom' ? 'text-white' : 'text-purple-600'}`} />
+                      <Clock className={`w-3.5 h-3.5 ${createAttendanceMode === 'custom' ? 'text-white' : 'text-blue-600'}`} />
                       <span>Custom Timings</span>
                     </button>
                   </div>
                 </div>
 
                 {createAttendanceMode === 'default' ? (
-                  <div className="p-3.5 rounded-xl bg-white border border-purple-200/90 shadow-2xs space-y-2.5">
+                  <div className="p-3.5 rounded-xl bg-white border border-blue-200/90 shadow-2xs space-y-2.5">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>Following System Default Attendance Settings</span>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-purple-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200 self-start sm:self-auto">
+                      <span className="text-[10px] font-mono font-bold text-blue-900 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 self-start sm:self-auto">
                         FN: {settingsFnStart || '08:30'}–{settingsFnCutoff || '09:00'} | AN: {settingsAnStart || '12:40'}–{settingsAnCutoff || '13:10'}
                       </span>
                     </div>
@@ -4136,9 +4136,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                       {/* Morning (FN) */}
-                      <div className="p-3 rounded-xl bg-white border border-purple-100 shadow-2xs space-y-2">
-                        <span className="text-[11px] font-bold text-purple-900 flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-purple-600"></span>
+                      <div className="p-3 rounded-xl bg-white border border-blue-100 shadow-2xs space-y-2">
+                        <span className="text-[11px] font-bold text-blue-900 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-blue-600"></span>
                           Morning (FN) Session
                         </span>
                         <div className="grid grid-cols-2 gap-2">
@@ -4148,7 +4148,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="time"
                               value={createFnStart}
                               onChange={(e) => setCreateFnStart(e.target.value)}
-                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-slate-800 bg-purple-50/30"
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-slate-800 bg-blue-50/30"
                             />
                           </div>
                           <div>
@@ -4157,16 +4157,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="time"
                               value={createFnCutoff}
                               onChange={(e) => setCreateFnCutoff(e.target.value)}
-                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-purple-950 bg-purple-50/30"
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-blue-950 bg-blue-50/30"
                             />
                           </div>
                         </div>
                       </div>
 
                       {/* Afternoon (AN) */}
-                      <div className="p-3 rounded-xl bg-white border border-purple-100 shadow-2xs space-y-2">
-                        <span className="text-[11px] font-bold text-purple-900 flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-purple-600"></span>
+                      <div className="p-3 rounded-xl bg-white border border-blue-100 shadow-2xs space-y-2">
+                        <span className="text-[11px] font-bold text-blue-900 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-blue-600"></span>
                           Afternoon (AN) Session
                         </span>
                         <div className="grid grid-cols-2 gap-2">
@@ -4176,7 +4176,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="time"
                               value={createAnStart}
                               onChange={(e) => setCreateAnStart(e.target.value)}
-                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-slate-800 bg-purple-50/30"
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-slate-800 bg-blue-50/30"
                             />
                           </div>
                           <div>
@@ -4185,7 +4185,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="time"
                               value={createAnCutoff}
                               onChange={(e) => setCreateAnCutoff(e.target.value)}
-                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-purple-950 bg-purple-50/30"
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-blue-950 bg-blue-50/30"
                             />
                           </div>
                         </div>
@@ -4198,8 +4198,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               {/* GENERATED TRAINING CALENDAR & DEFAULT CURRICULUM PREVIEW TABLE */}
               <div className="pt-2 space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-extrabold text-purple-950 uppercase tracking-wider flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-purple-700" />
+                  <h4 className="text-xs font-extrabold text-blue-950 uppercase tracking-wider flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-blue-700" />
                     <span>Training Calendar & Level Curriculum Preview</span>
                   </h4>
                   <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -4207,16 +4207,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </span>
                 </div>
 
-                <div className="max-h-52 overflow-y-auto border border-purple-200 rounded-2xl bg-white shadow-2xs">
+                <div className="max-h-52 overflow-y-auto border border-blue-200 rounded-2xl bg-white shadow-2xs">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-purple-50/80 text-purple-900 font-extrabold border-b border-purple-100 uppercase text-[10px]">
+                      <tr className="bg-blue-50/80 text-blue-900 font-extrabold border-b border-blue-100 uppercase text-[10px]">
                         <th className="p-2.5">Day</th>
                         <th className="p-2.5">Calendar Date</th>
                         <th className="p-2.5">Curriculum Module Topic</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100/60 font-medium">
+                    <tbody className="divide-y divide-blue-100/60 font-medium">
                       {generateTrainingDaysCalendar(createStartDate, createLevel, createDaysCount).map((item) => {
                         const customTask = createLevelTasks.find((t) => t.dayNumber === item.dayNumber);
                         const isExamDay = item.dayNumber === createDaysCount || item.isExam;
@@ -4226,10 +4226,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             className={
                               isExamDay
                                 ? 'bg-amber-50/80 border-t-2 border-amber-300 font-bold'
-                                : 'hover:bg-purple-50/40'
+                                : 'hover:bg-blue-50/40'
                             }
                           >
-                            <td className="p-2.5 font-bold font-mono text-purple-900 flex items-center gap-1.5">
+                            <td className="p-2.5 font-bold font-mono text-blue-900 flex items-center gap-1.5">
                               {isExamDay && <GraduationCap className="w-3.5 h-3.5 text-amber-700 shrink-0" />}
                               <span>Day {item.dayNumber}</span>
                               {isExamDay && (
@@ -4253,11 +4253,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-purple-100">
+              <div className="flex gap-3 pt-4 border-t border-blue-100">
                 <button
                   type="button"
                   onClick={() => setShowCreateBatchModal(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                 >
                   Cancel
                 </button>
@@ -4286,13 +4286,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto cursor-default"
           >
             
             {/* Header Info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-blue-100 pb-4">
               <div>
-                <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
+                <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
                   <BookOpen className="w-4 h-4" />
                   <span>Curriculum & Training Calendar Schedule</span>
                 </div>
@@ -4300,11 +4300,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   {curriculumBatch.name}
                 </h2>
                 <div className="flex flex-wrap items-center gap-3 mt-2 text-xs font-semibold text-slate-600">
-                  <span className="bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-md border border-purple-200 font-bold">
+                  <span className="bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-md border border-blue-200 font-bold">
                     {curriculumBatch.level || 'Level 1'}
                   </span>
                   <span>Start: <strong className="text-slate-900 font-mono">{formatDateDisplay(curriculumBatch.startDate)}</strong></span>
-                  <span>Derived End: <strong className="text-purple-900 font-mono font-bold">{formatDateDisplay(curriculumCalendarDays[curriculumCalendarDays.length - 1]?.dateStr || curriculumBatch.endDate)}</strong></span>
+                  <span>Derived End: <strong className="text-blue-900 font-mono font-bold">{formatDateDisplay(curriculumCalendarDays[curriculumCalendarDays.length - 1]?.dateStr || curriculumBatch.endDate)}</strong></span>
                   <span className="bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-md border border-indigo-200 font-mono">
                     {curriculumCalendarDays.length} Days Total
                   </span>
@@ -4319,7 +4319,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                     isEditingDates
                       ? 'bg-emerald-600 text-white border-emerald-700 shadow-sm hover:bg-emerald-700'
-                      : 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100'
+                      : 'bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100'
                   }`}
                 >
                   {savingCurriculum ? (
@@ -4359,7 +4359,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     setIsEditingDates(false);
                     setShowCurriculumModal(false);
                   }}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -4376,7 +4376,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     className={`p-4 rounded-2xl space-y-3 transition-all ${
                       isExamDay
                         ? 'bg-gradient-to-br from-amber-50/90 via-white to-amber-50/50 border-2 border-amber-300 shadow-sm'
-                        : 'bg-purple-50/50 border border-purple-200/80'
+                        : 'bg-blue-50/50 border border-blue-200/80'
                     }`}
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -4385,7 +4385,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           className={`text-xs font-extrabold font-mono px-3 py-1 rounded-lg border flex items-center gap-2 ${
                             isExamDay
                               ? 'bg-amber-100 text-amber-950 border-amber-300 ring-2 ring-amber-300/60 shadow-2xs'
-                              : 'bg-purple-100 text-purple-900 border-purple-200'
+                              : 'bg-blue-100 text-blue-900 border-blue-200'
                           }`}
                         >
                           {isExamDay && <GraduationCap className="w-3.5 h-3.5 text-amber-700" />}
@@ -4407,11 +4407,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             type="date"
                             value={day.dateStr}
                             onChange={(e) => handleDayDateChange(idx, e.target.value)}
-                            className="pro-input rounded-xl px-3 py-1 text-xs font-mono font-bold text-purple-950 bg-white border-purple-300"
+                            className="pro-input rounded-xl px-3 py-1 text-xs font-mono font-bold text-blue-950 bg-white border-blue-300"
                           />
                         ) : (
-                          <span className="px-3 py-1 rounded-lg bg-white border border-purple-200 text-xs font-mono font-bold text-slate-900 shadow-2xs flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5 text-purple-600" />
+                          <span className="px-3 py-1 rounded-lg bg-white border border-blue-200 text-xs font-mono font-bold text-slate-900 shadow-2xs flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-blue-600" />
                             <span>{formatDateDisplay(day.dateStr)}</span>
                             {day.isManualOverride && (
                               <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-sans font-bold">Manual</span>
@@ -4432,13 +4432,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       <div className="space-y-4 pt-1">
                         {/* Tasks List Section (Read-Only) */}
                         <div className="space-y-2.5">
-                          <div className="flex items-center justify-between border-b border-purple-200/70 pb-2">
+                          <div className="flex items-center justify-between border-b border-blue-200/70 pb-2">
                             <div className="flex items-center gap-2">
-                              <ListChecks className="w-4 h-4 text-purple-700" />
+                              <ListChecks className="w-4 h-4 text-blue-700" />
                               <span className="text-xs font-bold text-slate-900">
                                 {isExamDay ? 'Exam Tasks & Practical Requirements' : 'Tasks & Practical Requirements'}
                               </span>
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800 border border-blue-200">
                                 {dayTasks.length} {dayTasks.length === 1 ? 'Task' : 'Tasks'}
                               </span>
                             </div>
@@ -4451,11 +4451,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             {dayTasks.map((taskItem, tIdx) => (
                               <div
                                 key={taskItem.id || tIdx}
-                                className="p-3.5 rounded-xl bg-white border border-purple-200/80 shadow-2xs space-y-2"
+                                className="p-3.5 rounded-xl bg-white border border-blue-200/80 shadow-2xs space-y-2"
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[11px] font-extrabold text-purple-950 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-200">
+                                    <span className="text-[11px] font-extrabold text-blue-950 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
                                       Task #{tIdx + 1}
                                     </span>
                                     {isExamDay && tIdx === 0 && (
@@ -4471,7 +4471,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                     {taskItem.title || `Day ${day.dayNumber} Task ${tIdx + 1}`}
                                   </div>
                                   {taskItem.description ? (
-                                    <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line bg-purple-50/30 p-2.5 rounded-lg border border-purple-100">
+                                    <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line bg-blue-50/30 p-2.5 rounded-lg border border-blue-100">
                                       {taskItem.description}
                                     </p>
                                   ) : (
@@ -4484,7 +4484,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         </div>
 
                         {/* Learning Resources Section (Read-Only) */}
-                        <div className="space-y-2.5 pt-2 border-t border-purple-200/70">
+                        <div className="space-y-2.5 pt-2 border-t border-blue-200/70">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Paperclip className="w-4 h-4 text-indigo-700" />
@@ -4498,7 +4498,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           </div>
 
                           {dayResources.length === 0 ? (
-                            <div className="p-3 rounded-xl border border-dashed border-purple-200 bg-purple-50/20 text-center">
+                            <div className="p-3 rounded-xl border border-dashed border-blue-200 bg-blue-50/20 text-center">
                               <p className="text-[11px] text-slate-500 font-medium">
                                 No resources attached for this day.
                               </p>
@@ -4508,10 +4508,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               {dayResources.map((resItem, rIdx) => (
                                 <div
                                   key={resItem.id || rIdx}
-                                  className="p-3 rounded-xl bg-white border border-purple-200/80 shadow-2xs flex items-center justify-between gap-3"
+                                  className="p-3 rounded-xl bg-white border border-blue-200/80 shadow-2xs flex items-center justify-between gap-3"
                                 >
                                   <div className="flex items-center gap-2.5 min-w-0">
-                                    <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
                                       {resItem.type === 'pdf' ? (
                                         <FileText className="w-4 h-4" />
                                       ) : resItem.type === 'link' ? (
@@ -4524,7 +4524,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                       <span className="text-xs font-bold text-slate-900 truncate block">
                                         {resItem.title || 'Attached Resource'}
                                       </span>
-                                      <span className="text-[10px] font-mono text-purple-700 font-bold uppercase tracking-wider">
+                                      <span className="text-[10px] font-mono text-blue-700 font-bold uppercase tracking-wider">
                                         {resItem.type === 'pdf' ? 'PDF Document' : resItem.type === 'link' ? 'Web Link' : resItem.type || 'Resource'}
                                       </span>
                                     </div>
@@ -4535,7 +4535,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                       href={resItem.url}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="py-1 px-2.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-bold transition-colors flex items-center gap-1 shrink-0"
+                                      className="py-1 px-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 text-xs font-bold transition-colors flex items-center gap-1 shrink-0"
                                       title="Open resource"
                                     >
                                       <ExternalLink className="w-3.5 h-3.5" />
@@ -4564,16 +4564,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
             {/* Save Action */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-purple-100">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-blue-100">
               <div className="text-xs text-slate-500 font-medium flex items-center gap-2">
-                <Info className="w-4 h-4 text-purple-600 shrink-0" />
+                <Info className="w-4 h-4 text-blue-600 shrink-0" />
                 <span>Curriculum & tasks are read-only here. To edit task definitions, visit the <strong>Curriculum & Tasks</strong> tab.</span>
               </div>
               <div className="flex gap-3 w-full sm:w-auto justify-end">
                 <button
                   type="button"
                   onClick={() => setShowCurriculumModal(false)}
-                  className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                  className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                 >
                   {isEditingDates ? 'Cancel' : 'Close'}
                 </button>
@@ -4597,10 +4597,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       {staffTab === 'curriculum' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           {/* Section Header Card */}
-          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
-                <BookOpen className="w-4 h-4 text-purple-700" />
+              <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                <BookOpen className="w-4 h-4 text-blue-700" />
                 <span>Curriculum & Task Architecture Hub</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -4615,7 +4615,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <button
                 type="button"
                 onClick={() => handleTabSwitch('batches')}
-                className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Back to Batches</span>
@@ -4648,10 +4648,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {/* Level Sub-tabs Selector & Total Days Control */}
-          <div className="pro-card rounded-2xl p-3 bg-gradient-to-r from-purple-50/70 to-indigo-50/70 border-purple-200/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+          <div className="pro-card rounded-2xl p-3 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 border-blue-200/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-2 flex-1 overflow-x-auto pb-1 sm:pb-0">
               {configuredLevels.length === 0 && (
-                <span className="text-xs font-semibold text-purple-900/60 italic px-2">No levels configured yet</span>
+                <span className="text-xs font-semibold text-blue-900/60 italic px-2">No levels configured yet</span>
               )}
               {configuredLevels.map((lvl) => {
                 const displayName = (settingsActiveLevel === lvl ? settingsLevelName : levelDisplayNames[lvl]) || LEVEL_CONFIG[lvl]?.name || lvl;
@@ -4663,11 +4663,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     title={displayName}
                     className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 max-w-[260px] ${
                       settingsActiveLevel === lvl
-                        ? 'bg-purple-900 text-white shadow-md scale-[1.02]'
-                        : 'bg-white text-slate-700 hover:bg-purple-100/70 hover:text-purple-950 border border-purple-200/80 shadow-2xs'
+                        ? 'bg-blue-900 text-white shadow-md scale-[1.02]'
+                        : 'bg-white text-slate-700 hover:bg-blue-100/70 hover:text-blue-950 border border-blue-200/80 shadow-2xs'
                     }`}
                   >
-                    <Layers className={`w-3.5 h-3.5 shrink-0 ${settingsActiveLevel === lvl ? 'text-purple-300' : 'text-purple-500'}`} />
+                    <Layers className={`w-3.5 h-3.5 shrink-0 ${settingsActiveLevel === lvl ? 'text-blue-300' : 'text-blue-500'}`} />
                     <span className="truncate">{displayName}</span>
                   </button>
                 );
@@ -4677,7 +4677,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 flex-wrap">
               {configuredLevels.length > 0 && (
                 <>
-                  <span className="text-xs font-mono font-extrabold text-purple-950 bg-white border border-purple-200 px-3 py-1.5 rounded-xl shadow-2xs">
+                  <span className="text-xs font-mono font-extrabold text-blue-950 bg-white border border-blue-200 px-3 py-1.5 rounded-xl shadow-2xs">
                     {settingsLevelTasks.length} Training Days
                   </span>
                   {settingsLevelTasks.length > 0 && (
@@ -4702,7 +4702,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <button
                 type="button"
                 onClick={handleOpenAddLevelModal}
-                className="py-1.5 px-3.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-colors shadow-xs flex items-center gap-1 cursor-pointer"
+                className="py-1.5 px-3.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors shadow-xs flex items-center gap-1 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Level</span>
@@ -4719,12 +4719,12 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   }}
                 >
                   <div
-                    className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+                    className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="flex items-center justify-between border-b border-purple-100 pb-3">
+                    <div className="flex items-center justify-between border-b border-blue-100 pb-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2.5 rounded-2xl bg-gradient-to-br from-purple-100 to-indigo-100 text-purple-800 border border-purple-200/80 shadow-2xs">
+                        <div className="p-2.5 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-800 border border-blue-200/80 shadow-2xs">
                           <Layers className="w-5 h-5" />
                         </div>
                         <div>
@@ -4758,7 +4758,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     >
                       <div>
                         <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                           <span>Level Name / Title *</span>
                         </label>
                         <input
@@ -4770,7 +4770,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             if (newLevelError) setNewLevelError('');
                           }}
                           placeholder="e.g. WebXR & Three.js Development"
-                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 bg-purple-50/40 border-purple-200 focus:bg-white"
+                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 bg-blue-50/40 border-blue-200 focus:bg-white"
                         />
                         <p className="text-[11px] text-slate-500 mt-1 font-medium">
                           This title will appear on level tabs, batches, and student certificates.
@@ -4779,7 +4779,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                       <div>
                         <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-purple-600" />
+                          <Calendar className="w-3.5 h-3.5 text-blue-600" />
                           <span>Total Training Days *</span>
                         </label>
                         <input
@@ -4791,7 +4791,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             const val = parseInt(e.target.value, 10);
                             setNewLevelForm((prev) => ({ ...prev, days: isNaN(val) ? 1 : val }));
                           }}
-                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 bg-purple-50/40 border-purple-200 focus:bg-white"
+                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 bg-blue-50/40 border-blue-200 focus:bg-white"
                         />
                         <div className="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-xl">
                           <GraduationCap className="w-3.5 h-3.5 text-amber-600 shrink-0" />
@@ -4799,7 +4799,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-purple-100">
+                      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-blue-100">
                         <button
                           type="button"
                           disabled={creatingLevel}
@@ -4824,8 +4824,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
               {/* Empty state when no levels configured */}
               {configuredLevels.length === 0 ? (
-                <div className="pro-card rounded-3xl p-16 text-center flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-purple-50/40 via-white to-indigo-50/30 border-2 border-dashed border-purple-200/80 shadow-xs">
-                  <div className="p-4 rounded-3xl bg-purple-100/80 text-purple-700 shadow-2xs border border-purple-200/60">
+                <div className="pro-card rounded-3xl p-16 text-center flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-blue-50/40 via-white to-indigo-50/30 border-2 border-dashed border-blue-200/80 shadow-xs">
+                  <div className="p-4 rounded-3xl bg-blue-100/80 text-blue-700 shadow-2xs border border-blue-200/60">
                     <Layers className="w-10 h-10" />
                   </div>
                   <div className="space-y-1.5 max-w-md">
@@ -4846,13 +4846,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               ) : (
                 <>
                   {/* Level Title / Custom Name Field */}
-                  <div className="pro-card rounded-2xl p-5 bg-gradient-to-r from-purple-50/80 via-white to-indigo-50/80 border border-purple-200 space-y-2.5 shadow-xs">
+                  <div className="pro-card rounded-2xl p-5 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/80 border border-blue-200 space-y-2.5 shadow-xs">
                     <div className="flex items-center justify-between">
-                      <label className="block text-xs font-extrabold text-purple-950 uppercase tracking-wider flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-purple-700" />
+                      <label className="block text-xs font-extrabold text-blue-950 uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-blue-700" />
                         <span>Level Name / Curriculum Title</span>
                       </label>
-                      <span className="text-[11px] font-semibold text-purple-700">Appears on Level Tabs, Batch Creation & Certificates</span>
+                      <span className="text-[11px] font-semibold text-blue-700">Appears on Level Tabs, Batch Creation & Certificates</span>
                     </div>
                     <input
                       type="text"
@@ -4866,7 +4866,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         }));
                       }}
                       placeholder="e.g. AR/VR Core Fundamentals or Advanced WebXR"
-                      className="w-full pro-input rounded-xl px-4 py-2.5 text-xs font-bold text-slate-900 bg-white border-purple-300"
+                      className="w-full pro-input rounded-xl px-4 py-2.5 text-xs font-bold text-slate-900 bg-white border-blue-300"
                     />
                   </div>
 
@@ -4883,7 +4883,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         className={`pro-card rounded-3xl p-5 sm:p-6 space-y-5 transition-all ${
                           isExamDay
                             ? 'bg-gradient-to-br from-amber-50/90 via-white to-amber-50/50 border-2 border-amber-300 shadow-sm'
-                            : 'bg-white border border-purple-200/90 shadow-sm hover:border-purple-300'
+                            : 'bg-white border border-blue-200/90 shadow-sm hover:border-blue-300'
                         }`}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -4892,7 +4892,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               className={`text-xs font-extrabold font-mono px-3 py-1 rounded-lg border flex items-center gap-1.5 ${
                                 isExamDay
                                   ? 'bg-amber-100 text-amber-950 border-amber-300 ring-2 ring-amber-300/60 shadow-2xs'
-                                  : 'bg-purple-100 text-purple-900 border-purple-200'
+                                  : 'bg-blue-100 text-blue-900 border-blue-200'
                               }`}
                             >
                               {isExamDay && <GraduationCap className="w-3.5 h-3.5 text-amber-700" />}
@@ -4960,22 +4960,22 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             <div className="space-y-4 pt-1">
                               {/* Tasks List Section */}
                               <div className="space-y-3">
-                                <div className="flex items-center justify-between border-b border-purple-200/70 pb-2">
+                                <div className="flex items-center justify-between border-b border-blue-200/70 pb-2">
                                   <div className="flex items-center gap-2">
-                                    <ListChecks className="w-4 h-4 text-purple-700" />
+                                    <ListChecks className="w-4 h-4 text-blue-700" />
                                     <span className="text-xs font-bold text-slate-900">
                                       {isExamDay ? 'Exam Tasks & Practical Requirements' : 'Tasks & Practical Requirements'}
                                     </span>
-                                    <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">
+                                    <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800 border border-blue-200">
                                       {dayTasks.length} {dayTasks.length === 1 ? 'Task' : 'Tasks'}
                                     </span>
                                   </div>
                                   <button
                                     type="button"
                                     onClick={() => handleAddTask(idx, false)}
-                                    className="px-2.5 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 text-[11px] font-bold transition-all flex items-center gap-1 border border-purple-300 shadow-2xs"
+                                    className="px-2.5 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-900 text-[11px] font-bold transition-all flex items-center gap-1 border border-blue-300 shadow-2xs"
                                   >
-                                    <Plus className="w-3.5 h-3.5 text-purple-700" />
+                                    <Plus className="w-3.5 h-3.5 text-blue-700" />
                                     <span>Add Task</span>
                                   </button>
                                 </div>
@@ -4984,11 +4984,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                   {dayTasks.map((taskItem, tIdx) => (
                                     <div
                                       key={taskItem.id || tIdx}
-                                      className="p-4 rounded-2xl bg-purple-50/40 border border-purple-200/80 shadow-2xs space-y-3"
+                                      className="p-4 rounded-2xl bg-blue-50/40 border border-blue-200/80 shadow-2xs space-y-3"
                                     >
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                          <span className="text-[11px] font-extrabold text-purple-950 bg-white px-2.5 py-0.5 rounded-md border border-purple-200">
+                                          <span className="text-[11px] font-extrabold text-blue-950 bg-white px-2.5 py-0.5 rounded-md border border-blue-200">
                                             Task #{tIdx + 1}
                                           </span>
                                           {isExamDay && tIdx === 0 && (
@@ -5042,7 +5042,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               </div>
 
                               {/* Learning Resources Section (PDFs, Links, Others) */}
-                              <div className="space-y-3 pt-2 border-t border-purple-200/70">
+                              <div className="space-y-3 pt-2 border-t border-blue-200/70">
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
                                     <Paperclip className="w-4 h-4 text-indigo-700" />
@@ -5150,13 +5150,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                             />
                                             <span className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
                                               uploadingResourceKey === `settings-${idx}-${rIdx}`
-                                                ? 'bg-purple-100 text-purple-700 border-purple-300 animate-pulse'
-                                                : 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100 shadow-2xs'
+                                                ? 'bg-blue-100 text-blue-700 border-blue-300 animate-pulse'
+                                                : 'bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100 shadow-2xs'
                                             }`}>
                                               {uploadingResourceKey === `settings-${idx}-${rIdx}` ? (
-                                                <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-700" />
+                                                <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-700" />
                                               ) : (
-                                                <FileUp className="w-3.5 h-3.5 text-purple-700" />
+                                                <FileUp className="w-3.5 h-3.5 text-blue-700" />
                                               )}
                                               <span>{uploadingResourceKey === `settings-${idx}-${rIdx}` ? 'Uploading...' : 'Upload File'}</span>
                                             </span>
@@ -5189,16 +5189,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <button
                     type="button"
                     onClick={handleAddSettingsDay}
-                    className="w-full py-3.5 rounded-2xl border-2 border-dashed border-purple-300 hover:border-purple-500 hover:bg-purple-50/50 text-purple-900 text-xs font-bold transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-2xl border-2 border-dashed border-blue-300 hover:border-blue-500 hover:bg-blue-50/50 text-blue-900 text-xs font-bold transition-all flex items-center justify-center gap-2"
                   >
-                    <Plus className="w-4 h-4 text-purple-600" />
+                    <Plus className="w-4 h-4 text-blue-600" />
                     <span>Add Training Day {settingsLevelTasks.length + 1} to {settingsActiveLevel}</span>
                   </button>
                 </div>
               )}
 
               {/* Action Buttons */}
-              <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+              <div className="pro-card rounded-2xl p-4 bg-white border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                 <span className="text-xs text-slate-500 font-medium">
                   Edits persist in database for all future {settingsActiveLevel} batches.
                 </span>
@@ -5206,7 +5206,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <button
                     type="button"
                     onClick={() => handleTabSwitch('batches')}
-                    className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                    className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                   >
                     Back to Batches
                   </button>
@@ -5230,10 +5230,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       {staffTab === 'settings' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           {/* Section Header Card */}
-          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
-                <Settings className="w-4 h-4 text-purple-700" />
+              <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                <Settings className="w-4 h-4 text-blue-700" />
                 <span>Admin Settings • System Configuration</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -5248,7 +5248,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <button
                 type="button"
                 onClick={() => handleTabSwitch('batches')}
-                className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Back to Batches</span>
@@ -5259,7 +5259,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <button
                     type="button"
                     onClick={handleResetPageSettingsToDefault}
-                    className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors cursor-pointer"
+                    className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors cursor-pointer"
                   >
                     Reset Defaults
                   </button>
@@ -5302,7 +5302,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {/* Section Tabs: Page Details, Attendance & Drive */}
-          <div className="pro-card rounded-2xl p-2 bg-white/95 border-purple-200/90 flex flex-wrap items-center gap-2 shadow-xs">
+          <div className="pro-card rounded-2xl p-2 bg-white/95 border-blue-200/90 flex flex-wrap items-center gap-2 shadow-xs">
             <button
               type="button"
               onClick={() => {
@@ -5311,8 +5311,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               }}
               className={`py-2.5 px-5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 settingsSectionTab === 'pageDetails'
-                  ? 'bg-purple-900 text-white shadow-md'
-                  : 'bg-purple-50/70 text-slate-700 hover:bg-purple-100/80 border border-purple-200/70'
+                  ? 'bg-blue-900 text-white shadow-md'
+                  : 'bg-blue-50/70 text-slate-700 hover:bg-blue-100/80 border border-blue-200/70'
               }`}
             >
               <Globe className="w-4 h-4" />
@@ -5324,8 +5324,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               onClick={() => setSettingsSectionTab('attendance')}
               className={`py-2.5 px-5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 settingsSectionTab === 'attendance'
-                  ? 'bg-purple-900 text-white shadow-md'
-                  : 'bg-purple-50/70 text-slate-700 hover:bg-purple-100/80 border border-purple-200/70'
+                  ? 'bg-blue-900 text-white shadow-md'
+                  : 'bg-blue-50/70 text-slate-700 hover:bg-blue-100/80 border border-blue-200/70'
               }`}
             >
               <Clock className="w-4 h-4" />
@@ -5340,8 +5340,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               }}
               className={`py-2.5 px-5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 settingsSectionTab === 'drive'
-                  ? 'bg-purple-900 text-white shadow-md'
-                  : 'bg-purple-50/70 text-slate-700 hover:bg-purple-100/80 border border-purple-200/70'
+                  ? 'bg-blue-900 text-white shadow-md'
+                  : 'bg-blue-50/70 text-slate-700 hover:bg-blue-100/80 border border-blue-200/70'
               }`}
             >
               <ExternalLink className="w-4 h-4" />
@@ -5357,8 +5357,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               }}
               className={`py-2.5 px-5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 settingsSectionTab === 'accessControl'
-                  ? 'bg-purple-900 text-white shadow-md'
-                  : 'bg-purple-50/70 text-slate-700 hover:bg-purple-100/80 border border-purple-200/70'
+                  ? 'bg-blue-900 text-white shadow-md'
+                  : 'bg-blue-50/70 text-slate-700 hover:bg-blue-100/80 border border-blue-200/70'
               }`}
             >
               <Shield className="w-4 h-4" />
@@ -5370,8 +5370,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           {/* TAB 1: PAGE TITLE & BRANDING DETAILS */}
           {settingsSectionTab === 'pageDetails' && (
             <div className="space-y-6">
-              <div className="pro-card rounded-2xl p-5 bg-purple-50/70 border border-purple-200 text-xs text-purple-950 leading-relaxed font-medium flex items-start gap-3">
-                <Info className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+              <div className="pro-card rounded-2xl p-5 bg-blue-50/70 border border-blue-200 text-xs text-blue-950 leading-relaxed font-medium flex items-start gap-3">
+                <Info className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
                 <div>
                   <strong className="block font-bold text-slate-900 mb-0.5">Customize Page Title & Portal Details</strong>
                   Change the application branding, navigation bar title, edition badge, page subtitle, browser tab title, institutional details, and footer text. Updates reflect immediately across the entire portal.
@@ -5380,19 +5380,19 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
               {loadingPageSettings ? (
                 <div className="pro-card rounded-3xl p-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-                  <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
+                  <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
                   <span className="text-xs font-bold text-slate-700">Loading page settings & branding...</span>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Card 1: Navbar & Header Branding */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200 shadow-sm space-y-5">
-                    <div className="flex items-center gap-2.5 pb-3 border-b border-purple-100">
-                      <div className="p-2 rounded-xl bg-purple-100 text-purple-800">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200 shadow-sm space-y-5">
+                    <div className="flex items-center gap-2.5 pb-3 border-b border-blue-100">
+                      <div className="p-2 rounded-xl bg-blue-100 text-blue-800">
                         <LayoutDashboard className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-purple-950">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-blue-950">
                           Portal Header Branding
                         </h3>
                         <p className="text-[11px] text-slate-500 font-medium">Main application title and header subtitle</p>
@@ -5426,7 +5426,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             value={pageBadge}
                             onChange={(e) => setPageBadge(e.target.value)}
                             placeholder="e.g. ENTERPRISE, PRO, ACADEMY"
-                            className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-purple-950 bg-white border-purple-300"
+                            className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-blue-950 bg-white border-blue-300"
                           />
                           <p className="text-[11px] text-slate-400 mt-1 font-medium">
                             Small pill badge next to the title (optional).
@@ -5469,13 +5469,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </div>
 
                   {/* Card 2: Browser Tab & SEO Details */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200 shadow-sm space-y-5">
-                    <div className="flex items-center gap-2.5 pb-3 border-b border-purple-100">
-                      <div className="p-2 rounded-xl bg-purple-100 text-purple-800">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200 shadow-sm space-y-5">
+                    <div className="flex items-center gap-2.5 pb-3 border-b border-blue-100">
+                      <div className="p-2 rounded-xl bg-blue-100 text-blue-800">
                         <Globe className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-purple-950">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-blue-950">
                           Browser Window & Page Details
                         </h3>
                         <p className="text-[11px] text-slate-500 font-medium">Browser tab title, overview, and contact info</p>
@@ -5548,7 +5548,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               )}
 
               {/* Bottom Action Buttons */}
-              <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+              <div className="pro-card rounded-2xl p-4 bg-white border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                 <span className="text-xs text-slate-500 font-medium">
                   Changes apply dynamically across the entire website and all user sessions.
                 </span>
@@ -5556,7 +5556,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <button
                     type="button"
                     onClick={() => handleTabSwitch('batches')}
-                    className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors cursor-pointer"
+                    className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors cursor-pointer"
                   >
                     Back to Batches
                   </button>
@@ -5584,8 +5584,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           {/* TAB 2: ATTENDANCE WINDOW SETTINGS */}
           {settingsSectionTab === 'attendance' && (
             <div className="space-y-6">
-              <div className="pro-card rounded-2xl p-5 bg-purple-50/70 border border-purple-200 text-xs text-purple-950 leading-relaxed font-medium flex items-start gap-3">
-                <Info className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+              <div className="pro-card rounded-2xl p-5 bg-blue-50/70 border border-blue-200 text-xs text-blue-950 leading-relaxed font-medium flex items-start gap-3">
+                <Info className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
                 <div>
                   <strong className="block font-bold text-slate-900 mb-0.5">Daily Attendance Marking Windows</strong>
                   Set opening and closing (cutoff) times for student attendance marking. Students can mark attendance only during these active windows.
@@ -5594,19 +5594,19 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
               {loadingAttendanceSettings ? (
                 <div className="pro-card rounded-3xl p-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-                  <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
+                  <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
                   <span className="text-xs font-bold text-slate-700">Loading attendance window settings...</span>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Morning (FN) Session */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200 shadow-sm space-y-5">
-                    <div className="flex items-center gap-2.5 pb-3 border-b border-purple-100">
-                      <div className="p-2 rounded-xl bg-purple-100 text-purple-800">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200 shadow-sm space-y-5">
+                    <div className="flex items-center gap-2.5 pb-3 border-b border-blue-100">
+                      <div className="p-2 rounded-xl bg-blue-100 text-blue-800">
                         <Clock className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-purple-950">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-blue-950">
                           FN Session (Morning)
                         </h3>
                         <p className="text-[11px] text-slate-500 font-medium">Forenoon attendance marking window</p>
@@ -5630,27 +5630,27 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           type="time"
                           value={settingsFnCutoff}
                           onChange={(e) => setSettingsFnCutoff(e.target.value)}
-                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-purple-950 bg-white border-purple-300"
+                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-blue-950 bg-white border-blue-300"
                         />
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-purple-100/70 flex items-center justify-between text-xs">
+                    <div className="pt-3 border-t border-blue-100/70 flex items-center justify-between text-xs">
                       <span className="text-slate-500 font-medium">Active Window:</span>
-                      <span className="font-mono font-extrabold text-purple-900 bg-purple-100/80 px-3 py-1 rounded-lg border border-purple-200">
+                      <span className="font-mono font-extrabold text-blue-900 bg-blue-100/80 px-3 py-1 rounded-lg border border-blue-200">
                         {settingsFnStart} – {settingsFnCutoff}
                       </span>
                     </div>
                   </div>
 
                   {/* Afternoon (AN) Session */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200 shadow-sm space-y-5">
-                    <div className="flex items-center gap-2.5 pb-3 border-b border-purple-100">
-                      <div className="p-2 rounded-xl bg-purple-100 text-purple-800">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200 shadow-sm space-y-5">
+                    <div className="flex items-center gap-2.5 pb-3 border-b border-blue-100">
+                      <div className="p-2 rounded-xl bg-blue-100 text-blue-800">
                         <Clock className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-purple-950">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-blue-950">
                           AN Session (Afternoon)
                         </h3>
                         <p className="text-[11px] text-slate-500 font-medium">Afternoon attendance marking window</p>
@@ -5674,14 +5674,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           type="time"
                           value={settingsAnCutoff}
                           onChange={(e) => setSettingsAnCutoff(e.target.value)}
-                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-purple-950 bg-white border-purple-300"
+                          className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-blue-950 bg-white border-blue-300"
                         />
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-purple-100/70 flex items-center justify-between text-xs">
+                    <div className="pt-3 border-t border-blue-100/70 flex items-center justify-between text-xs">
                       <span className="text-slate-500 font-medium">Active Window:</span>
-                      <span className="font-mono font-extrabold text-purple-900 bg-purple-100/80 px-3 py-1 rounded-lg border border-purple-200">
+                      <span className="font-mono font-extrabold text-blue-900 bg-blue-100/80 px-3 py-1 rounded-lg border border-blue-200">
                         {settingsAnStart} – {settingsAnCutoff}
                       </span>
                     </div>
@@ -5690,7 +5690,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               )}
 
               {/* Action Buttons */}
-              <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+              <div className="pro-card rounded-2xl p-4 bg-white border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                 <span className="text-xs text-slate-500 font-medium">
                   Changes apply immediately across Student Attendance Marking portals.
                 </span>
@@ -5698,7 +5698,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <button
                     type="button"
                     onClick={() => handleTabSwitch('batches')}
-                    className="py-2.5 px-4 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors cursor-pointer"
+                    className="py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors cursor-pointer"
                   >
                     Back to Batches
                   </button>
@@ -5720,10 +5720,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           {settingsSectionTab === 'drive' && (
             /* Google Drive OAuth Connection Tab */
             <div className="space-y-6">
-              <div className="pro-card rounded-3xl p-6 sm:p-8 bg-white border border-purple-200 shadow-sm space-y-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-purple-100 pb-5">
+              <div className="pro-card rounded-3xl p-6 sm:p-8 bg-white border border-blue-200 shadow-sm space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-blue-100 pb-5">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-2xl bg-purple-100 text-purple-800">
+                    <div className="p-3 rounded-2xl bg-blue-100 text-blue-800">
                       <ExternalLink className="w-6 h-6" />
                     </div>
                     <div>
@@ -5750,11 +5750,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 </div>
 
                 {/* Google Cloud API Credentials Configuration Form */}
-                <div className="rounded-2xl p-5 bg-purple-50/70 border border-purple-200 space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-purple-100">
+                <div className="rounded-2xl p-5 bg-blue-50/70 border border-blue-200 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-blue-100">
                     <div className="flex items-center gap-2">
-                      <KeyRound className="w-4 h-4 text-purple-700" />
-                      <span className="text-xs font-bold uppercase tracking-wider text-purple-950">
+                      <KeyRound className="w-4 h-4 text-blue-700" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-blue-950">
                         Google Cloud OAuth Credentials
                       </span>
                     </div>
@@ -5781,7 +5781,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             ? driveStorageInfo.redirectUri
                             : 'https://lms.xarc.online/api/google-drive/oauth/callback'
                         }
-                        className="w-full pro-input rounded-xl px-3 py-2 text-xs font-mono font-bold text-purple-950 bg-white border border-purple-200 select-all focus:outline-none"
+                        className="w-full pro-input rounded-xl px-3 py-2 text-xs font-mono font-bold text-blue-950 bg-white border border-blue-200 select-all focus:outline-none"
                       />
                       <button
                         type="button"
@@ -5793,7 +5793,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           navigator.clipboard.writeText(uri);
                           showSuccess('Redirect URI copied to clipboard!');
                         }}
-                        className="px-3.5 py-2 bg-purple-900 hover:bg-purple-800 text-white rounded-xl text-xs font-bold whitespace-nowrap transition-colors"
+                        className="px-3.5 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-xl text-xs font-bold whitespace-nowrap transition-colors"
                       >
                         Copy URI
                       </button>
@@ -5816,7 +5816,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           value={googleClientIdInput}
                           onChange={(e) => setGoogleClientIdInput(e.target.value)}
                           placeholder="e.g. 123456789-xyz.apps.googleusercontent.com"
-                          className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-purple-200 focus:outline-none focus:border-purple-600"
+                          className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-blue-200 focus:outline-none focus:border-blue-600"
                         />
                       </div>
 
@@ -5829,10 +5829,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           value={googleClientSecretInput}
                           onChange={(e) => setGoogleClientSecretInput(e.target.value)}
                           placeholder={driveStorageInfo?.hasSecret ? '••••••••••••••••••••••••' : 'Enter Google Client Secret (starts with GOCSPX-)'}
-                          className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-purple-200 focus:outline-none focus:border-purple-600"
+                          className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 bg-white border border-blue-200 focus:outline-none focus:border-blue-600"
                         />
                         <p className="text-[10px] text-slate-500 font-medium mt-1">
-                          From Google Cloud Console (starts with <code className="text-purple-700 bg-purple-50 px-1 py-0.5 rounded font-mono">GOCSPX-</code>). Do not enter your admin password here.
+                          From Google Cloud Console (starts with <code className="text-blue-700 bg-blue-50 px-1 py-0.5 rounded font-mono">GOCSPX-</code>). Do not enter your admin password here.
                         </p>
                       </div>
                     </div>
@@ -5855,7 +5855,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       <button
                         type="submit"
                         disabled={savingDriveCreds}
-                        className="py-2.5 px-5 rounded-xl bg-purple-900 hover:bg-purple-800 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-xs"
+                        className="py-2.5 px-5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-xs"
                       >
                         {savingDriveCreds ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                         <span>Save API Credentials</span>
@@ -5866,16 +5866,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                 {loadingDriveSettings ? (
                   <div className="py-12 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-                    <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
+                    <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
                     <span className="text-xs font-bold text-slate-700">Checking Google Drive connection status...</span>
                   </div>
                 ) : driveStorageInfo?.isConnected ? (
                   <div className="space-y-5">
-                    <div className="p-5 rounded-2xl bg-purple-50/50 border border-purple-200/80 space-y-2">
+                    <div className="p-5 rounded-2xl bg-blue-50/50 border border-blue-200/80 space-y-2">
                       <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Connected Google Account:</span>
-                      <span className="text-sm font-extrabold font-mono text-purple-950">{driveStorageInfo?.connectedAccount || 'admin@gmail.com'}</span>
+                      <span className="text-sm font-extrabold font-mono text-blue-950">{driveStorageInfo?.connectedAccount || 'admin@gmail.com'}</span>
                       <p className="text-xs text-slate-500 font-medium pt-1">
-                        Submissions will be automatically organized under <code className="font-bold text-purple-950 bg-white px-2 py-0.5 rounded border border-purple-200 font-mono">ARVR_Student_Submissions/{"{Batch_Name}"}/</code> in this Google Drive.
+                        Submissions will be automatically organized under <code className="font-bold text-blue-950 bg-white px-2 py-0.5 rounded border border-blue-200 font-mono">ARVR_Student_Submissions/{"{Batch_Name}"}/</code> in this Google Drive.
                       </p>
                     </div>
 
@@ -5892,7 +5892,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         type="button"
                         disabled={testingDriveConn}
                         onClick={handleTestDriveConnection}
-                        className="py-2.5 px-5 rounded-xl bg-purple-900 text-white font-bold text-xs hover:bg-purple-800 transition-colors shadow-xs flex items-center gap-2"
+                        className="py-2.5 px-5 rounded-xl bg-blue-900 text-white font-bold text-xs hover:bg-blue-800 transition-colors shadow-xs flex items-center gap-2"
                       >
                         {testingDriveConn ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                         <span>Test Connection</span>
@@ -5919,7 +5919,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       <div className="text-xs text-slate-700 space-y-1.5">
                         <p>
                           <span className="font-bold">Previously Linked Account: </span>
-                          <span className="font-mono font-bold text-purple-950">{driveStorageInfo?.connectedAccount}</span>
+                          <span className="font-mono font-bold text-blue-950">{driveStorageInfo?.connectedAccount}</span>
                         </p>
                         <p className="text-slate-600 leading-relaxed font-medium">
                           {driveStorageInfo?.message || 'Google OAuth tokens in Testing mode automatically expire every 7 days. Click Reconnect Google Drive to grant a fresh token.'}
@@ -5940,7 +5940,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         type="button"
                         disabled={connectingDrive}
                         onClick={handleConnectDrive}
-                        className="py-3 px-6 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-bold text-xs shadow-lg shadow-purple-700/20 hover:from-purple-600 hover:to-indigo-600 transition-all flex items-center gap-2"
+                        className="py-3 px-6 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 text-white font-bold text-xs shadow-lg shadow-blue-700/20 hover:from-blue-600 hover:to-indigo-600 transition-all flex items-center gap-2"
                       >
                         {connectingDrive ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
                         <span>Reconnect Google Drive</span>
@@ -5960,7 +5960,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 ) : (
                   <div className="space-y-5">
                     <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                      Connect your personal Google Drive account using Google OAuth 2.0. Submissions will be uploaded directly into your Drive under <code className="font-bold text-purple-950 bg-white px-2 py-0.5 rounded border border-purple-200 font-mono">ARVR_Student_Submissions/{"{Batch_Name}"}/</code>.
+                      Connect your personal Google Drive account using Google OAuth 2.0. Submissions will be uploaded directly into your Drive under <code className="font-bold text-blue-950 bg-white px-2 py-0.5 rounded border border-blue-200 font-mono">ARVR_Student_Submissions/{"{Batch_Name}"}/</code>.
                     </p>
 
                     {testResultMsg && (
@@ -5975,7 +5975,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       type="button"
                       disabled={connectingDrive}
                       onClick={handleConnectDrive}
-                      className="py-3 px-6 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-bold text-xs shadow-lg shadow-purple-700/20 hover:from-purple-600 hover:to-indigo-600 transition-all flex items-center gap-2"
+                      className="py-3 px-6 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 text-white font-bold text-xs shadow-lg shadow-blue-700/20 hover:from-blue-600 hover:to-indigo-600 transition-all flex items-center gap-2"
                     >
                       {connectingDrive ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
                       <span>Connect Google Drive</span>
@@ -5984,11 +5984,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 )}
               </div>
 
-              <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex items-center justify-end shadow-sm">
+              <div className="pro-card rounded-2xl p-4 bg-white border border-blue-200 flex items-center justify-end shadow-sm">
                 <button
                   type="button"
                   onClick={() => handleTabSwitch('batches')}
-                  className="py-2.5 px-5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                  className="py-2.5 px-5 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                 >
                   Back to Batches
                 </button>
@@ -5999,8 +5999,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           {/* TAB 4: ACCESS CONTROL (CAMPUS GEOFENCING & WIFI NETWORK RESTRICTIONS) */}
           {settingsSectionTab === 'accessControl' && (
             <div className="space-y-6">
-              <div className="pro-card rounded-2xl p-5 bg-purple-50/70 border border-purple-200 text-xs text-purple-950 leading-relaxed font-medium flex items-start gap-3">
-                <Shield className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+              <div className="pro-card rounded-2xl p-5 bg-blue-50/70 border border-blue-200 text-xs text-blue-950 leading-relaxed font-medium flex items-start gap-3">
+                <Shield className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
                 <div>
                   <strong className="block font-bold text-slate-900 mb-0.5">Enterprise Physical Campus Geofencing & Academy WiFi Security</strong>
                   Ensure students can only authenticate and mark daily attendance when physically present inside the designated campus perimeter and connected to authorized academy WiFi networks. Includes a dedicated Localhost Testing Bypass so development workflows remain completely uninterrupted.
@@ -6026,16 +6026,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
               {loadingAccessSettings ? (
                 <div className="py-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-                  <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
+                  <RefreshCw className="w-8 h-8 animate-spin text-blue-600" />
                   <span className="text-xs font-bold text-slate-700">Loading access control policy...</span>
                 </div>
               ) : (
                 <div className="space-y-6">
                   {/* CARD 1: PHYSICAL CAMPUS GEOFENCING */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200/90 shadow-sm space-y-6">
-                    <div className="flex items-center justify-between border-b border-purple-100 pb-4 flex-wrap gap-3">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200/90 shadow-sm space-y-6">
+                    <div className="flex items-center justify-between border-b border-blue-100 pb-4 flex-wrap gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700">
+                        <div className="w-10 h-10 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
                           <MapPin className="w-5 h-5" />
                         </div>
                         <div>
@@ -6053,10 +6053,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           onChange={(e) => setAccessGeofenceEnabled(e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-900"></div>
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-900"></div>
                         <span className="ml-3 text-xs font-bold text-slate-700">
                           {accessGeofenceEnabled ? (
-                            <span className="text-purple-900 font-extrabold">Active</span>
+                            <span className="text-blue-900 font-extrabold">Active</span>
                           ) : (
                             <span className="text-slate-400">Disabled</span>
                           )}
@@ -6076,7 +6076,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             placeholder="e.g. 13.082680"
                             value={accessCampusLat}
                             onChange={(e) => setAccessCampusLat(e.target.value)}
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-blue-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                           />
                         </div>
 
@@ -6090,7 +6090,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             placeholder="e.g. 80.270718"
                             value={accessCampusLng}
                             onChange={(e) => setAccessCampusLng(e.target.value)}
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-blue-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                           />
                         </div>
                       </div>
@@ -6100,7 +6100,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           type="button"
                           disabled={capturingLocation}
                           onClick={handleCaptureAdminCoordinates}
-                          className="py-2 px-4 rounded-xl bg-purple-50 border border-purple-300 text-purple-900 text-xs font-bold hover:bg-purple-100 transition-colors flex items-center gap-2 cursor-pointer shadow-2xs"
+                          className="py-2 px-4 rounded-xl bg-blue-50 border border-blue-300 text-blue-900 text-xs font-bold hover:bg-blue-100 transition-colors flex items-center gap-2 cursor-pointer shadow-2xs"
                         >
                           {capturingLocation ? (
                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -6116,10 +6116,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         )}
                       </div>
 
-                      <div className="space-y-2 pt-2 border-t border-purple-100">
+                      <div className="space-y-2 pt-2 border-t border-blue-100">
                         <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
                           <span>Allowed Campus Radius (Meters)</span>
-                          <span className="text-xs font-extrabold text-purple-900 font-mono">{accessRadiusMeters} meters</span>
+                          <span className="text-xs font-extrabold text-blue-900 font-mono">{accessRadiusMeters} meters</span>
                         </label>
                         <input
                           type="number"
@@ -6127,7 +6127,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           max="5000"
                           value={accessRadiusMeters}
                           onChange={(e) => setAccessRadiusMeters(parseInt(e.target.value, 10) || 150)}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-blue-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                         />
                         <div className="flex flex-wrap items-center gap-2 pt-1">
                           <span className="text-[11px] font-bold text-slate-500">Presets:</span>
@@ -6143,8 +6143,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               onClick={() => setAccessRadiusMeters(p.val)}
                               className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
                                 accessRadiusMeters === p.val
-                                  ? 'bg-purple-900 text-white'
-                                  : 'bg-purple-50 text-purple-900 border border-purple-200 hover:bg-purple-100'
+                                  ? 'bg-blue-900 text-white'
+                                  : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
                               }`}
                             >
                               {p.label}
@@ -6156,10 +6156,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </div>
 
                   {/* CARD 2: ACADEMY WIFI NETWORK WHITELIST */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200/90 shadow-sm space-y-6">
-                    <div className="flex items-center justify-between border-b border-purple-100 pb-4 flex-wrap gap-3">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200/90 shadow-sm space-y-6">
+                    <div className="flex items-center justify-between border-b border-blue-100 pb-4 flex-wrap gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700">
+                        <div className="w-10 h-10 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
                           <Wifi className="w-5 h-5" />
                         </div>
                         <div>
@@ -6177,10 +6177,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           onChange={(e) => setAccessWifiEnabled(e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-900"></div>
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-900"></div>
                         <span className="ml-3 text-xs font-bold text-slate-700">
                           {accessWifiEnabled ? (
-                            <span className="text-purple-900 font-extrabold">Active</span>
+                            <span className="text-blue-900 font-extrabold">Active</span>
                           ) : (
                             <span className="text-slate-400">Disabled</span>
                           )}
@@ -6190,11 +6190,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                     <div className="space-y-5">
                       {/* 1-CLICK EASY SETUP ASSISTANT */}
-                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-purple-50 via-indigo-50/40 to-purple-50/60 border border-purple-200 space-y-3.5">
+                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50 via-indigo-50/40 to-blue-50/60 border border-blue-200 space-y-3.5">
                         <div className="flex items-center justify-between flex-wrap gap-2">
                           <div className="flex items-center gap-2">
-                            <Sparkles className="w-4 h-4 text-purple-700" />
-                            <span className="text-xs font-extrabold text-purple-950 uppercase tracking-wider">
+                            <Sparkles className="w-4 h-4 text-blue-700" />
+                            <span className="text-xs font-extrabold text-blue-950 uppercase tracking-wider">
                               1-Click Easy WiFi Setup
                             </span>
                           </div>
@@ -6223,11 +6223,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           <div className="space-y-0.5">
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Your Current Detected Network IP:</span>
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-extrabold font-mono text-purple-950 bg-white/80 px-2.5 py-1 rounded-lg border border-purple-200 inline-block shadow-2xs">
+                              <span className="text-sm font-extrabold font-mono text-blue-950 bg-white/80 px-2.5 py-1 rounded-lg border border-blue-200 inline-block shadow-2xs">
                                 {accessCurrentDetectedIp || 'Resolving caller IP...'}
                               </span>
                               {(accessCurrentDetectedIp === '::1' || accessCurrentDetectedIp === '127.0.0.1' || accessCurrentDetectedIp.startsWith('127.')) && (
-                                <span className="text-[10px] font-bold text-purple-700 bg-purple-100/90 px-2 py-0.5 rounded-md border border-purple-200">
+                                <span className="text-[10px] font-bold text-blue-700 bg-blue-100/90 px-2 py-0.5 rounded-md border border-blue-200">
                                   Localhost (::1)
                                 </span>
                               )}
@@ -6255,7 +6255,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="button"
                               onClick={handleOneClickSetWifi}
                               disabled={!accessCurrentDetectedIp}
-                              className="py-2 px-3.5 rounded-xl bg-purple-900 text-white font-extrabold text-xs hover:bg-purple-800 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                              className="py-2 px-3.5 rounded-xl bg-blue-900 text-white font-extrabold text-xs hover:bg-blue-800 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                             >
                               <Sparkles className="w-3.5 h-3.5" />
                               <span>Set Current Network as Academy WiFi</span>
@@ -6265,7 +6265,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               <button
                                 type="button"
                                 onClick={handleAddCurrentIp}
-                                className="py-2 px-3 rounded-xl bg-white border border-purple-300 text-purple-900 font-bold text-xs hover:bg-purple-50 transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
+                                className="py-2 px-3 rounded-xl bg-white border border-blue-300 text-blue-900 font-bold text-xs hover:bg-blue-50 transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
                               >
                                 <Plus className="w-3.5 h-3.5" />
                                 <span>Add IP</span>
@@ -6286,10 +6286,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
                           <span className="flex items-center gap-1.5">
-                            <Wifi className="w-3.5 h-3.5 text-purple-700" />
+                            <Wifi className="w-3.5 h-3.5 text-blue-700" />
                             <span>Official WiFi Network Name (SSID)</span>
                           </span>
-                          <span className="text-[10px] text-purple-800 bg-purple-100/70 px-2 py-0.5 rounded font-semibold">
+                          <span className="text-[10px] text-blue-800 bg-blue-100/70 px-2 py-0.5 rounded font-semibold">
                             Shown to students
                           </span>
                         </label>
@@ -6298,7 +6298,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           placeholder="e.g. ARVR-Academy-5G or Campus-Lab-WiFi"
                           value={accessWifiSsid}
                           onChange={(e) => setAccessWifiSsid(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-blue-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                         />
                         <p className="text-[11px] text-slate-500 leading-relaxed">
                           Students will see this exact name on their sign-in & attendance screens (e.g., <em>"Please connect to {accessWifiSsid || 'ARVR-Academy-WiFi'} to mark attendance"</em>).
@@ -6316,7 +6316,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="button"
                               onClick={handleSetOnlyCurrentIp}
                               disabled={!accessCurrentDetectedIp}
-                              className="text-[10px] font-bold text-purple-800 hover:text-purple-950 underline cursor-pointer disabled:opacity-50"
+                              className="text-[10px] font-bold text-blue-800 hover:text-blue-950 underline cursor-pointer disabled:opacity-50"
                             >
                               Lock Only to My IP
                             </button>
@@ -6325,7 +6325,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               type="button"
                               onClick={handleAddSubnetPreset}
                               disabled={!accessCurrentDetectedIp}
-                              className="text-[10px] font-bold text-purple-800 hover:text-purple-950 underline cursor-pointer disabled:opacity-50"
+                              className="text-[10px] font-bold text-blue-800 hover:text-blue-950 underline cursor-pointer disabled:opacity-50"
                             >
                               + Add /24 Subnet Block
                             </button>
@@ -6336,7 +6336,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           placeholder="e.g. 103.21.244.15, 122.164.88.0/24, 49.207.210.15"
                           value={accessAllowedIps}
                           onChange={(e) => setAccessAllowedIps(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-blue-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                         />
                         <p className="text-[11px] text-slate-500 leading-relaxed">
                           <strong>Why router egress IP?</strong> Web browsers intentionally prevent web applications from querying private local WiFi network names (SSIDs) to protect user privacy. Whitelisting your academy's external router egress IP or CIDR block reliably guarantees student devices are actively routed through this WiFi.
@@ -6346,8 +6346,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </div>
 
                   {/* CARD 3: ENFORCEMENT SCOPE & LOCALHOST TESTING BYPASS */}
-                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200/90 shadow-sm space-y-6">
-                    <div className="border-b border-purple-100 pb-4">
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-blue-200/90 shadow-sm space-y-6">
+                    <div className="border-b border-blue-100 pb-4">
                       <h3 className="text-base font-extrabold text-slate-900">Enforcement Scope & Localhost Testing Mode</h3>
                       <p className="text-xs text-slate-500">
                         Choose which student actions require geofence/WiFi verification, and toggle safe localhost development mode
@@ -6380,8 +6380,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               onClick={() => setAccessScope(scopeOption.id as any)}
                               className={`p-4 rounded-2xl border text-left cursor-pointer transition-all ${
                                 accessScope === scopeOption.id
-                                  ? 'bg-purple-50/80 border-purple-900 shadow-2xs'
-                                  : 'bg-white border-purple-200/70 hover:border-purple-300'
+                                  ? 'bg-blue-50/80 border-blue-900 shadow-2xs'
+                                  : 'bg-white border-blue-200/70 hover:border-blue-300'
                               }`}
                             >
                               <div className="flex items-center gap-2 mb-1">
@@ -6391,7 +6391,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                   value={scopeOption.id}
                                   checked={accessScope === scopeOption.id}
                                   onChange={() => setAccessScope(scopeOption.id as any)}
-                                  className="text-purple-900 focus:ring-purple-700"
+                                  className="text-blue-900 focus:ring-blue-700"
                                 />
                                 <span className="text-xs font-extrabold text-slate-900">{scopeOption.title}</span>
                               </div>
@@ -6406,7 +6406,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-extrabold text-amber-950">
-                              Allow Localhost Testing Bypass (<code className="font-mono text-purple-950">127.0.0.1</code> / <code className="font-mono text-purple-950">localhost</code>)
+                              Allow Localhost Testing Bypass (<code className="font-mono text-blue-950">127.0.0.1</code> / <code className="font-mono text-blue-950">localhost</code>)
                             </span>
                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900">
                               Safe For Local Testing
@@ -6424,18 +6424,18 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             onChange={(e) => setAccessAllowLocalhost(e.target.checked)}
                             className="sr-only peer"
                           />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-900"></div>
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-900"></div>
                         </label>
                       </div>
                     </div>
                   </div>
 
                   {/* BOTTOM ACTION BUTTON */}
-                  <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex items-center justify-between shadow-sm flex-wrap gap-3">
+                  <div className="pro-card rounded-2xl p-4 bg-white border border-blue-200 flex items-center justify-between shadow-sm flex-wrap gap-3">
                     <button
                       type="button"
                       onClick={() => handleTabSwitch('batches')}
-                      className="py-2.5 px-5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors cursor-pointer"
+                      className="py-2.5 px-5 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors cursor-pointer"
                     >
                       Back to Batches
                     </button>
@@ -6465,7 +6465,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
           >
             <div className="flex items-center gap-3 text-amber-700 bg-amber-50 p-3 rounded-2xl border border-amber-200">
               <AlertCircle className="w-6 h-6 shrink-0 text-amber-600" />
@@ -6502,26 +6502,26 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
           >
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div>
-                <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">AR/VR COE</span>
+                <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">AR/VR COE</span>
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Batch Details</h2>
               </div>
               <button
                 onClick={() => setShowBatchDetailsModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-2">
+              <div className="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-slate-500 font-semibold">Batch Name:</span>
-                  <strong className="font-mono text-purple-950 font-bold">{selectedBatchDetail.name}</strong>
+                  <strong className="font-mono text-blue-950 font-bold">{selectedBatchDetail.name}</strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 font-semibold">Batch No:</span>
@@ -6529,7 +6529,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 font-semibold">Batch Level:</span>
-                  <strong className="text-purple-800 font-bold">{selectedBatchDetail.level || 'Level 1'}</strong>
+                  <strong className="text-blue-800 font-bold">{selectedBatchDetail.level || 'Level 1'}</strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 font-semibold">Start Date:</span>
@@ -6567,16 +6567,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 const editAnInverted = Boolean(editBatchAttendanceMode === 'custom' && editBatchAnStart && editBatchAnCutoff && editBatchAnStart >= editBatchAnCutoff);
 
                 return (
-                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-purple-50/80 to-indigo-50/80 border border-purple-200 space-y-3">
-                    <div className="flex items-center justify-between border-b border-purple-200/70 pb-2">
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-200 space-y-3">
+                    <div className="flex items-center justify-between border-b border-blue-200/70 pb-2">
                       <div className="flex items-center gap-2">
-                        <Clock className="w-3.5 h-3.5 text-purple-700" />
-                        <span className="font-extrabold text-purple-950 text-xs">
+                        <Clock className="w-3.5 h-3.5 text-blue-700" />
+                        <span className="font-extrabold text-blue-950 text-xs">
                           Attendance Window Schedule
                         </span>
                         {!isEditingBatchTimings && (
                           hasCustomTimings ? (
-                            <span className="text-[10px] font-bold text-purple-900 bg-purple-100/90 px-2 py-0.5 rounded-md border border-purple-300">
+                            <span className="text-[10px] font-bold text-blue-900 bg-blue-100/90 px-2 py-0.5 rounded-md border border-blue-300">
                               Custom Timings
                             </span>
                           ) : (
@@ -6603,7 +6603,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             }
                             setIsEditingBatchTimings(true);
                           }}
-                          className="px-2.5 py-1 rounded-lg bg-white border border-purple-200 text-purple-700 hover:text-purple-900 text-[10px] font-bold shadow-2xs transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-lg bg-white border border-blue-200 text-blue-700 hover:text-blue-900 text-[10px] font-bold shadow-2xs transition-colors flex items-center gap-1 cursor-pointer"
                         >
                           <Edit className="w-3 h-3" />
                           <span>Edit Timings</span>
@@ -6648,7 +6648,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         <div className="flex justify-between items-center">
                           <span className="text-slate-600 font-medium">Morning (FN) Window:</span>
                           <strong className={`font-mono px-2 py-0.5 rounded-md border text-[11px] flex items-center gap-1.5 ${
-                            isFnInverted ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-white text-purple-950 border-purple-200'
+                            isFnInverted ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-white text-blue-950 border-blue-200'
                           }`}>
                             <span>
                               {selectedBatchDetail.fnStartTime || settingsFnStart || '08:30'} ({formatTime12Hour(selectedBatchDetail.fnStartTime || settingsFnStart || '08:30')}) – {selectedBatchDetail.fnCutoffTime || settingsFnCutoff || '09:00'} ({formatTime12Hour(selectedBatchDetail.fnCutoffTime || settingsFnCutoff || '09:00')})
@@ -6661,7 +6661,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         <div className="flex justify-between items-center">
                           <span className="text-slate-600 font-medium">Afternoon (AN) Window:</span>
                           <strong className={`font-mono px-2 py-0.5 rounded-md border text-[11px] flex items-center gap-1.5 ${
-                            isAnInverted ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-white text-purple-950 border-purple-200'
+                            isAnInverted ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-white text-blue-950 border-blue-200'
                           }`}>
                             <span>
                               {selectedBatchDetail.anStartTime || settingsAnStart || '12:40'} ({formatTime12Hour(selectedBatchDetail.anStartTime || settingsAnStart || '12:40')}) – {selectedBatchDetail.anCutoffTime || settingsAnCutoff || '13:10'} ({formatTime12Hour(selectedBatchDetail.anCutoffTime || settingsAnCutoff || '13:10')})
@@ -6674,19 +6674,19 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     ) : (
                       <div className="space-y-3 pt-1">
                         {/* Toggle: Follow Default vs Custom Timings */}
-                        <div className="flex items-center justify-between gap-2 p-1 bg-purple-100/80 border border-purple-200/90 rounded-xl">
-                          <span className="text-[11px] font-bold text-purple-950 pl-2">Mode:</span>
-                          <div className="inline-flex rounded-lg bg-white/90 p-0.5 border border-purple-200 text-xs font-bold shadow-2xs">
+                        <div className="flex items-center justify-between gap-2 p-1 bg-blue-100/80 border border-blue-200/90 rounded-xl">
+                          <span className="text-[11px] font-bold text-blue-950 pl-2">Mode:</span>
+                          <div className="inline-flex rounded-lg bg-white/90 p-0.5 border border-blue-200 text-xs font-bold shadow-2xs">
                             <button
                               type="button"
                               onClick={() => setEditBatchAttendanceMode('default')}
                               className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
                                 editBatchAttendanceMode === 'default'
-                                  ? 'bg-purple-700 text-white shadow-xs'
-                                  : 'text-purple-900 hover:text-purple-950 hover:bg-purple-50'
+                                  ? 'bg-blue-700 text-white shadow-xs'
+                                  : 'text-blue-900 hover:text-blue-950 hover:bg-blue-50'
                               }`}
                             >
-                              <CheckCircle2 className={`w-3 h-3 ${editBatchAttendanceMode === 'default' ? 'text-white' : 'text-purple-600'}`} />
+                              <CheckCircle2 className={`w-3 h-3 ${editBatchAttendanceMode === 'default' ? 'text-white' : 'text-blue-600'}`} />
                               <span>Follow Default</span>
                             </button>
                             <button
@@ -6694,18 +6694,18 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               onClick={() => setEditBatchAttendanceMode('custom')}
                               className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
                                 editBatchAttendanceMode === 'custom'
-                                  ? 'bg-purple-700 text-white shadow-xs'
-                                  : 'text-purple-900 hover:text-purple-950 hover:bg-purple-50'
+                                  ? 'bg-blue-700 text-white shadow-xs'
+                                  : 'text-blue-900 hover:text-blue-950 hover:bg-blue-50'
                               }`}
                             >
-                              <Clock className={`w-3 h-3 ${editBatchAttendanceMode === 'custom' ? 'text-white' : 'text-purple-600'}`} />
+                              <Clock className={`w-3 h-3 ${editBatchAttendanceMode === 'custom' ? 'text-white' : 'text-blue-600'}`} />
                               <span>Custom Timings</span>
                             </button>
                           </div>
                         </div>
 
                         {editBatchAttendanceMode === 'default' ? (
-                          <div className="p-3 rounded-xl bg-white border border-purple-200 space-y-2 text-xs">
+                          <div className="p-3 rounded-xl bg-white border border-blue-200 space-y-2 text-xs">
                             <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
                               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                               <span>Follow Default Attendance Settings</span>
@@ -6756,15 +6756,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             )}
 
                             <div className="grid grid-cols-2 gap-2">
-                              <div className="bg-white p-2.5 rounded-xl border border-purple-200 space-y-1.5">
-                                <span className="text-[10px] font-bold text-purple-900 block border-b border-purple-100 pb-1">
+                              <div className="bg-white p-2.5 rounded-xl border border-blue-200 space-y-1.5">
+                                <span className="text-[10px] font-bold text-blue-900 block border-b border-blue-100 pb-1">
                                   Morning (FN) Session
                                 </span>
                                 <div className="space-y-1.5">
                                   <div>
                                     <div className="flex justify-between items-center mb-0.5">
                                       <label className="text-[9px] font-bold text-slate-500">Start Time</label>
-                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchFnStart)}</span>
+                                      <span className="text-[9px] font-mono font-bold text-blue-700">{formatTime12Hour(editBatchFnStart)}</span>
                                     </div>
                                     <input
                                       type="time"
@@ -6776,7 +6776,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                   <div>
                                     <div className="flex justify-between items-center mb-0.5">
                                       <label className="text-[9px] font-bold text-slate-500">Cutoff Time</label>
-                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchFnCutoff)}</span>
+                                      <span className="text-[9px] font-mono font-bold text-blue-700">{formatTime12Hour(editBatchFnCutoff)}</span>
                                     </div>
                                     <input
                                       type="time"
@@ -6788,15 +6788,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                 </div>
                               </div>
 
-                              <div className="bg-white p-2.5 rounded-xl border border-purple-200 space-y-1.5">
-                                <span className="text-[10px] font-bold text-purple-900 block border-b border-purple-100 pb-1">
+                              <div className="bg-white p-2.5 rounded-xl border border-blue-200 space-y-1.5">
+                                <span className="text-[10px] font-bold text-blue-900 block border-b border-blue-100 pb-1">
                                   Afternoon (AN) Session
                                 </span>
                                 <div className="space-y-1.5">
                                   <div>
                                     <div className="flex justify-between items-center mb-0.5">
                                       <label className="text-[9px] font-bold text-slate-500">Start Time</label>
-                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchAnStart)}</span>
+                                      <span className="text-[9px] font-mono font-bold text-blue-700">{formatTime12Hour(editBatchAnStart)}</span>
                                     </div>
                                     <input
                                       type="time"
@@ -6808,7 +6808,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                   <div>
                                     <div className="flex justify-between items-center mb-0.5">
                                       <label className="text-[9px] font-bold text-slate-500">Cutoff Time</label>
-                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchAnCutoff)}</span>
+                                      <span className="text-[9px] font-mono font-bold text-blue-700">{formatTime12Hour(editBatchAnCutoff)}</span>
                                     </div>
                                     <input
                                       type="time"
@@ -7042,10 +7042,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           <div className="space-y-6">
             
             {/* Section Header Card */}
-            <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
-                  <Award className="w-4 h-4 text-purple-700" />
+                <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                  <Award className="w-4 h-4 text-blue-700" />
                   <span>Official Certification & Reporting System</span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -7062,7 +7062,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={selectedBatchId}
                   onChange={(e) => setSelectedBatchId(e.target.value)}
-                  className="pro-input text-xs font-bold text-purple-950 rounded-xl px-4 py-2.5 bg-white shadow-2xs"
+                  className="pro-input text-xs font-bold text-blue-950 rounded-xl px-4 py-2.5 bg-white shadow-2xs"
                 >
                   {batches.map((b) => (
                     <option key={b.id} value={b.id}>{b.name}</option>
@@ -7073,7 +7073,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
             {/* Metric Summary Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              <div className="p-4 rounded-2xl bg-white border border-purple-200 text-center shadow-xs">
+              <div className="p-4 rounded-2xl bg-white border border-blue-200 text-center shadow-xs">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Students</span>
                 <span className="text-2xl font-extrabold text-slate-900 mt-1 block">{totalStudents}</span>
               </div>
@@ -7088,9 +7088,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <span className="text-2xl font-extrabold text-indigo-900 mt-1 block">{eligibleCount}</span>
               </div>
 
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 text-center shadow-xs">
-                <span className="text-[10px] font-bold text-purple-800 uppercase tracking-wider block">Certificates Ready</span>
-                <span className="text-2xl font-extrabold text-purple-900 mt-1 block">{certReadyCount}</span>
+              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 text-center shadow-xs">
+                <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wider block">Certificates Ready</span>
+                <span className="text-2xl font-extrabold text-blue-900 mt-1 block">{certReadyCount}</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 text-center shadow-xs">
@@ -7100,9 +7100,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
             {/* Primary Action Buttons Bar */}
-            <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="pro-card rounded-2xl p-4 bg-white border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <ShieldCheck className="w-4 h-4 text-purple-700" />
+                <ShieldCheck className="w-4 h-4 text-blue-700" />
                 <span>Certificate Pipeline Control</span>
               </div>
 
@@ -7110,9 +7110,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <button
                   onClick={handleRunCompletionCheck}
                   disabled={runningCheck}
-                  className="py-2.5 px-4 rounded-xl bg-purple-100 text-purple-900 border border-purple-300 font-bold text-xs hover:bg-purple-200 transition-all flex items-center gap-1.5 shadow-2xs"
+                  className="py-2.5 px-4 rounded-xl bg-blue-100 text-blue-900 border border-blue-300 font-bold text-xs hover:bg-blue-200 transition-all flex items-center gap-1.5 shadow-2xs"
                 >
-                  {runningCheck ? <RefreshCw className="w-4 h-4 animate-spin text-purple-700" /> : <Award className="w-4 h-4 text-purple-700" />}
+                  {runningCheck ? <RefreshCw className="w-4 h-4 animate-spin text-blue-700" /> : <Award className="w-4 h-4 text-blue-700" />}
                   <span>{runningCheck ? 'Checking...' : 'Run Completion Check'}</span>
                 </button>
 
@@ -7152,46 +7152,46 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             )}
 
             {/* Reports Workspace Navigation Switcher */}
-            <div className="flex items-center gap-2 border-b border-purple-100 pb-2 overflow-x-auto">
+            <div className="flex items-center gap-2 border-b border-blue-100 pb-2 overflow-x-auto">
               <button
                 onClick={() => setCertReportTab('roster')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'roster' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'roster' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Certificate Data Roster
               </button>
               <button
                 onClick={() => setCertReportTab('training')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'training' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'training' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Training Report
               </button>
               <button
                 onClick={() => setCertReportTab('attendance')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'attendance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'attendance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Attendance Report
               </button>
               <button
                 onClick={() => setCertReportTab('tasks')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'tasks' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'tasks' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Task Completion Report
               </button>
               <button
                 onClick={() => setCertReportTab('performance')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'performance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'performance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Performance Report
               </button>
               <button
                 onClick={() => setCertReportTab('completion')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'completion' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'completion' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Completion Report
               </button>
               <button
                 onClick={() => setCertReportTab('certReport')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'certReport' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${certReportTab === 'certReport' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Certificate Report
               </button>
@@ -7202,9 +7202,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div className="space-y-4">
                 
                 {/* Search & Filter Bar */}
-                <div className="pro-card rounded-2xl p-4 bg-white/90 border-purple-200/80 flex flex-col lg:flex-row items-center justify-between gap-4">
+                <div className="pro-card rounded-2xl p-4 bg-white/90 border-blue-200/80 flex flex-col lg:flex-row items-center justify-between gap-4">
                   <div className="relative w-full lg:w-80">
-                    <Search className="w-4 h-4 text-purple-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Search className="w-4 h-4 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       placeholder="Search name, reg no, cert no..."
@@ -7216,14 +7216,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                   <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
                     <div className="flex items-center gap-1 text-xs text-slate-600 font-bold">
-                      <Filter className="w-3.5 h-3.5 text-purple-600" />
+                      <Filter className="w-3.5 h-3.5 text-blue-600" />
                       <span>Filters:</span>
                     </div>
 
                     <select
                       value={certFilterCompletion}
                       onChange={(e) => setCertFilterCompletion(e.target.value)}
-                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                     >
                       <option value="All">Completion: All</option>
                       <option value="Completed">Completed</option>
@@ -7233,7 +7233,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <select
                       value={certFilterGrade}
                       onChange={(e) => setCertFilterGrade(e.target.value)}
-                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                     >
                       <option value="All">All Grades</option>
                       <option value="O">Grade O</option>
@@ -7247,7 +7247,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <select
                       value={certFilterLevel}
                       onChange={(e) => setCertFilterLevel(e.target.value)}
-                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                     >
                       <option value="All">All Levels</option>
                       <option value="Level 1">Level 1</option>
@@ -7258,7 +7258,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <select
                       value={certFilterStatus}
                       onChange={(e) => setCertFilterStatus(e.target.value)}
-                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                      className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
                     >
                       <option value="All">Cert Status: All</option>
                       <option value="Certificate Data Ready">Data Ready</option>
@@ -7274,7 +7274,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-purple-100 bg-purple-50/60 text-[11px] font-extrabold uppercase text-purple-900 tracking-wider">
+                        <tr className="border-b border-blue-100 bg-blue-50/60 text-[11px] font-extrabold uppercase text-blue-900 tracking-wider">
                           <th className="py-3 px-3 rounded-l-xl w-10 text-center">
                             <input
                               type="checkbox"
@@ -7283,7 +7283,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                 if (e.target.checked) setSelectedCertStudentIds(filteredCertRoster.map((i) => i.id));
                                 else setSelectedCertStudentIds([]);
                               }}
-                              className="accent-purple-600 rounded cursor-pointer"
+                              className="accent-blue-600 rounded cursor-pointer"
                             />
                           </th>
                           <th className="py-3 px-4">Student Name</th>
@@ -7297,7 +7297,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           <th className="py-3 px-4 text-right rounded-r-xl">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-purple-100/60 text-xs text-slate-700 font-medium">
+                      <tbody className="divide-y divide-blue-100/60 text-xs text-slate-700 font-medium">
                         {filteredCertRoster.length === 0 ? (
                           <tr>
                             <td colSpan={10} className="py-10 text-center text-slate-500 font-medium">
@@ -7308,19 +7308,19 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           filteredCertRoster.map((item) => {
                             const isChecked = selectedCertStudentIds.includes(item.id);
                             return (
-                              <tr key={item.id} className="hover:bg-purple-50/30 transition-colors">
+                              <tr key={item.id} className="hover:bg-blue-50/30 transition-colors">
                                 <td className="py-3.5 px-3 text-center">
                                   <input
                                     type="checkbox"
                                     checked={isChecked}
                                     onChange={() => toggleSelectStudent(item.id)}
-                                    className="accent-purple-600 rounded cursor-pointer"
+                                    className="accent-blue-600 rounded cursor-pointer"
                                   />
                                 </td>
                                 <td className="py-3.5 px-4 font-bold text-slate-900">
                                   {item.name}
                                 </td>
-                                <td className="py-3.5 px-4 font-mono font-bold text-purple-900">
+                                <td className="py-3.5 px-4 font-mono font-bold text-blue-900">
                                   {item.registerNo}
                                 </td>
                                 <td className="py-3.5 px-4 font-mono">
@@ -7329,7 +7329,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                 <td className="py-3.5 px-4 font-mono">
                                   {formatDateDisplay(selectedBatch?.endDate)}
                                 </td>
-                                <td className="py-3.5 px-4 font-bold text-purple-900 font-mono">
+                                <td className="py-3.5 px-4 font-bold text-blue-900 font-mono">
                                   {item.grade}
                                 </td>
                                 <td className="py-3.5 px-4 font-semibold text-slate-800">
@@ -7344,7 +7344,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                       ❌ Invalid (&lt; 100%)
                                     </span>
                                   ) : item.isCompleted && item.isManuallyOverridden ? (
-                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border bg-purple-100 text-purple-900 border-purple-300" title="Manually authorized by Admin">
+                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border bg-blue-100 text-blue-900 border-blue-300" title="Manually authorized by Admin">
                                       ★ Valid (Override)
                                     </span>
                                   ) : item.isCompleted ? (
@@ -7361,7 +7361,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                   <div className="flex items-center justify-end gap-1.5">
                                     <button
                                       onClick={() => handleOpenManualOverride(item)}
-                                      className="px-2.5 py-1.5 rounded-xl bg-purple-700 text-white hover:bg-purple-800 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
+                                      className="px-2.5 py-1.5 rounded-xl bg-blue-700 text-white hover:bg-blue-800 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
                                       title="Manual Student Data & Certificate Override"
                                     >
                                       <Settings className="w-3.5 h-3.5" />
@@ -7373,7 +7373,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                                         setEditCertNo(item.certNo !== 'Pending' ? item.certNo : `ARVR-2026-${String(item.registerNo).slice(-3)}`);
                                         setShowCertRecordModal(true);
                                       }}
-                                      className="px-2.5 py-1.5 rounded-xl bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
+                                      className="px-2.5 py-1.5 rounded-xl bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
                                     >
                                       <Eye className="w-3.5 h-3.5" />
                                       <span>View</span>
@@ -7391,18 +7391,18 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   {/* Mobile Cards View */}
                   <div className="md:hidden space-y-3">
                     {filteredCertRoster.map((item) => (
-                      <div key={item.id} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-200 space-y-3 text-xs">
+                      <div key={item.id} className="p-4 rounded-2xl bg-blue-50/40 border border-blue-200 space-y-3 text-xs">
                         <div className="flex items-start justify-between">
                           <div>
                             <h4 className="font-bold text-slate-900 text-sm">{item.name}</h4>
-                            <span className="font-mono font-bold text-purple-900 text-xs">{item.registerNo}</span>
+                            <span className="font-mono font-bold text-blue-900 text-xs">{item.registerNo}</span>
                           </div>
                           {item.certificate && !item.isCertValid ? (
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold border bg-rose-100 text-rose-800 border-rose-300">
                               ❌ Invalid (&lt; 100%)
                             </span>
                           ) : item.isCompleted && item.isManuallyOverridden ? (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold border bg-purple-100 text-purple-900 border-purple-300">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold border bg-blue-100 text-blue-900 border-blue-300">
                               ★ Valid (Override)
                             </span>
                           ) : item.isCompleted ? (
@@ -7416,15 +7416,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           )}
                         </div>
 
-                        <div className="space-y-1 font-medium text-slate-700 bg-white p-2.5 rounded-xl border border-purple-100">
-                          <p>Grade: <strong className="text-purple-900 font-mono">{item.grade}</strong> • Level: <strong>{item.level}</strong></p>
+                        <div className="space-y-1 font-medium text-slate-700 bg-white p-2.5 rounded-xl border border-blue-100">
+                          <p>Grade: <strong className="text-blue-900 font-mono">{item.grade}</strong> • Level: <strong>{item.level}</strong></p>
                           <p>Cert No: <strong className="font-mono text-slate-900">{item.certNo}</strong></p>
                         </div>
 
                         <div className="flex gap-2 pt-1">
                           <button
                             onClick={() => handleOpenManualOverride(item)}
-                            className="flex-1 py-2 rounded-xl bg-purple-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-xs"
+                            className="flex-1 py-2 rounded-xl bg-blue-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-xs"
                           >
                             <Settings className="w-3.5 h-3.5" />
                             <span>Manual Override</span>
@@ -7435,7 +7435,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               setEditCertNo(item.certNo !== 'Pending' ? item.certNo : `ARVR-2026-${String(item.registerNo).slice(-3)}`);
                               setShowCertRecordModal(true);
                             }}
-                            className="px-3 py-2 rounded-xl bg-purple-100 text-purple-900 border border-purple-300 text-xs font-bold flex items-center justify-center gap-1"
+                            className="px-3 py-2 rounded-xl bg-blue-100 text-blue-900 border border-blue-300 text-xs font-bold flex items-center justify-center gap-1"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             <span>View</span>
@@ -7454,28 +7454,28 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {certReportTab === 'training' && (
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-purple-700" />
+                  <BarChart3 className="w-4 h-4 text-blue-700" />
                   <span>Training Report Summary</span>
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                  <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-2">
+                  <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-2">
                     <span className="text-slate-500 font-semibold block uppercase">Batch Name</span>
                     <strong className="text-slate-900 font-mono text-sm block">{selectedBatch?.name}</strong>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-2">
+                  <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-2">
                     <span className="text-slate-500 font-semibold block uppercase">Start Date & End Date</span>
                     <strong className="text-slate-900 font-mono text-sm block">
                       {formatDateDisplay(selectedBatch?.startDate)} — {formatDateDisplay(selectedBatch?.endDate)}
                     </strong>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-2">
+                  <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-2">
                     <span className="text-slate-500 font-semibold block uppercase">Total Training Days</span>
                     <strong className="text-slate-900 font-mono text-sm block">{selectedBatch?.trainingDays} Days</strong>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-2">
+                  <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-2">
                     <span className="text-slate-500 font-semibold block uppercase">Enrolled Students</span>
                     <strong className="text-slate-900 font-mono text-sm block">{totalStudents} Students</strong>
                   </div>
@@ -7498,7 +7498,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-purple-700" />
+                    <Clock className="w-4 h-4 text-blue-700" />
                     <span>Attendance Report</span>
                   </h3>
                   <span className="text-xs text-slate-500 font-medium">FN Cutoff: 9:15 AM • AN Cutoff: 2:00 PM</span>
@@ -7506,7 +7506,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-purple-50/60 text-purple-900 font-bold border-b border-purple-100 uppercase">
+                      <tr className="bg-blue-50/60 text-blue-900 font-bold border-b border-blue-100 uppercase">
                         <th className="p-3">Student Name</th>
                         <th className="p-3">Reg No</th>
                         <th className="p-3 text-center">FN Attendance</th>
@@ -7514,14 +7514,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         <th className="p-3 text-right">Overall Attendance</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100/60 font-medium">
+                    <tbody className="divide-y divide-blue-100/60 font-medium">
                       {certRoster.map((item) => (
                         <tr key={item.id}>
                           <td className="p-3 font-bold text-slate-900">{item.name}</td>
-                          <td className="p-3 font-mono font-bold text-purple-900">{item.registerNo}</td>
+                          <td className="p-3 font-mono font-bold text-blue-900">{item.registerNo}</td>
                           <td className="p-3 text-center font-mono">{item.fnCount} / {totalDays}</td>
                           <td className="p-3 text-center font-mono">{item.anCount} / {totalDays}</td>
-                          <td className="p-3 text-right font-mono font-bold text-purple-950">{item.attPct}%</td>
+                          <td className="p-3 text-right font-mono font-bold text-blue-950">{item.attPct}%</td>
                         </tr>
                       ))}
                     </tbody>
@@ -7533,14 +7533,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {/* TAB 4: TASK COMPLETION REPORT */}
             {certReportTab === 'tasks' && (
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-blue-100 pb-3">
                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <CheckSquare className="w-4 h-4 text-purple-700" />
+                    <CheckSquare className="w-4 h-4 text-blue-700" />
                     <span>Task Completion Report</span>
                   </h3>
                   <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-                    <span className="flex items-center gap-1.5 bg-purple-50 text-purple-800 px-3 py-1 rounded-xl border border-purple-100/80 shadow-2xs">
-                      <Info className="w-3.5 h-3.5 text-purple-600" />
+                    <span className="flex items-center gap-1.5 bg-blue-50 text-blue-800 px-3 py-1 rounded-xl border border-blue-100/80 shadow-2xs">
+                      <Info className="w-3.5 h-3.5 text-blue-600" />
                       Hover any task number to view completed & missing tasks
                     </span>
                   </div>
@@ -7549,7 +7549,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-purple-50/60 text-purple-900 font-bold border-b border-purple-100 uppercase">
+                      <tr className="bg-blue-50/60 text-blue-900 font-bold border-b border-blue-100 uppercase">
                         <th className="p-3">Student Name</th>
                         <th className="p-3">Reg No</th>
                         <th className="p-3 text-center">Submitted Tasks</th>
@@ -7557,11 +7557,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         <th className="p-3 text-right">Task Completion</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100/60 font-medium">
+                    <tbody className="divide-y divide-blue-100/60 font-medium">
                       {certRoster.map((item) => (
-                        <tr key={item.id} className="hover:bg-purple-50/30 transition-colors">
+                        <tr key={item.id} className="hover:bg-blue-50/30 transition-colors">
                           <td className="p-3 font-bold text-slate-900">{item.name}</td>
-                          <td className="p-3 font-mono font-bold text-purple-900">{item.registerNo}</td>
+                          <td className="p-3 font-mono font-bold text-blue-900">{item.registerNo}</td>
                           
                           {/* SUBMITTED TASKS with Hover Tooltip Trigger */}
                           <td className="p-3 text-center">
@@ -7600,7 +7600,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                               onMouseEnter={(e) => handleTaskNumberMouseEnter(item, 'all', e)}
                               onMouseLeave={handleTaskNumberMouseLeave}
                               onClick={(e) => handleTaskNumberMouseEnter(item, 'all', e)}
-                              className="inline-flex items-center gap-1.5 font-mono font-bold text-purple-950 hover:text-purple-700 cursor-pointer transition-colors"
+                              className="inline-flex items-center gap-1.5 font-mono font-bold text-blue-950 hover:text-blue-700 cursor-pointer transition-colors"
                               title="Hover to view task breakdown"
                             >
                               <span>{item.taskPct}%</span>
@@ -7643,11 +7643,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         width: `${tipWidth}px`,
                         zIndex: 9999,
                       }}
-                      className="bg-white rounded-2xl shadow-2xl border border-purple-200/90 overflow-hidden text-left animate-in fade-in zoom-in-95 duration-150"
+                      className="bg-white rounded-2xl shadow-2xl border border-blue-200/90 overflow-hidden text-left animate-in fade-in zoom-in-95 duration-150"
                     >
                       {/* Arrow Indicator pointing towards hovered number */}
                       <div
-                        className={`absolute w-3.5 h-3.5 bg-white border-purple-200 ${
+                        className={`absolute w-3.5 h-3.5 bg-white border-blue-200 ${
                           showAbove ? '-bottom-1.5 border-b border-r' : '-top-1.5 border-t border-l'
                         }`}
                         style={{
@@ -7657,15 +7657,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       />
 
                       {/* Header */}
-                      <div className="p-3.5 bg-gradient-to-r from-purple-50 via-slate-50 to-purple-50/60 border-b border-purple-100 flex items-center justify-between relative z-10">
+                      <div className="p-3.5 bg-gradient-to-r from-blue-50 via-slate-50 to-blue-50/60 border-b border-blue-100 flex items-center justify-between relative z-10">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold shadow-2xs">
+                          <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold shadow-2xs">
                             <CheckSquare className="w-4 h-4" />
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-slate-900 text-xs">{hoveredTaskTip.studentName}</span>
-                              <span className="font-mono text-[11px] font-bold text-purple-700 bg-purple-100/80 px-1.5 py-0.5 rounded border border-purple-200">
+                              <span className="font-mono text-[11px] font-bold text-blue-700 bg-blue-100/80 px-1.5 py-0.5 rounded border border-blue-200">
                                 {hoveredTaskTip.registerNo}
                               </span>
                             </div>
@@ -7675,7 +7675,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           </div>
                         </div>
                         <div className="text-right">
-                          <span className={`text-sm font-mono font-black ${completedPercent === 100 ? 'text-emerald-600' : 'text-purple-900'}`}>
+                          <span className={`text-sm font-mono font-black ${completedPercent === 100 ? 'text-emerald-600' : 'text-blue-900'}`}>
                             {completedPercent}%
                           </span>
                         </div>
@@ -7702,7 +7702,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           onClick={(e) => { e.stopPropagation(); setTipActiveFilter('all'); }}
                           className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
                             tipActiveFilter === 'all'
-                              ? 'bg-purple-700 text-white shadow-2xs'
+                              ? 'bg-blue-700 text-white shadow-2xs'
                               : 'text-slate-600 hover:bg-slate-200/60'
                           }`}
                         >
@@ -7823,13 +7823,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {certReportTab === 'performance' && (
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Star className="w-4 h-4 text-purple-700" />
+                  <Star className="w-4 h-4 text-blue-700" />
                   <span>Performance Report</span>
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-purple-50/60 text-purple-900 font-bold border-b border-purple-100 uppercase">
+                      <tr className="bg-blue-50/60 text-blue-900 font-bold border-b border-blue-100 uppercase">
                         <th className="p-3">Student Name</th>
                         <th className="p-3">Reg No</th>
                         <th className="p-3 text-center">Score</th>
@@ -7837,13 +7837,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         <th className="p-3 text-right">Training Level</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100/60 font-medium">
+                    <tbody className="divide-y divide-blue-100/60 font-medium">
                       {certRoster.map((item) => (
                         <tr key={item.id}>
                           <td className="p-3 font-bold text-slate-900">{item.name}</td>
-                          <td className="p-3 font-mono font-bold text-purple-900">{item.registerNo}</td>
+                          <td className="p-3 font-mono font-bold text-blue-900">{item.registerNo}</td>
                           <td className="p-3 text-center font-mono font-bold text-emerald-800">{item.avgScore} / 100</td>
-                          <td className="p-3 text-center font-mono font-extrabold text-purple-900">{item.grade}</td>
+                          <td className="p-3 text-center font-mono font-extrabold text-blue-900">{item.grade}</td>
                           <td className="p-3 text-right font-bold text-slate-900">{item.level}</td>
                         </tr>
                       ))}
@@ -7857,24 +7857,24 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {certReportTab === 'completion' && (
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <FileCheck className="w-4 h-4 text-purple-700" />
+                  <FileCheck className="w-4 h-4 text-blue-700" />
                   <span>Completion Status Breakdown</span>
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-purple-50/60 text-purple-900 font-bold border-b border-purple-100 uppercase">
+                      <tr className="bg-blue-50/60 text-blue-900 font-bold border-b border-blue-100 uppercase">
                         <th className="p-3">Student Name</th>
                         <th className="p-3">Reg No</th>
                         <th className="p-3">Completion Status</th>
                         <th className="p-3 text-right">Pending Reason / Status Note</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100/60 font-medium">
+                    <tbody className="divide-y divide-blue-100/60 font-medium">
                       {certRoster.map((item) => (
                         <tr key={item.id}>
                           <td className="p-3 font-bold text-slate-900">{item.name}</td>
-                          <td className="p-3 font-mono font-bold text-purple-900">{item.registerNo}</td>
+                          <td className="p-3 font-mono font-bold text-blue-900">{item.registerNo}</td>
                           <td className="p-3">
                             <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border ${
                               item.isCompleted ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-900 border-amber-300'
@@ -7897,27 +7897,27 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {certReportTab === 'certReport' && (
               <div className="pro-card rounded-3xl p-6 bg-white space-y-4">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Award className="w-4 h-4 text-purple-700" />
+                  <Award className="w-4 h-4 text-blue-700" />
                   <span>Certificate Status Report</span>
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-purple-50/60 text-purple-900 font-bold border-b border-purple-100 uppercase">
+                      <tr className="bg-blue-50/60 text-blue-900 font-bold border-b border-blue-100 uppercase">
                         <th className="p-3">Student Name</th>
                         <th className="p-3">Reg No</th>
                         <th className="p-3 font-mono">Certificate Number</th>
                         <th className="p-3 text-right">Certificate Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100/60 font-medium">
+                    <tbody className="divide-y divide-blue-100/60 font-medium">
                       {certRoster.map((item) => (
                         <tr key={item.id}>
                           <td className="p-3 font-bold text-slate-900">{item.name}</td>
-                          <td className="p-3 font-mono font-bold text-purple-900">{item.registerNo}</td>
+                          <td className="p-3 font-mono font-bold text-blue-900">{item.registerNo}</td>
                           <td className="p-3 font-mono font-bold text-slate-900">{item.certNo}</td>
                           <td className="p-3 text-right">
-                            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 border border-purple-300">
+                            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-900 border border-blue-300">
                               {item.certStatus}
                             </span>
                           </td>
@@ -7938,10 +7938,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         <div className="space-y-6">
           
           {/* Section Header Card */}
-          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="pro-card rounded-3xl p-6 bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1">
-                <UserPlus className="w-4 h-4 text-purple-700" />
+              <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                <UserPlus className="w-4 h-4 text-blue-700" />
                 <span>Student Roster & Registration Center</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -7958,9 +7958,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   setImportBatchId(batches[0]?.id || '');
                   setShowImportModal(true);
                 }}
-                className="py-3 px-4 rounded-2xl bg-purple-100 text-purple-900 border border-purple-300 font-bold text-xs flex items-center gap-2 shadow-2xs hover:bg-purple-200 transition-all"
+                className="py-3 px-4 rounded-2xl bg-blue-100 text-blue-900 border border-blue-300 font-bold text-xs flex items-center gap-2 shadow-2xs hover:bg-blue-200 transition-all"
               >
-                <UploadCloud className="w-4 h-4 text-purple-700" />
+                <UploadCloud className="w-4 h-4 text-blue-700" />
                 <span>Bulk Import CSV</span>
               </button>
 
@@ -7975,10 +7975,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {/* Search & Filters Control Bar */}
-          <div className="pro-card rounded-2xl p-4 bg-white/90 border-purple-200/80 flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div className="pro-card rounded-2xl p-4 bg-white/90 border-blue-200/80 flex flex-col lg:flex-row items-center justify-between gap-4">
             {/* Search Field */}
             <div className="relative w-full lg:w-80">
-              <Search className="w-4 h-4 text-purple-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search students..."
@@ -7991,7 +7991,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {/* Filters */}
             <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
               <div className="flex items-center gap-1 text-xs text-slate-600 font-bold">
-                <Filter className="w-3.5 h-3.5 text-purple-600" />
+                <Filter className="w-3.5 h-3.5 text-blue-600" />
                 <span>Filters:</span>
               </div>
 
@@ -7999,7 +7999,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={studentFilterBatch}
                 onChange={(e) => setStudentFilterBatch(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Batches</option>
                 {batches.map((b) => (
@@ -8011,7 +8011,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={studentFilterDept}
                 onChange={(e) => setStudentFilterDept(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Departments</option>
                 <option value="Computer Science">Computer Science</option>
@@ -8026,7 +8026,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={studentFilterYear}
                 onChange={(e) => setStudentFilterYear(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Years</option>
                 <option value="1st Year">1st Year</option>
@@ -8039,7 +8039,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={studentFilterSec}
                 onChange={(e) => setStudentFilterSec(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Sections</option>
                 <option value="A">Section A</option>
@@ -8051,7 +8051,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <select
                 value={studentFilterStatus}
                 onChange={(e) => setStudentFilterStatus(e.target.value)}
-                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-purple-50/50 font-semibold"
+                className="pro-input rounded-xl px-3 py-1.5 text-xs bg-blue-50/50 font-semibold"
               >
                 <option value="All">All Status</option>
                 <option value="Active">Active</option>
@@ -8068,7 +8068,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             <div className="pro-card rounded-3xl p-6 bg-white space-y-4 overflow-hidden">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-purple-700" />
+                  <Users className="w-4 h-4 text-blue-700" />
                   <span>Registered Students Directory ({students.filter((s) => {
                   const matchesSearch =
                     !studentSearch ||
@@ -8096,7 +8096,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-purple-100 bg-purple-50/60 text-[11px] font-extrabold uppercase text-purple-900 tracking-wider">
+                  <tr className="border-b border-blue-100 bg-blue-50/60 text-[11px] font-extrabold uppercase text-blue-900 tracking-wider">
                     <th className="py-3 px-4 rounded-l-xl">Register No</th>
                     <th className="py-3 px-4">Student Name</th>
                     <th className="py-3 px-4">Department</th>
@@ -8107,7 +8107,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <th className="py-3 px-4 text-right rounded-r-xl">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-purple-100/60 text-xs text-slate-700 font-medium">
+                <tbody className="divide-y divide-blue-100/60 text-xs text-slate-700 font-medium">
                   {students.filter((s) => {
                     const matchesSearch =
                       !studentSearch ||
@@ -8165,8 +8165,8 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       const statusVal = s.status || 'Active';
 
                       return (
-                        <tr key={s.id} className="hover:bg-purple-50/30 transition-colors">
-                          <td className="py-3.5 px-4 font-mono font-bold text-purple-900">
+                        <tr key={s.id} className="hover:bg-blue-50/30 transition-colors">
+                          <td className="py-3.5 px-4 font-mono font-bold text-blue-900">
                             {s.registerNo}
                           </td>
                           <td className="py-3.5 px-4 font-bold text-slate-900">
@@ -8181,7 +8181,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           <td className="py-3.5 px-4 font-bold">
                             Section {cleanSec}
                           </td>
-                          <td className="py-3.5 px-4 font-mono text-purple-900 font-semibold">
+                          <td className="py-3.5 px-4 font-mono text-blue-900 font-semibold">
                             {s.batch?.name || 'Unassigned'}
                           </td>
                           <td className="py-3.5 px-4">
@@ -8197,7 +8197,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                             <div className="flex items-center justify-end gap-2">
                               <button
                                 onClick={() => handleOpenManualOverride(s)}
-                                className="px-2.5 py-1.5 rounded-xl bg-purple-700 text-white hover:bg-purple-800 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
+                                className="px-2.5 py-1.5 rounded-xl bg-blue-700 text-white hover:bg-blue-800 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
                                 title="Manual Attendance & Certificate Override"
                               >
                                 <Award className="w-3.5 h-3.5" />
@@ -8206,7 +8206,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                               <button
                                 onClick={() => handleOpenStudentProfile(s)}
-                                className="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
+                                className="px-3 py-1.5 rounded-xl bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
                               >
                                 <Eye className="w-3.5 h-3.5" />
                                 <span>View Profile</span>
@@ -8214,10 +8214,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                               <button
                                 onClick={() => handleOpenEditStudent(s)}
-                                className="px-2.5 py-1.5 rounded-xl bg-purple-50 text-slate-700 hover:bg-purple-100 border border-purple-200 transition-colors text-xs font-semibold"
+                                className="px-2.5 py-1.5 rounded-xl bg-blue-50 text-slate-700 hover:bg-blue-100 border border-blue-200 transition-colors text-xs font-semibold"
                                 title="Edit Student"
                               >
-                                <Edit className="w-3.5 h-3.5 text-purple-700" />
+                                <Edit className="w-3.5 h-3.5 text-blue-700" />
                               </button>
                             </div>
                           </td>
@@ -8255,11 +8255,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 const statusVal = s.status || 'Active';
 
                 return (
-                  <div key={s.id} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-200 space-y-3">
+                  <div key={s.id} className="p-4 rounded-2xl bg-blue-50/40 border border-blue-200 space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
                         <h4 className="font-bold text-slate-900 text-sm">{s.name}</h4>
-                        <span className="font-mono font-bold text-purple-900 text-xs">{s.registerNo}</span>
+                        <span className="font-mono font-bold text-blue-900 text-xs">{s.registerNo}</span>
                       </div>
                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                         statusVal === 'Completed' ? 'bg-indigo-100 text-indigo-800 border-indigo-300' :
@@ -8272,29 +8272,29 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                     <div className="text-xs text-slate-600 space-y-0.5 font-medium">
                       <p>{s.department} • {s.year} • Section {cleanSec}</p>
-                      <p className="font-mono text-purple-950 font-semibold">{s.batch?.name || 'Unassigned Batch'}</p>
+                      <p className="font-mono text-blue-950 font-semibold">{s.batch?.name || 'Unassigned Batch'}</p>
                     </div>
 
-                    <div className="flex gap-2 pt-1 border-t border-purple-100">
+                    <div className="flex gap-2 pt-1 border-t border-blue-100">
                       <button
                         onClick={() => handleOpenManualOverride(s)}
-                        className="py-1.5 px-3 rounded-xl bg-purple-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-2xs"
+                        className="py-1.5 px-3 rounded-xl bg-blue-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-2xs"
                       >
                         <Award className="w-3.5 h-3.5" />
                         <span>Override</span>
                       </button>
                       <button
                         onClick={() => handleOpenStudentProfile(s)}
-                        className="flex-1 py-1.5 rounded-xl bg-purple-600 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-2xs"
+                        className="flex-1 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-2xs"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Profile</span>
                       </button>
                       <button
                         onClick={() => handleOpenEditStudent(s)}
-                        className="px-3 py-1.5 rounded-xl bg-white border border-purple-200 text-slate-700 text-xs font-semibold"
+                        className="px-3 py-1.5 rounded-xl bg-white border border-blue-200 text-slate-700 text-xs font-semibold"
                       >
-                        <Edit className="w-3.5 h-3.5 text-purple-700" />
+                        <Edit className="w-3.5 h-3.5 text-blue-700" />
                       </button>
                     </div>
                   </div>
@@ -8316,17 +8316,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto cursor-default"
           >
             
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div>
-                <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">AR/VR COE</span>
+                <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">AR/VR COE</span>
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">New Student Registration</h2>
               </div>
               <button
                 onClick={() => setShowNewRegisterModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -8351,7 +8351,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span>Register Number <span className="text-rose-500">*</span></span>
-                  <span className="text-[10px] text-purple-600 font-medium">Unrestricted format • Unique</span>
+                  <span className="text-[10px] text-blue-600 font-medium">Unrestricted format • Unique</span>
                 </label>
                 <input
                   type="text"
@@ -8359,7 +8359,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   placeholder="e.g. 23CS101, MECH001, 101, ABC123"
                   value={regForm.registerNo}
                   onChange={(e) => setRegForm({ ...regForm, registerNo: e.target.value })}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-purple-950"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-blue-950"
                 />
               </div>
 
@@ -8444,14 +8444,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span>Training Batch <span className="text-rose-500">*</span></span>
                   {batches.length > 0 && (
-                    <span className="text-[10px] text-purple-700 font-semibold">{batches.length} Batches</span>
+                    <span className="text-[10px] text-blue-700 font-semibold">{batches.length} Batches</span>
                   )}
                 </label>
                 <select
                   required
                   value={regForm.batchId || batches[0]?.id || ''}
                   onChange={(e) => setRegForm({ ...regForm, batchId: e.target.value })}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-purple-950 bg-white"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-blue-950 bg-white"
                 >
                   {batches.length === 0 ? (
                     <option value="">No batches available</option>
@@ -8466,7 +8466,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span>6-Digit PIN <span className="text-rose-500">*</span></span>
-                  <span className="text-[10px] font-mono text-purple-600">Exactly 6 numbers</span>
+                  <span className="text-[10px] font-mono text-blue-600">Exactly 6 numbers</span>
                 </label>
                 <input
                   type="password"
@@ -8475,15 +8475,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   placeholder="e.g. 123456"
                   value={regForm.pin}
                   onChange={(e) => setRegForm({ ...regForm, pin: e.target.value })}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold tracking-widest text-purple-950"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold tracking-widest text-blue-950"
                 />
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-purple-100">
+              <div className="flex gap-3 pt-4 border-t border-blue-100">
                 <button
                   type="button"
                   onClick={() => setShowNewRegisterModal(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                 >
                   Cancel
                 </button>
@@ -8510,7 +8510,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
           >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0">
@@ -8522,14 +8522,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 text-xs space-y-2 font-medium">
+            <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 text-xs space-y-2 font-medium">
               <div className="flex justify-between">
                 <span className="text-slate-500">Student Name:</span>
                 <strong className="text-slate-900 font-bold">{registeredSuccessStudent.name}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Register Number:</span>
-                <strong className="font-mono text-purple-900 font-bold">{registeredSuccessStudent.registerNo}</strong>
+                <strong className="font-mono text-blue-900 font-bold">{registeredSuccessStudent.registerNo}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Training Batch:</span>
@@ -8547,7 +8547,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   setShowRegSuccessModal(false);
                   handleOpenStudentProfile(registeredSuccessStudent);
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-purple-100 text-purple-900 border border-purple-300 text-xs font-bold hover:bg-purple-200 transition-colors flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 rounded-xl bg-blue-100 text-blue-900 border border-blue-300 text-xs font-bold hover:bg-blue-200 transition-colors flex items-center justify-center gap-1.5"
               >
                 <Eye className="w-4 h-4" />
                 <span>View Student Profile</span>
@@ -8576,54 +8576,54 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto cursor-default"
           >
             
             {/* Profile Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-blue-100 pb-4">
               <div>
-                <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">STUDENT PROFILE</span>
+                <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">STUDENT PROFILE</span>
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">{profileStudent.name}</h2>
                 <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs font-semibold text-slate-600">
-                  <span className="font-mono text-purple-900 font-bold bg-purple-100 px-2 py-0.5 rounded border border-purple-200">
+                  <span className="font-mono text-blue-900 font-bold bg-blue-100 px-2 py-0.5 rounded border border-blue-200">
                     Reg No: {profileStudent.registerNo}
                   </span>
                   <span>{profileStudent.department} • {profileStudent.year} • {profileStudent.section}</span>
-                  <span className="text-purple-950 font-bold font-mono">Batch: {profileStudent.batch?.name}</span>
+                  <span className="text-blue-950 font-bold font-mono">Batch: {profileStudent.batch?.name}</span>
                 </div>
               </div>
 
               <button
                 onClick={() => setShowStudentProfileModal(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors self-end sm:self-auto"
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors self-end sm:self-auto"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Profile Tabs Navigation */}
-            <div className="flex items-center gap-2 border-b border-purple-100 pb-2 overflow-x-auto">
+            <div className="flex items-center gap-2 border-b border-blue-100 pb-2 overflow-x-auto">
               <button
                 onClick={() => setProfileTab('overview')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'overview' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'overview' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Overview
               </button>
               <button
                 onClick={() => setProfileTab('attendance')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'attendance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'attendance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Attendance
               </button>
               <button
                 onClick={() => setProfileTab('tasks')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'tasks' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'tasks' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Tasks History
               </button>
               <button
                 onClick={() => setProfileTab('performance')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'performance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-purple-50'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${profileTab === 'performance' ? 'pro-button-primary text-white shadow-xs' : 'text-slate-600 hover:bg-blue-50'}`}
               >
                 Performance
               </button>
@@ -8633,11 +8633,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {profileTab === 'overview' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200">
+                  <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200">
                     <span className="text-[11px] font-bold text-slate-500 uppercase">Attendance</span>
                     <div className="text-2xl font-extrabold text-slate-900 mt-1">92%</div>
-                    <div className="w-full bg-purple-200 h-2 rounded-full mt-2 overflow-hidden">
-                      <div className="bg-purple-600 h-full rounded-full w-[92%]" />
+                    <div className="w-full bg-blue-200 h-2 rounded-full mt-2 overflow-hidden">
+                      <div className="bg-blue-600 h-full rounded-full w-[92%]" />
                     </div>
                   </div>
 
@@ -8671,20 +8671,20 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             {/* Tab 2: Attendance */}
             {profileTab === 'attendance' && (
               <div className="space-y-3">
-                <div className="p-3 rounded-xl bg-purple-50 text-purple-900 text-xs font-semibold flex items-center justify-between">
+                <div className="p-3 rounded-xl bg-blue-50 text-blue-900 text-xs font-semibold flex items-center justify-between">
                   <span>FN Cutoff: <strong>9:15 AM</strong></span>
                   <span>AN Cutoff: <strong>2:00 PM</strong></span>
                 </div>
                 <div className="overflow-x-auto max-h-60 overflow-y-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="bg-purple-100 text-purple-900 font-bold border-b border-purple-200">
+                      <tr className="bg-blue-100 text-blue-900 font-bold border-b border-blue-200">
                         <th className="p-2.5">Date</th>
                         <th className="p-2.5">Session</th>
                         <th className="p-2.5">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-purple-100 font-medium">
+                    <tbody className="divide-y divide-blue-100 font-medium">
                       {(profileStudent.attendances || []).length === 0 ? (
                         <tr>
                           <td colSpan={3} className="p-4 text-center text-slate-500">No attendance logs found.</td>
@@ -8693,7 +8693,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         profileStudent.attendances.map((att: any) => (
                           <tr key={att.id}>
                             <td className="p-2.5 font-mono">{formatDateDisplay(att.date)}</td>
-                            <td className="p-2.5 font-bold text-purple-900">{att.session}</td>
+                            <td className="p-2.5 font-bold text-blue-900">{att.session}</td>
                             <td className="p-2.5">
                               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Present</span>
                             </td>
@@ -8713,14 +8713,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <p className="text-xs text-slate-500 italic p-4 text-center">No task submissions uploaded yet.</p>
                 ) : (
                   profileStudent.taskSubmissions.map((task: any) => (
-                    <div key={task.id} className="p-4 rounded-2xl bg-purple-50/50 border border-purple-200 space-y-2 text-xs">
+                    <div key={task.id} className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200 space-y-2 text-xs">
                       <div className="flex justify-between items-center font-bold">
-                        <span className="font-mono text-purple-900">Day {task.trainingDay?.dayNumber || 1} • {task.trainingDay?.taskTitle || 'Task'}</span>
+                        <span className="font-mono text-blue-900">Day {task.trainingDay?.dayNumber || 1} • {task.trainingDay?.taskTitle || 'Task'}</span>
                         <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px]">{task.status}</span>
                       </div>
                       {task.description && <p className="text-slate-700 italic">{task.description}</p>}
                       {task.evaluation && (
-                        <div className="pt-2 border-t border-purple-200 font-semibold text-purple-950 flex justify-between">
+                        <div className="pt-2 border-t border-blue-200 font-semibold text-blue-950 flex justify-between">
                           <span>Score: {task.evaluation.score}/100 ({task.evaluation.grade})</span>
                           <span>Level: {task.evaluation.trainingLevel}</span>
                         </div>
@@ -8733,10 +8733,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
             {/* Tab 4: Performance */}
             {profileTab === 'performance' && (
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-3 text-xs">
+              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-3 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-600 font-bold">Grade Evaluation:</span>
-                  <strong className="text-purple-900 font-bold font-mono text-sm">A+ (Excellent)</strong>
+                  <strong className="text-blue-900 font-bold font-mono text-sm">A+ (Excellent)</strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600 font-bold">Training Level Achieved:</span>
@@ -8761,16 +8761,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
           >
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div>
-                <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">ADMIN ACTIONS</span>
+                <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">ADMIN ACTIONS</span>
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Edit Student Profile</h2>
               </div>
               <button
                 onClick={() => setShowEditStudentModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -8852,7 +8852,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={editStudentData.batchId}
                   onChange={(e) => setEditStudentData({ ...editStudentData, batchId: e.target.value })}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-purple-950"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-blue-950"
                 >
                   {batches.map((b) => (
                     <option key={b.id} value={b.id}>{b.name}</option>
@@ -8865,7 +8865,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={editStudentData.status}
                   onChange={(e) => setEditStudentData({ ...editStudentData, status: e.target.value })}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-purple-950"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-blue-950"
                 >
                   <option value="Active">Active</option>
                   <option value="Completed">Completed</option>
@@ -8873,11 +8873,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 </select>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-purple-100">
+              <div className="flex gap-3 pt-4 border-t border-blue-100">
                 <button
                   type="button"
                   onClick={() => setShowEditStudentModal(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                 >
                   Cancel
                 </button>
@@ -8904,38 +8904,38 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
           >
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-purple-900 text-white flex items-center justify-center font-bold text-sm">
-                  <ShieldCheck className="w-6 h-6 text-purple-200" />
+                <div className="w-10 h-10 rounded-2xl bg-blue-900 text-white flex items-center justify-center font-bold text-sm">
+                  <ShieldCheck className="w-6 h-6 text-blue-200" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">ACCOUNT PROFILE</span>
+                  <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">ACCOUNT PROFILE</span>
                   <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">Admin Credentials</h2>
                 </div>
               </div>
               <button
                 onClick={() => setShowAdminProfileModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs p-4 rounded-2xl bg-purple-50/60 border border-purple-200 font-medium">
+            <div className="space-y-3 text-xs p-4 rounded-2xl bg-blue-50/60 border border-blue-200 font-medium">
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">Admin Name:</span>
                 <strong className="text-slate-900 font-bold">{user.name}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">Email Address:</span>
-                <strong className="font-mono text-purple-900">{user.email || 'admin@arvr.com'}</strong>
+                <strong className="font-mono text-blue-900">{user.email || 'admin@arvr.com'}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">System Role:</span>
-                <strong className="font-mono text-purple-800 font-extrabold bg-purple-100 px-2 py-0.5 rounded border border-purple-200">{user.role}</strong>
+                <strong className="font-mono text-blue-800 font-extrabold bg-blue-100 px-2 py-0.5 rounded border border-blue-200">{user.role}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">Access Scope:</span>
@@ -8963,22 +8963,22 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           >
             <div 
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl border border-purple-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+              className="bg-white rounded-3xl border border-blue-200 max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
             >
-              <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+              <div className="flex items-center justify-between border-b border-blue-100 pb-4">
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">CERTIFICATE RECORD</span>
+                  <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">CERTIFICATE RECORD</span>
                   <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Official Certificate Data</h2>
                 </div>
                 <button
                   onClick={() => setShowCertRecordModal(false)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="space-y-2.5 text-xs p-4 rounded-2xl bg-purple-50/60 border border-purple-200 font-medium">
+              <div className="space-y-2.5 text-xs p-4 rounded-2xl bg-blue-50/60 border border-blue-200 font-medium">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Student Name:</span>
                   <strong className="text-slate-900 font-bold text-sm">{selectedCertRecordStudent.name}</strong>
@@ -8986,7 +8986,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                 <div className="flex justify-between">
                   <span className="text-slate-500">Register Number:</span>
-                  <strong className="font-mono text-purple-900 font-bold">{selectedCertRecordStudent.registerNo}</strong>
+                  <strong className="font-mono text-blue-900 font-bold">{selectedCertRecordStudent.registerNo}</strong>
                 </div>
 
                 <div className="flex justify-between">
@@ -9006,7 +9006,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                 <div className="flex justify-between">
                   <span className="text-slate-500">Performance Grade:</span>
-                  <strong className="font-mono text-purple-900 font-bold text-sm">{selectedCertRecordStudent.grade}</strong>
+                  <strong className="font-mono text-blue-900 font-bold text-sm">{selectedCertRecordStudent.grade}</strong>
                 </div>
 
                 <div className="flex justify-between">
@@ -9014,9 +9014,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <strong className="text-slate-900 font-bold">{selectedCertRecordStudent.level}</strong>
                 </div>
 
-                <div className="flex justify-between items-center pt-2 border-t border-purple-200">
+                <div className="flex justify-between items-center pt-2 border-t border-blue-200">
                   <span className="text-slate-700 font-bold">Certificate Number:</span>
-                  <strong className="font-mono text-purple-950 font-extrabold text-sm">{selectedCertRecordStudent.certNo}</strong>
+                  <strong className="font-mono text-blue-950 font-extrabold text-sm">{selectedCertRecordStudent.certNo}</strong>
                 </div>
 
                 <div className="flex justify-between">
@@ -9034,7 +9034,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     setShowCertRecordModal(false);
                     handleOpenManualOverride(selectedCertRecordStudent);
                   }}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-700 text-white text-xs font-bold shadow-md hover:bg-purple-800 transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-700 text-white text-xs font-bold shadow-md hover:bg-blue-800 transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Settings className="w-3.5 h-3.5" />
                   <span>Manual Override & Data</span>
@@ -9042,7 +9042,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <button
                   type="button"
                   onClick={() => setShowCertRecordModal(false)}
-                  className="py-2.5 px-4 rounded-xl bg-purple-50 text-slate-700 hover:bg-purple-100 border border-purple-200 text-xs font-bold transition-colors"
+                  className="py-2.5 px-4 rounded-xl bg-blue-50 text-slate-700 hover:bg-blue-100 border border-blue-200 text-xs font-bold transition-colors"
                 >
                   Close
                 </button>
@@ -9072,37 +9072,37 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           >
             <div 
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl border border-purple-200 max-w-xl w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto max-h-[92vh] overflow-y-auto cursor-default"
+              className="bg-white rounded-3xl border border-blue-200 max-w-xl w-full p-6 sm:p-8 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto max-h-[92vh] overflow-y-auto cursor-default"
             >
               
               {/* Modal Header */}
-              <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+              <div className="flex items-center justify-between border-b border-blue-100 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-purple-900 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                    <ShieldCheck className="w-5 h-5 text-purple-200" />
+                  <div className="w-10 h-10 rounded-2xl bg-blue-900 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                    <ShieldCheck className="w-5 h-5 text-blue-200" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">ADMIN OVERRIDE CENTER</span>
+                    <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">ADMIN OVERRIDE CENTER</span>
                     <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Manual Student Data & Certificate Override</h2>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowManualOverrideModal(false)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Student Header Card */}
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 text-xs flex flex-wrap items-center justify-between gap-3 font-medium">
+              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 text-xs flex flex-wrap items-center justify-between gap-3 font-medium">
                 <div>
                   <h3 className="font-extrabold text-slate-900 text-sm">{overrideStudent.name}</h3>
-                  <p className="font-mono text-purple-900 font-bold">{overrideStudent.registerNo} • {overrideStudent.department}</p>
+                  <p className="font-mono text-blue-900 font-bold">{overrideStudent.registerNo} • {overrideStudent.department}</p>
                 </div>
                 <div className="text-right">
                   <span className="text-slate-500 block text-[10px] font-bold uppercase">Batch</span>
-                  <span className="font-mono text-purple-950 font-bold">{batchObj?.name || 'Unassigned'}</span>
+                  <span className="font-mono text-blue-950 font-bold">{batchObj?.name || 'Unassigned'}</span>
                 </div>
               </div>
 
@@ -9117,11 +9117,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-purple-50/80 border border-purple-200 text-purple-900">
+                <div className="p-3 rounded-xl bg-blue-50/80 border border-blue-200 text-blue-900">
                   <span className="text-[10px] font-bold uppercase tracking-wider block text-slate-500">Tasks</span>
                   <span className="text-base font-extrabold block mt-0.5">{currentTaskPct}%</span>
                   <span className="text-[10px] font-bold block">{studentTasks}/{totalDays} days</span>
-                  <span className="inline-block mt-1 px-1.5 py-0.5 rounded-md text-[9px] font-extrabold bg-purple-200/80 text-purple-900">
+                  <span className="inline-block mt-1 px-1.5 py-0.5 rounded-md text-[9px] font-extrabold bg-blue-200/80 text-blue-900">
                     {studentTasks >= totalDays ? '✓ Completed' : 'In Progress'}
                   </span>
                 </div>
@@ -9150,11 +9150,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   </div>
                 </div>
               ) : existingCert?.isManualOverride ? (
-                <div className="p-3 rounded-2xl bg-purple-50 border border-purple-200 text-purple-900 text-xs flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-purple-700 shrink-0 mt-0.5" />
+                <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200 text-blue-900 text-xs flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
                     <p className="font-bold">Manual Admin Override Active</p>
-                    <p className="text-purple-800 text-[11px] leading-relaxed">
+                    <p className="text-blue-800 text-[11px] leading-relaxed">
                       Reason: <strong className="font-medium text-slate-900">"{existingCert.overrideReason || 'Admin manual override'}"</strong>. This certificate is certified valid under administrative authority.
                     </p>
                   </div>
@@ -9170,9 +9170,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               )}
 
               {/* Quick Actions Card */}
-              <div className="p-4 rounded-2xl bg-white border border-purple-200 space-y-3 shadow-2xs">
+              <div className="p-4 rounded-2xl bg-white border border-blue-200 space-y-3 shadow-2xs">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
-                  <Sparkles className="w-4 h-4 text-purple-600" />
+                  <Sparkles className="w-4 h-4 text-blue-600" />
                   <span>Quick Student Data Adjustments</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -9180,9 +9180,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     type="button"
                     disabled={savingOverride}
                     onClick={() => handleGrant100Attendance(overrideStudent.id)}
-                    className="py-2.5 px-3 rounded-xl bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    className="py-2.5 px-3 rounded-xl bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
                   >
-                    <Clock className="w-3.5 h-3.5 text-purple-700" />
+                    <Clock className="w-3.5 h-3.5 text-blue-700" />
                     <span>Grant 100% Att</span>
                   </button>
 
@@ -9190,9 +9190,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     type="button"
                     disabled={savingOverride}
                     onClick={() => handleGrantAllTasks(overrideStudent.id)}
-                    className="py-2.5 px-3 rounded-xl bg-purple-100 text-purple-900 hover:bg-purple-200 border border-purple-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    className="py-2.5 px-3 rounded-xl bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
                   >
-                    <CheckSquare className="w-3.5 h-3.5 text-purple-700" />
+                    <CheckSquare className="w-3.5 h-3.5 text-blue-700" />
                     <span>Accept All Tasks</span>
                   </button>
 
@@ -9209,18 +9209,18 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </div>
 
               {/* Manual Certificate Configuration Form */}
-              <div className="p-4 rounded-2xl bg-purple-50/40 border border-purple-200 space-y-3.5">
+              <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-200 space-y-3.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <Settings className="w-4 h-4 text-purple-700" />
+                    <Settings className="w-4 h-4 text-blue-700" />
                     <span>Certificate & Validity Customization</span>
                   </span>
-                  <label className="flex items-center gap-1.5 text-xs font-extrabold text-purple-900 cursor-pointer">
+                  <label className="flex items-center gap-1.5 text-xs font-extrabold text-blue-900 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={overrideIsManual}
                       onChange={(e) => setOverrideIsManual(e.target.checked)}
-                      className="rounded text-purple-600 focus:ring-purple-500 w-4 h-4"
+                      className="rounded text-blue-600 focus:ring-blue-500 w-4 h-4"
                     />
                     <span>Manual Override Mode</span>
                   </label>
@@ -9269,7 +9269,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <select
                       value={overrideFinalGrade}
                       onChange={(e) => setOverrideFinalGrade(e.target.value)}
-                      className="w-full pro-input rounded-xl px-3 py-2 text-xs font-bold text-purple-950 bg-white"
+                      className="w-full pro-input rounded-xl px-3 py-2 text-xs font-bold text-blue-950 bg-white"
                     >
                       <option value="O">Grade O (Outstanding / &ge; 90)</option>
                       <option value="A+">Grade A+ (Excellent / 80-89)</option>
@@ -9285,7 +9285,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     <select
                       value={overrideFinalLevel}
                       onChange={(e) => setOverrideFinalLevel(e.target.value)}
-                      className="w-full pro-input rounded-xl px-3 py-2 text-xs font-bold text-purple-950 bg-white"
+                      className="w-full pro-input rounded-xl px-3 py-2 text-xs font-bold text-blue-950 bg-white"
                     >
                       <option value="Level 1 Foundation">Level 1 Foundation</option>
                       <option value="Level 2 Advanced">Level 2 Advanced</option>
@@ -9328,7 +9328,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <button
                     type="button"
                     onClick={() => setShowManualOverrideModal(false)}
-                    className="py-2.5 px-4 rounded-xl bg-purple-50 text-slate-700 hover:bg-purple-100 border border-purple-200 text-xs font-bold transition-colors"
+                    className="py-2.5 px-4 rounded-xl bg-blue-50 text-slate-700 hover:bg-blue-100 border border-blue-200 text-xs font-bold transition-colors"
                   >
                     Cancel
                   </button>
@@ -9357,16 +9357,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl border border-purple-200 max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
+            className="bg-white rounded-3xl border border-blue-200 max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
           >
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div>
-                <span className="text-[10px] font-mono tracking-widest text-purple-700 font-extrabold uppercase">TASK MANAGEMENT</span>
+                <span className="text-[10px] font-mono tracking-widest text-blue-700 font-extrabold uppercase">TASK MANAGEMENT</span>
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Edit Task Details • Day {selectedDayNumber}</h2>
               </div>
               <button
                 onClick={() => setShowEditTaskModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -9397,11 +9397,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 />
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-purple-100">
+              <div className="flex gap-3 pt-4 border-t border-blue-100">
                 <button
                   type="button"
                   onClick={() => setShowEditTaskModal(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-50 border border-blue-200 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors"
                 >
                   Cancel
                 </button>
@@ -9443,14 +9443,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           >
             <div 
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl border border-purple-200 max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto cursor-default"
+              className="bg-white rounded-3xl border border-blue-200 max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto cursor-default"
             >
               
               {/* Header Context */}
-              <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+              <div className="flex items-center justify-between border-b border-blue-100 pb-4">
                 <div>
                   <span className={`text-[10px] font-mono tracking-widest font-extrabold uppercase ${
-                    isFinalExamDay ? 'text-amber-700' : 'text-purple-700'
+                    isFinalExamDay ? 'text-amber-700' : 'text-blue-700'
                   }`}>
                     {isFinalExamDay ? `FINAL EXAM EVALUATION WORKSPACE • DAY ${selectedDayNumber}` : 'SUBMISSION EVALUATION WORKSPACE'}
                   </span>
@@ -9465,7 +9465,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     setSelectedSubmissionStudent(null);
                   }}
                   aria-label="Close evaluation modal"
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-purple-50 transition-colors"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-blue-50 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -9487,7 +9487,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               )}
 
               {/* Student Metadata Card */}
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
                   <span className="text-slate-500 font-medium">Student Name:</span>
                   <strong className="text-slate-900 font-bold block text-sm mt-0.5">{selectedSubmissionStudent.name}</strong>
@@ -9495,7 +9495,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
                 <div>
                   <span className="text-slate-500 font-medium">Register Number:</span>
-                  <strong className="font-mono text-purple-900 font-bold block text-sm mt-0.5">{selectedSubmissionStudent.registerNo}</strong>
+                  <strong className="font-mono text-blue-900 font-bold block text-sm mt-0.5">{selectedSubmissionStudent.registerNo}</strong>
                 </div>
 
                 <div>
@@ -9526,19 +9526,19 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   : [];
 
                 return (
-                  <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-200 text-xs space-y-3">
+                  <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200 text-xs space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-purple-900 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
-                        <ListChecks className="w-3.5 h-3.5 text-purple-700" />
+                      <span className="font-bold text-blue-900 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
+                        <ListChecks className="w-3.5 h-3.5 text-blue-700" />
                         <span>Assigned Tasks & Requirements ({evalDayTasks.length})</span>
                       </span>
                     </div>
 
                     <div className="space-y-2">
                       {evalDayTasks.map((t: any, idx: number) => (
-                        <div key={idx} className="p-2.5 rounded-xl bg-white border border-purple-100 shadow-2xs space-y-1">
+                        <div key={idx} className="p-2.5 rounded-xl bg-white border border-blue-100 shadow-2xs space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-extrabold text-purple-900 bg-purple-100 px-1.5 py-0.5 rounded">Task #{idx + 1}</span>
+                            <span className="text-[10px] font-extrabold text-blue-900 bg-blue-100 px-1.5 py-0.5 rounded">Task #{idx + 1}</span>
                             <h4 className="font-bold text-slate-900 text-xs">{t.title}</h4>
                           </div>
                           {t.description && <p className="text-slate-600 font-medium text-[11px] leading-relaxed">{t.description}</p>}
@@ -9547,7 +9547,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     </div>
 
                     {evalDayResources.length > 0 && (
-                      <div className="pt-2 border-t border-purple-100 space-y-1.5">
+                      <div className="pt-2 border-t border-blue-100 space-y-1.5">
                         <span className="font-bold text-slate-700 text-[10px] uppercase tracking-wider flex items-center gap-1">
                           <Paperclip className="w-3 h-3 text-indigo-600" />
                           <span>Attached Learning Resources ({evalDayResources.length})</span>
@@ -9578,14 +9578,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-800 text-xs uppercase tracking-wider block">Uploaded Screenshot / Task File</span>
                   {evaluatingTask.storedFilename && (
-                    <span className="font-mono text-[11px] font-bold text-purple-900 bg-purple-100 px-2.5 py-0.5 rounded-lg border border-purple-200">
+                    <span className="font-mono text-[11px] font-bold text-blue-900 bg-blue-100 px-2.5 py-0.5 rounded-lg border border-blue-200">
                       {evaluatingTask.storedFilename}
                     </span>
                   )}
                 </div>
 
                 {evaluatingTask.screenshotUrl ? (
-                  <div className="p-3 rounded-2xl border border-purple-200 bg-purple-50/30 space-y-2">
+                  <div className="p-3 rounded-2xl border border-blue-200 bg-blue-50/30 space-y-2">
                     <div className="relative max-h-64 rounded-xl overflow-hidden bg-slate-950 flex items-center justify-center">
                       <img
                         src={evaluatingTask.screenshotUrl}
@@ -9598,7 +9598,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     </div>
                     <div className="flex flex-wrap items-center justify-between text-xs gap-2 pt-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-purple-950 font-bold font-mono text-[11px]">
+                        <span className="text-blue-950 font-bold font-mono text-[11px]">
                           {evaluatingTask.storedFilename || 'Submission File'}
                         </span>
                         {evaluatingTask.googleDriveFileId && (
@@ -9624,7 +9624,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                           href={evaluatingTask.screenshotUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-purple-700 hover:text-purple-950 underline font-mono text-xs flex items-center gap-1 font-bold bg-white hover:bg-purple-50 px-3 py-1 rounded-xl border border-purple-200 shadow-2xs transition-all"
+                          className="text-blue-700 hover:text-blue-950 underline font-mono text-xs flex items-center gap-1 font-bold bg-white hover:bg-blue-50 px-3 py-1 rounded-xl border border-blue-200 shadow-2xs transition-all"
                         >
                           <span>[ View Submission ]</span>
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -9640,22 +9640,22 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </div>
 
               {/* Student Submission Description */}
-              <div className="space-y-1 text-xs bg-purple-50/50 p-4 rounded-2xl border border-purple-200">
-                <span className="font-bold text-purple-950 uppercase tracking-wider text-[10px] block">Student Submission Description</span>
+              <div className="space-y-1 text-xs bg-blue-50/50 p-4 rounded-2xl border border-blue-200">
+                <span className="font-bold text-blue-950 uppercase tracking-wider text-[10px] block">Student Submission Description</span>
                 <p className="text-slate-800 font-medium italic">
                   {evaluatingTask.description || 'Student provided no submission text.'}
                 </p>
               </div>
 
               {/* Evaluation Form Panel */}
-              <form onSubmit={handleSubmitEvaluation} className="space-y-4 border-t border-purple-100 pt-4">
+              <form onSubmit={handleSubmitEvaluation} className="space-y-4 border-t border-blue-100 pt-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Star className="w-4 h-4 text-amber-500" />
                     <span>{isFinalExamDay ? 'Final Exam Evaluation Panel' : 'Evaluation Panel'}</span>
                   </h4>
                   {evaluatingTask.evaluation?.evaluatedAt && (
-                    <span className="text-[11px] font-mono text-purple-900 font-semibold bg-purple-100 px-2.5 py-0.5 rounded-md border border-purple-200">
+                    <span className="text-[11px] font-mono text-blue-900 font-semibold bg-blue-100 px-2.5 py-0.5 rounded-md border border-blue-200">
                       Evaluated At: {formatDateDisplay(evaluatingTask.evaluation.evaluatedAt)}
                     </span>
                   )}
@@ -9664,7 +9664,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
                     <span>{isFinalExamDay ? 'Final Exam Score (0 - 100 Scale)' : 'Score (0 - 100 Scale)'} <span className="text-rose-500">*</span></span>
-                    <span className="text-purple-900 font-mono font-extrabold text-base bg-purple-100 px-2.5 py-0.5 rounded-md border border-purple-200">{evalScore} / 100</span>
+                    <span className="text-blue-900 font-mono font-extrabold text-base bg-blue-100 px-2.5 py-0.5 rounded-md border border-blue-200">{evalScore} / 100</span>
                   </label>
                   <input
                     type="range"
@@ -9672,7 +9672,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     max={100}
                     value={evalScore}
                     onChange={(e) => handleScoreChange(Number(e.target.value))}
-                    className="w-full accent-purple-600 h-2 bg-purple-100 rounded-lg cursor-pointer"
+                    className="w-full accent-blue-600 h-2 bg-blue-100 rounded-lg cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1 font-bold">
                     <span>0 (Invalid/Fail)</span>
@@ -9707,7 +9707,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                       value={evalGrade}
                       onChange={(e) => setEvalGrade(e.target.value)}
                       className={`w-full pro-input rounded-xl px-3 py-2 text-xs font-bold ${
-                        isFinalExamDay ? 'text-amber-950 bg-amber-50/50 border-amber-300 ring-1 ring-amber-300/60' : 'text-purple-900'
+                        isFinalExamDay ? 'text-amber-950 bg-amber-50/50 border-amber-300 ring-1 ring-amber-300/60' : 'text-blue-900'
                       }`}
                     >
                       <option value="O">O (Outstanding 90+)</option>
@@ -9744,14 +9744,14 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   />
                 </div>
 
-                <div className="flex gap-3 pt-3 border-t border-purple-100">
+                <div className="flex gap-3 pt-3 border-t border-blue-100">
                   <button
                     type="button"
                     onClick={() => {
                       setEvaluatingTask(null);
                       setSelectedSubmissionStudent(null);
                     }}
-                    className="flex-1 py-2.5 rounded-xl bg-purple-50 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors border border-purple-200"
+                    className="flex-1 py-2.5 rounded-xl bg-blue-50 text-slate-700 text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-200"
                   >
                     Cancel
                   </button>
@@ -9759,7 +9759,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     type="submit"
                     disabled={submittingEval}
                     className={`flex-1 py-2.5 rounded-xl text-white text-xs font-bold shadow-md flex items-center justify-center gap-1.5 ${
-                      isFinalExamDay ? 'bg-gradient-to-r from-amber-600 to-purple-600 hover:opacity-95' : 'pro-button-primary'
+                      isFinalExamDay ? 'bg-gradient-to-r from-amber-600 to-blue-600 hover:opacity-95' : 'pro-button-primary'
                     }`}
                   >
                     {submittingEval ? <RefreshCw className="w-4 h-4 animate-spin" /> : isFinalExamDay ? <GraduationCap className="w-4 h-4" /> : <Save className="w-4 h-4" />}
@@ -9781,16 +9781,16 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="pro-card rounded-3xl p-6 max-w-xl w-full space-y-4 shadow-2xl border border-purple-200 bg-white cursor-default"
+            className="pro-card rounded-3xl p-6 max-w-xl w-full space-y-4 shadow-2xl border border-blue-200 bg-white cursor-default"
           >
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 tracking-tight">
-                <UploadCloud className="w-5 h-5 text-purple-700" />
+                <UploadCloud className="w-5 h-5 text-blue-700" />
                 <span>Bulk Student CSV Roster Import</span>
               </h3>
               <button
                 onClick={handleDownloadSampleCsv}
-                className="text-[11px] font-bold text-purple-700 hover:text-purple-900 underline flex items-center gap-1"
+                className="text-[11px] font-bold text-blue-700 hover:text-blue-900 underline flex items-center gap-1"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5" />
                 <span>Download Sample CSV</span>
@@ -9803,7 +9803,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 <select
                   value={importBatchId}
                   onChange={(e) => setImportBatchId(e.target.value)}
-                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-purple-900"
+                  className="w-full pro-input rounded-xl px-3.5 py-2.5 text-xs font-bold text-blue-900"
                   required
                 >
                   {batches.map((b) => (
@@ -9855,7 +9855,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                     setImportResult(null);
                     setImportCsvText('');
                   }}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-50 text-slate-700 text-xs font-semibold hover:bg-purple-100 transition-colors border border-purple-200"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-50 text-slate-700 text-xs font-semibold hover:bg-blue-100 transition-colors border border-blue-200"
                 >
                   Close
                 </button>

@@ -75,6 +75,33 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
   } | null>(null);
   const [locatingUser, setLocatingUser] = useState<boolean>(false);
 
+  // Phase 2: Live Attendance Countdown Clock
+  const [clockNow, setClockNow] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setClockNow(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getSessionRemaining = (sessionDetails: any) => {
+    if (!sessionDetails || sessionDetails.status !== 'OPEN' || !sessionDetails.cutoff) return null;
+    const cutoffDate = new Date(sessionDetails.cutoff);
+    if (isNaN(cutoffDate.getTime())) return null;
+    const diffMs = cutoffDate.getTime() - clockNow.getTime();
+    if (diffMs <= 0) return { expired: true, isUrgent: true, text: 'Closing now' };
+    const totalSecs = Math.floor(diffMs / 1000);
+    const mins = Math.floor(totalSecs / 60);
+    const secs = totalSecs % 60;
+    return {
+      expired: false,
+      isUrgent: mins < 5,
+      text: `${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`,
+      totalSecs,
+    };
+  };
+
   const fetchAccessPolicy = async () => {
     try {
       const res = await fetch('/api/auth/access-status');
@@ -481,8 +508,8 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 )}
 
                 {locatingUser && (
-                  <p className="text-[11px] text-purple-900 font-semibold flex items-center gap-1.5 pt-0.5">
-                    <RefreshCw className="w-3 h-3 animate-spin text-purple-700" />
+                  <p className="text-[11px] text-blue-900 font-semibold flex items-center gap-1.5 pt-0.5">
+                    <RefreshCw className="w-3 h-3 animate-spin text-blue-700" />
                     <span>Verifying device campus GPS location...</span>
                   </p>
                 )}
@@ -681,7 +708,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                     required
                     value={regSection}
                     onChange={(e) => setRegSection(e.target.value)}
-                    className="w-full pro-input rounded-xl px-3 py-2 text-xs font-bold bg-white text-purple-950"
+                    className="w-full pro-input rounded-xl px-3 py-2 text-xs font-bold bg-white text-blue-950"
                   >
                     <option value="A">Section A</option>
                     <option value="B">Section B</option>
@@ -695,7 +722,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 <label htmlFor="student-reg-batch" className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span>Assigned Batch <span className="text-rose-500">*</span></span>
                   {activeBatches.length > 0 && (
-                    <span className="text-[10px] text-purple-700 font-semibold">{activeBatches.length} Active Batches</span>
+                    <span className="text-[10px] text-blue-700 font-semibold">{activeBatches.length} Active Batches</span>
                   )}
                 </label>
                 <select
@@ -703,7 +730,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                   required
                   value={regBatchId}
                   onChange={(e) => setRegBatchId(e.target.value)}
-                  className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-bold text-purple-950 bg-white"
+                  className="w-full pro-input rounded-xl px-3.5 py-2 text-xs font-bold text-blue-950 bg-white"
                 >
                   {activeBatches.length === 0 ? (
                     <option value="">No active training batches available</option>
@@ -720,7 +747,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
               <div>
                 <label htmlFor="student-reg-pin" className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span>Create 6-Digit Security PIN <span className="text-rose-500">*</span></span>
-                  <span className="text-[10px] text-purple-600 font-mono">Exactly 6 digits</span>
+                  <span className="text-[10px] text-blue-600 font-mono">Exactly 6 digits</span>
                 </label>
                 <input
                   id="student-reg-pin"
@@ -737,7 +764,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
               <div>
                 <label htmlFor="student-reg-confirm-pin" className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span>Confirm 6-Digit Security PIN <span className="text-rose-500">*</span></span>
-                  <span className="text-[10px] text-purple-600 font-mono">Re-enter PIN</span>
+                  <span className="text-[10px] text-blue-600 font-mono">Re-enter PIN</span>
                 </label>
                 <input
                   id="student-reg-confirm-pin"
@@ -777,11 +804,11 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 </button>
               </div>
 
-              <div className="text-center pt-3 border-t border-purple-100">
+              <div className="text-center pt-3 border-t border-blue-100">
                 <button
                   type="button"
                   onClick={() => setIsRegistering(false)}
-                  className="text-xs text-slate-600 hover:text-purple-900 transition-colors font-medium"
+                  className="text-xs text-slate-600 hover:text-blue-900 transition-colors font-medium"
                 >
                   &larr; Back to Sign In
                 </button>
@@ -798,9 +825,9 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
   if (user && user.role === 'STUDENT' && !progressData) {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8 animate-in fade-in duration-200">
-        <div className="pro-card rounded-3xl p-6 sm:p-8 bg-white border border-purple-200 shadow-xs space-y-4 animate-pulse">
-          <div className="w-40 h-4 bg-purple-100 rounded-full" />
-          <div className="w-72 h-8 bg-purple-200/80 rounded-xl" />
+        <div className="pro-card rounded-3xl p-6 sm:p-8 bg-white border border-blue-200 shadow-xs space-y-4 animate-pulse">
+          <div className="w-40 h-4 bg-blue-100 rounded-full" />
+          <div className="w-72 h-8 bg-blue-200/80 rounded-xl" />
           <div className="w-96 h-3 bg-slate-100 rounded-md" />
         </div>
         <StatsCardsSkeleton count={4} />
@@ -817,28 +844,28 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8">
 
       {/* Student Welcome Header Card */}
-      <div className="pro-card rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-white via-purple-50/40 to-purple-100/30 border-purple-200">
+      <div className="pro-card rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-white via-blue-50/40 to-blue-100/30 border-blue-200">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-              <GraduationCap className="w-4 h-4 text-purple-700" />
+            <div className="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1.5">
+              <GraduationCap className="w-4 h-4 text-blue-700" />
               <span>Student Overview Dashboard</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Welcome back, {student.name || user.name}
             </h1>
             <p className="text-slate-600 text-xs sm:text-sm mt-1">
-              Register No: <span className="text-purple-900 font-mono font-bold">{student.registerNo || user.registerNo}</span> • Dept: <span className="text-slate-700 font-semibold">{student.department || 'CSE'} ({student.year}, Sec {student.section})</span>
+              Register No: <span className="text-blue-900 font-mono font-bold">{student.registerNo || user.registerNo}</span> • Dept: <span className="text-slate-700 font-semibold">{student.department || 'CSE'} ({student.year}, Sec {student.section})</span>
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
-            <div className="flex items-center gap-1 bg-purple-50/80 p-1.5 rounded-2xl border border-purple-200">
+            <div className="flex items-center gap-1 bg-blue-50/80 p-1.5 rounded-2xl border border-blue-200">
               <button
                 onClick={() => setStudentSubTab('workspace')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${studentSubTab === 'workspace'
                     ? 'pro-button-primary text-white shadow-xs'
-                    : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                    : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                   }`}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -848,7 +875,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 onClick={() => setStudentSubTab('curriculum')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${studentSubTab === 'curriculum'
                     ? 'pro-button-primary text-white shadow-xs'
-                    : 'text-slate-600 hover:text-purple-900 hover:bg-purple-100/60'
+                    : 'text-slate-600 hover:text-blue-900 hover:bg-blue-100/60'
                   }`}
               >
                 <BookOpen className="w-3.5 h-3.5" />
@@ -856,9 +883,9 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
               </button>
             </div>
 
-            <div className="bg-purple-100/80 border border-purple-200 rounded-2xl px-4 py-2 text-right">
-              <span className="text-[10px] text-purple-800 font-bold uppercase tracking-wider block">Assigned Batch</span>
-              <span className="text-sm font-bold text-purple-950">{student.batchName || 'AR/VR Development'}</span>
+            <div className="bg-blue-100/80 border border-blue-200 rounded-2xl px-4 py-2 text-right">
+              <span className="text-[10px] text-blue-800 font-bold uppercase tracking-wider block">Assigned Batch</span>
+              <span className="text-sm font-bold text-blue-950">{student.batchName || 'AR/VR Development'}</span>
             </div>
 
             {onLogout && (
@@ -866,7 +893,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 type="button"
                 onClick={onLogout}
                 title="Sign Out"
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-purple-200/90 shadow-sm text-xs font-bold text-slate-600 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-blue-200/90 shadow-sm text-xs font-bold text-slate-600 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5 text-slate-500" />
                 <span>Logout</span>
@@ -918,13 +945,13 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
         <div className="pro-card-interactive rounded-2xl p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tasks Accepted</span>
-            <span className="p-2 rounded-xl bg-purple-100 text-purple-700">
+            <span className="p-2 rounded-xl bg-blue-100 text-blue-700">
               <FileText className="w-4 h-4" />
             </span>
           </div>
           <div className="text-3xl font-extrabold text-slate-900 mb-2">{metrics.taskPct ?? 0}%</div>
           <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-            <div className="bg-purple-600 h-full transition-all duration-500" style={{ width: `${metrics.taskPct || 0}%` }} />
+            <div className="bg-blue-600 h-full transition-all duration-500" style={{ width: `${metrics.taskPct || 0}%` }} />
           </div>
           <p className="text-[11px] font-semibold text-slate-500 mt-2.5">
             {metrics.tasksAccepted || 0} of {metrics.totalTrainingDays || 0} tasks accepted
@@ -987,13 +1014,13 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
         <div className="pro-card-interactive rounded-2xl p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Overall Score</span>
-            <span className="p-2 rounded-xl bg-purple-100 text-purple-700">
+            <span className="p-2 rounded-xl bg-blue-100 text-blue-700">
               <Award className="w-4 h-4" />
             </span>
           </div>
           <div className="text-3xl font-extrabold text-slate-900 mb-2">{metrics.overallPct ?? 0}%</div>
           <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-500 to-amber-500 h-full transition-all duration-500" style={{ width: `${metrics.overallPct || 0}%` }} />
+            <div className="bg-gradient-to-r from-blue-500 to-amber-500 h-full transition-all duration-500" style={{ width: `${metrics.overallPct || 0}%` }} />
           </div>
           <p className="text-[11px] font-semibold text-slate-500 mt-2.5">Weighted performance index</p>
         </div>
@@ -1008,16 +1035,16 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
           {/* Left Column: Quick Attendance Actions */}
           <div className="space-y-6">
             <div className="pro-card rounded-3xl p-6">
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-purple-100">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-blue-100">
                 <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-purple-700" />
+                  <Clock className="w-5 h-5 text-blue-700" />
                   <div>
                     <h2 className="text-base font-bold text-slate-900 tracking-tight">Daily Attendance Marking</h2>
-                    <span className="text-[10px] text-purple-600 font-semibold tracking-wide uppercase">Strict Cutoff Enforcement</span>
+                    <span className="text-[10px] text-blue-600 font-semibold tracking-wide uppercase">Strict Cutoff Enforcement</span>
                   </div>
                 </div>
                 {todayTask?.attendanceToday?.currentZonedTime && (
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-purple-50 text-purple-800 rounded-xl text-xs font-bold border border-purple-200">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 text-blue-800 rounded-xl text-xs font-bold border border-blue-200">
                     <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                     <span>IST: {todayTask.attendanceToday.currentZonedTime}</span>
                   </div>
@@ -1058,11 +1085,11 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-1.5 text-[11px]">
                   <div className="bg-white p-2 rounded-xl border border-slate-100">
-                    <span className="font-bold text-purple-900 block">Morning (FN)</span>
+                    <span className="font-bold text-blue-900 block">Morning (FN)</span>
                     <span className="text-slate-600">{todayTask?.attendanceToday?.fnDetails?.startFormatted || '08:45 AM'} – {todayTask?.attendanceToday?.fnDetails?.cutoffFormatted || '09:15 AM'}</span>
                   </div>
                   <div className="bg-white p-2 rounded-xl border border-slate-100">
-                    <span className="font-bold text-purple-900 block">Afternoon (AN)</span>
+                    <span className="font-bold text-blue-900 block">Afternoon (AN)</span>
                     <span className="text-slate-600">{todayTask?.attendanceToday?.anDetails?.startFormatted || '01:00 PM'} – {todayTask?.attendanceToday?.anDetails?.cutoffFormatted || '01:30 PM'}</span>
                   </div>
                 </div>
@@ -1081,7 +1108,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                     <div className={`p-4 rounded-2xl border transition-all ${isMarked
                         ? 'bg-emerald-50/50 border-emerald-200'
                         : status === 'OPEN'
-                          ? 'bg-purple-50/80 border-purple-300 ring-1 ring-purple-300/50'
+                          ? 'bg-blue-50/80 border-blue-300 ring-1 ring-blue-300/50'
                           : status === 'AFTER_CUTOFF'
                             ? 'bg-rose-50/40 border-rose-200'
                             : 'bg-amber-50/40 border-amber-200'
@@ -1096,10 +1123,19 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                 <span>Marked</span>
                               </span>
                             ) : status === 'OPEN' ? (
-                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded-full border border-emerald-300 flex items-center gap-1 animate-pulse">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                                <span>Window Open</span>
-                              </span>
+                              (() => {
+                                const remaining = getSessionRemaining(fn);
+                                return (
+                                  <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full border flex items-center gap-1 animate-pulse ${
+                                    remaining?.isUrgent
+                                      ? 'bg-rose-100 text-rose-800 border-rose-300'
+                                      : 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                  }`}>
+                                    <span className={`w-1.5 h-1.5 rounded-full ${remaining?.isUrgent ? 'bg-rose-600' : 'bg-emerald-600'}`} />
+                                    <span>{remaining ? `Open • ${remaining.text} left` : 'Window Open'}</span>
+                                  </span>
+                                );
+                              })()
                             ) : status === 'AFTER_CUTOFF' ? (
                               <span className="px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-extrabold rounded-full border border-rose-300">
                                 ❌ Cutoff Passed
@@ -1175,7 +1211,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                     <div className={`p-4 rounded-2xl border transition-all ${isMarked
                         ? 'bg-emerald-50/50 border-emerald-200'
                         : status === 'OPEN'
-                          ? 'bg-purple-50/80 border-purple-300 ring-1 ring-purple-300/50'
+                          ? 'bg-blue-50/80 border-blue-300 ring-1 ring-blue-300/50'
                           : status === 'AFTER_CUTOFF'
                             ? 'bg-rose-50/40 border-rose-200'
                             : 'bg-amber-50/40 border-amber-200'
@@ -1190,10 +1226,19 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                 <span>Marked</span>
                               </span>
                             ) : status === 'OPEN' ? (
-                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded-full border border-emerald-300 flex items-center gap-1 animate-pulse">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                                <span>Window Open</span>
-                              </span>
+                              (() => {
+                                const remaining = getSessionRemaining(an);
+                                return (
+                                  <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full border flex items-center gap-1 animate-pulse ${
+                                    remaining?.isUrgent
+                                      ? 'bg-rose-100 text-rose-800 border-rose-300'
+                                      : 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                  }`}>
+                                    <span className={`w-1.5 h-1.5 rounded-full ${remaining?.isUrgent ? 'bg-rose-600' : 'bg-emerald-600'}`} />
+                                    <span>{remaining ? `Open • ${remaining.text} left` : 'Window Open'}</span>
+                                  </span>
+                                );
+                              })()
                             ) : status === 'AFTER_CUTOFF' ? (
                               <span className="px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-extrabold rounded-full border border-rose-300">
                                 ❌ Cutoff Passed
@@ -1279,7 +1324,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
             {/* Certificate Status Card */}
             <div className="pro-card rounded-3xl p-6 text-center space-y-2">
-              <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center mx-auto mb-2 border border-purple-200">
+              <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center mx-auto mb-2 border border-blue-200">
                 <Award className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-slate-900">Certificate Eligibility</h3>
@@ -1300,7 +1345,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 </div>
               ) : (
                 <div className="pt-2">
-                  <span className="inline-block px-3 py-1 rounded-full bg-purple-50 text-purple-800 text-[11px] font-semibold border border-purple-200">
+                  <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-[11px] font-semibold border border-blue-200">
                     Attendance: {metrics?.attendancePct || 0}% • Tasks: {metrics?.tasksAccepted || 0}/{metrics?.totalTrainingDays || 10} Accepted
                   </span>
                 </div>
@@ -1311,9 +1356,9 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
           {/* Right Column: Today's VR/AR Practical Task */}
           <div className="lg:col-span-2 space-y-6">
             <div className="pro-card rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+              <div className="flex items-center justify-between border-b border-blue-100 pb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center border border-purple-200">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center border border-blue-200">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
@@ -1327,7 +1372,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                     <select
                       value={todayTask.trainingDay?.dayNumber || 1}
                       onChange={(e) => fetchTodayTask(parseInt(e.target.value, 10))}
-                      className="text-xs font-bold bg-purple-50 text-purple-900 border border-purple-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
+                      className="text-xs font-bold bg-blue-50 text-blue-900 border border-blue-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                       title="Select training day to view or submit"
                     >
                       {todayTask.allTrainingDays.map((td: any) => (
@@ -1340,7 +1385,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                   {todayTask?.trainingDay && (
                     <span className={`px-3 py-1 rounded-full text-xs font-extrabold font-mono border ${todayTask.trainingDay.isFinalExam || todayTask.isFinalExam
                         ? 'bg-amber-100 text-amber-900 border-amber-300'
-                        : 'bg-purple-100 text-purple-900 border-purple-200'
+                        : 'bg-blue-100 text-blue-900 border-blue-200'
                       }`}>
                       {todayTask.trainingDay.isFinalExam || todayTask.isFinalExam ? `🎓 Final Exam (Day ${todayTask.trainingDay.dayNumber})` : `Day ${todayTask.trainingDay.dayNumber}`}
                     </span>
@@ -1350,8 +1395,63 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
               {todayTask?.trainingDay ? (
                 <div className="space-y-6">
+                  {/* Phase 3: Interactive Syllabus Roadmap Timeline */}
+                  {todayTask?.allTrainingDays && todayTask.allTrainingDays.length > 0 && (
+                    <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 sm:p-5 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Compass className="w-4 h-4 text-blue-600" />
+                          <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Course Journey & Daily Milestones</span>
+                        </div>
+                        <span className="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 font-mono">
+                          Day {todayTask.trainingDay?.dayNumber || 1} of {todayTask.allTrainingDays.length}
+                        </span>
+                      </div>
+
+                      <div className="overflow-x-auto pb-1 pt-1">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-max">
+                          {todayTask.allTrainingDays.map((td: any) => {
+                            const isSelected = todayTask.trainingDay?.dayNumber === td.dayNumber;
+                            const isExam = td.isFinalExam;
+                            return (
+                              <button
+                                key={td.id || td.dayNumber}
+                                type="button"
+                                onClick={() => fetchTodayTask(td.dayNumber)}
+                                className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600 shadow-md shadow-blue-600/25 ring-2 ring-blue-500/30'
+                                    : 'bg-white hover:bg-blue-50/60 border-slate-200 text-slate-700 hover:border-blue-300'
+                                }`}
+                              >
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold ${
+                                  isSelected ? 'bg-white/20 text-white' : isExam ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
+                                }`}>
+                                  {isExam ? '🎓' : td.dayNumber}
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-xs font-extrabold leading-tight">Day {td.dayNumber}</span>
+                                    {isExam && (
+                                      <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${isSelected ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-800'}`}>
+                                        Final Exam
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className={`text-[10px] max-w-[130px] truncate ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                                    {td.taskTitle}
+                                  </p>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {(todayTask.trainingDay.isFinalExam || todayTask.isFinalExam) && (
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-purple-500/10 to-indigo-500/10 border-2 border-amber-400 text-slate-900 space-y-1.5 shadow-xs">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-blue-500/10 to-indigo-500/10 border-2 border-amber-400 text-slate-900 space-y-1.5 shadow-xs">
                       <div className="flex items-center gap-2 text-amber-950 font-extrabold text-sm">
                         <GraduationCap className="w-5 h-5 text-amber-700 shrink-0" />
                         <span>Final Examination & Assessment</span>
@@ -1373,14 +1473,14 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
                     return (
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between border-b border-purple-100 pb-2">
+                        <div className="flex items-center justify-between border-b border-blue-100 pb-2">
                           <div className="flex items-center gap-2">
-                            <ListChecks className="w-5 h-5 text-purple-700" />
+                            <ListChecks className="w-5 h-5 text-blue-700" />
                             <h3 className="text-base font-bold text-slate-900">
                               {todayTask.isFinalExam ? 'Final Exam Practical Tasks & Requirements' : 'Assigned Practical Tasks & Deliverables'}
                             </h3>
                           </div>
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-purple-100 text-purple-900 border border-purple-200 font-mono">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-100 text-blue-900 border border-blue-200 font-mono">
                             {currentTasks.length} {currentTasks.length === 1 ? 'Task' : 'Tasks'}
                           </span>
                         </div>
@@ -1389,10 +1489,10 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                           {currentTasks.map((taskItem: any, tIdx: number) => (
                             <div
                               key={taskItem.id || tIdx}
-                              className="bg-white border border-purple-200/80 rounded-2xl p-4 sm:p-5 space-y-2 shadow-2xs hover:shadow-xs transition-shadow"
+                              className="bg-white border border-blue-200/80 rounded-2xl p-4 sm:p-5 space-y-2 shadow-2xs hover:shadow-xs transition-shadow"
                             >
                               <div className="flex items-center gap-2">
-                                <span className="text-xs font-extrabold text-purple-950 bg-purple-100/70 border border-purple-200 px-2.5 py-0.5 rounded-lg font-mono">
+                                <span className="text-xs font-extrabold text-blue-950 bg-blue-100/70 border border-blue-200 px-2.5 py-0.5 rounded-lg font-mono">
                                   Task #{tIdx + 1}
                                 </span>
                                 <h4 className="text-sm sm:text-base font-bold text-slate-900">{taskItem.title}</h4>
@@ -1411,7 +1511,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
                   {/* Day Learning Resources Section */}
                   {todayTask.trainingDay.resources && Array.isArray(todayTask.trainingDay.resources) && todayTask.trainingDay.resources.length > 0 && (
-                    <div className="bg-gradient-to-r from-purple-50/60 to-indigo-50/60 border border-purple-200/90 rounded-2xl p-5 space-y-3.5 shadow-2xs">
+                    <div className="bg-gradient-to-r from-blue-50/60 to-indigo-50/60 border border-blue-200/90 rounded-2xl p-5 space-y-3.5 shadow-2xs">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center border border-indigo-200">
@@ -1440,7 +1540,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                     ? 'bg-rose-50 text-rose-600 border-rose-200'
                                     : res.type === 'link'
                                       ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
-                                      : 'bg-purple-50 text-purple-600 border-purple-200'
+                                      : 'bg-blue-50 text-blue-600 border-blue-200'
                                   }`}>
                                   {isPdf ? <FileText className="w-5 h-5" /> : res.type === 'link' ? <ExternalLink className="w-5 h-5" /> : <Paperclip className="w-5 h-5" />}
                                 </div>
@@ -1450,7 +1550,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                         ? 'bg-rose-100 text-rose-800 border-rose-200'
                                         : res.type === 'link'
                                           ? 'bg-indigo-100 text-indigo-800 border-indigo-200'
-                                          : 'bg-purple-100 text-purple-800 border-purple-200'
+                                          : 'bg-blue-100 text-blue-800 border-blue-200'
                                       }`}>
                                       {res.type ? res.type.toUpperCase() : 'RESOURCE'}
                                     </span>
@@ -1492,7 +1592,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                   )}
 
                   {todayTask.submission ? (
-                    <div className="bg-purple-50/50 border border-purple-200/80 rounded-2xl p-5 space-y-4">
+                    <div className="bg-blue-50/50 border border-blue-200/80 rounded-2xl p-5 space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Submitted Task Solution</span>
                         <span className={`px-2.5 py-1 text-[11px] font-bold rounded-full ${todayTask.submission.status === 'ACCEPTED' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'
@@ -1504,7 +1604,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                       {todayTask.submission.screenshotUrl && (
                         <div className="space-y-1.5">
                           <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Submitted Screenshot Preview</label>
-                          <div className="relative rounded-2xl overflow-hidden border border-purple-200 bg-white max-h-72 flex items-center justify-center p-2 shadow-xs">
+                          <div className="relative rounded-2xl overflow-hidden border border-blue-200 bg-white max-h-72 flex items-center justify-center p-2 shadow-xs">
                             <img
                               src={todayTask.submission.screenshotUrl}
                               alt="Submitted Screenshot"
@@ -1519,7 +1619,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                               href={todayTask.submission.screenshotUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs text-purple-700 hover:text-purple-900 underline font-mono flex items-center gap-1"
+                              className="text-xs text-blue-700 hover:text-blue-900 underline font-mono flex items-center gap-1"
                             >
                               <span>Open Full Screenshot Image</span>
                               <ExternalLink className="w-3.5 h-3.5" />
@@ -1538,7 +1638,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                       )}
 
                       {todayTask.submission.description && (
-                        <div className="bg-white border border-purple-200/80 rounded-xl p-3.5 space-y-1">
+                        <div className="bg-white border border-blue-200/80 rounded-xl p-3.5 space-y-1">
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Student Implementation Notes</span>
                           <p className="text-xs text-slate-700 font-medium">{todayTask.submission.description}</p>
                         </div>
@@ -1571,8 +1671,8 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                           )}
                         </div>
                       ) : (
-                        <div className="p-3.5 rounded-xl bg-purple-100/60 border border-purple-200 text-purple-900 text-xs font-medium flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-purple-700 shrink-0" />
+                        <div className="p-3.5 rounded-xl bg-blue-100/60 border border-blue-200 text-blue-900 text-xs font-medium flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-blue-700 shrink-0" />
                           <span>Submission uploaded successfully! Awaiting instructor evaluation and grading.</span>
                         </div>
                       )}
@@ -1603,7 +1703,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                 Upload Practical Execution Screenshot (PNG, JPG, WebP - Max 5MB)
                               </label>
                               {isTaskUnlocked && (
-                                <span className="text-[11px] font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
+                                <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
                                   ✓ Ready to upload
                                 </span>
                               )}
@@ -1636,43 +1736,59 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                 !isTaskUnlocked
                                   ? 'border-slate-200 bg-slate-50/50 cursor-not-allowed opacity-75'
                                   : isDraggingFile
-                                    ? 'border-purple-600 bg-purple-100/60 scale-[1.01] shadow-inner cursor-pointer'
-                                    : 'border-purple-200 hover:border-purple-400 bg-purple-50/40 hover:bg-purple-50/70 cursor-pointer group'
+                                    ? 'border-blue-600 bg-blue-100/60 scale-[1.01] shadow-inner cursor-pointer'
+                                    : 'border-blue-200 hover:border-blue-400 bg-blue-50/40 hover:bg-blue-50/70 cursor-pointer group'
                               }`}
                             >
                               {selectedFile ? (
                                 <div
                                   onClick={(e) => e.stopPropagation()}
-                                  className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-900 cursor-default"
+                                  className="space-y-3 cursor-default"
                                 >
-                                  <div className="flex items-center gap-2 overflow-hidden">
-                                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                                    <span className="truncate">{selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-900">
+                                    <div className="flex items-center gap-2 overflow-hidden">
+                                      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                                      <span className="truncate">{selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setSelectedFile(null);
+                                          if (fileInputRef.current) fileInputRef.current.value = '';
+                                        }}
+                                        className="px-3 py-1 bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                                      >
+                                        Remove
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                                      >
+                                        Change
+                                      </button>
+                                    </div>
                                   </div>
-                                  <div className="flex items-center gap-2 shrink-0">
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        setSelectedFile(null);
-                                        if (fileInputRef.current) fileInputRef.current.value = '';
-                                      }}
-                                      className="px-3 py-1 bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                                    >
-                                      Remove
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => fileInputRef.current?.click()}
-                                      className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                                    >
-                                      Change
-                                    </button>
+
+                                  {/* Live Image Preview Thumbnail */}
+                                  <div className="relative w-full h-44 rounded-xl overflow-hidden bg-slate-900 border border-slate-200 flex items-center justify-center shadow-inner">
+                                    <img
+                                      src={URL.createObjectURL(selectedFile)}
+                                      alt="Screenshot Preview"
+                                      className="max-h-full max-w-full object-contain"
+                                    />
+                                  </div>
+
+                                  <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50/80 py-1 px-2.5 rounded-lg border border-emerald-200">
+                                    <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                    <span>Zero-Trust In-Memory Antivirus & PE Executable Header Check Ready</span>
                                   </div>
                                 </div>
                               ) : (
                                 <div className="space-y-2.5">
                                   <div className={`w-12 h-12 rounded-2xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${
-                                    !isTaskUnlocked ? 'bg-slate-200 text-slate-400' : 'bg-purple-100 text-purple-700 border border-purple-200 shadow-2xs'
+                                    !isTaskUnlocked ? 'bg-slate-200 text-slate-400' : 'bg-blue-100 text-blue-700 border border-blue-200 shadow-2xs'
                                   }`}>
                                     <Upload className="w-6 h-6" />
                                   </div>
@@ -1681,7 +1797,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                                     <p className="text-xs font-bold text-slate-800">
                                       {isTaskUnlocked ? (
                                         <>
-                                          <span className="text-purple-700 group-hover:underline">Click anywhere here to choose file</span>
+                                          <span className="text-blue-700 group-hover:underline">Click anywhere here to choose file</span>
                                           <span className="text-slate-500 font-normal"> or drag & drop</span>
                                         </>
                                       ) : (
@@ -1708,8 +1824,8 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
                                   {isTaskUnlocked && (
                                     <div className="pt-1">
-                                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-purple-200 text-purple-800 text-xs font-bold shadow-2xs group-hover:border-purple-400 group-hover:bg-purple-50 transition-colors">
-                                        <Upload className="w-3.5 h-3.5 text-purple-600" />
+                                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-blue-200 text-blue-800 text-xs font-bold shadow-2xs group-hover:border-blue-400 group-hover:bg-blue-50 transition-colors">
+                                        <Upload className="w-3.5 h-3.5 text-blue-600" />
                                         Choose Screenshot
                                       </span>
                                     </div>
@@ -1749,7 +1865,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                 </div>
               ) : (
                 <div className="text-center py-10 text-slate-500 space-y-2">
-                  <FileText className="w-10 h-10 mx-auto text-purple-300" />
+                  <FileText className="w-10 h-10 mx-auto text-blue-300" />
                   <p className="text-sm font-medium">No active training task scheduled for today.</p>
                 </div>
               )}
@@ -1791,9 +1907,9 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
           {/* Section 1: Full Batch Curriculum Schedule */}
           <div className="pro-card rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center border border-purple-200">
+                <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center border border-blue-200">
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
@@ -1803,7 +1919,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
               </div>
 
               {curriculumData?.batch && (
-                <span className="px-3 py-1 bg-purple-100 text-purple-900 border border-purple-200 rounded-full text-xs font-bold">
+                <span className="px-3 py-1 bg-blue-100 text-blue-900 border border-blue-200 rounded-full text-xs font-bold">
                   {curriculumData.batch.trainingDays} Total Days
                 </span>
               )}
@@ -1812,16 +1928,16 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
             {loadingCurriculum ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="p-5 rounded-2xl border border-purple-100 bg-white shadow-xs space-y-3 animate-pulse">
+                  <div key={i} className="p-5 rounded-2xl border border-blue-100 bg-white shadow-xs space-y-3 animate-pulse">
                     <div className="flex items-center justify-between">
-                      <div className="w-20 h-5 bg-purple-100 rounded-md" />
+                      <div className="w-20 h-5 bg-blue-100 rounded-md" />
                       <div className="w-16 h-5 bg-slate-100 rounded-full" />
                     </div>
-                    <div className="w-3/4 h-4 bg-purple-200/70 rounded" />
+                    <div className="w-3/4 h-4 bg-blue-200/70 rounded" />
                     <div className="w-full h-12 bg-slate-50 rounded-xl" />
                     <div className="flex items-center justify-between pt-1">
-                      <div className="w-24 h-3 bg-purple-100 rounded" />
-                      <div className="w-16 h-6 bg-purple-100/70 rounded-lg" />
+                      <div className="w-24 h-3 bg-blue-100 rounded" />
+                      <div className="w-16 h-6 bg-blue-100/70 rounded-lg" />
                     </div>
                   </div>
                 ))}
@@ -1837,16 +1953,16 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                       className={`p-5 rounded-2xl border transition-all space-y-3 ${day.isFinalExam
                           ? isAccepted
                             ? 'bg-amber-50/60 border-2 border-amber-300 ring-1 ring-amber-200 shadow-sm'
-                            : 'bg-gradient-to-br from-amber-50/40 to-purple-50/30 border-2 border-amber-300 shadow-sm'
+                            : 'bg-gradient-to-br from-amber-50/40 to-blue-50/30 border-2 border-amber-300 shadow-sm'
                           : isAccepted
                             ? 'bg-emerald-50/40 border-emerald-200'
                             : isSubmitted
-                              ? 'bg-purple-50/40 border-purple-200'
-                              : 'bg-white border-purple-200/80 hover:border-purple-300'
+                              ? 'bg-blue-50/40 border-blue-200'
+                              : 'bg-white border-blue-200/80 hover:border-blue-300'
                         }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`px-2.5 py-0.5 rounded-md text-[11px] font-extrabold font-mono flex items-center gap-1 ${day.isFinalExam ? 'bg-amber-200 text-amber-950 border border-amber-300' : 'bg-purple-100 text-purple-900'
+                        <span className={`px-2.5 py-0.5 rounded-md text-[11px] font-extrabold font-mono flex items-center gap-1 ${day.isFinalExam ? 'bg-amber-200 text-amber-950 border border-amber-300' : 'bg-blue-100 text-blue-900'
                           }`}>
                           {day.isFinalExam ? <GraduationCap className="w-3.5 h-3.5 text-amber-800" /> : null}
                           <span>Day {day.dayNumber}{day.isFinalExam ? ' • Final Exam' : ''}</span>
@@ -1880,7 +1996,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                               <div key={tIdx} className="space-y-0.5">
                                 <div className="flex items-center gap-1.5">
                                   {curDayTasks.length > 1 && (
-                                    <span className="text-[10px] font-extrabold text-purple-950 bg-purple-100/80 px-1.5 py-0.2 rounded font-mono">
+                                    <span className="text-[10px] font-extrabold text-blue-950 bg-blue-100/80 px-1.5 py-0.2 rounded font-mono">
                                       #{tIdx + 1}
                                     </span>
                                   )}
@@ -1899,7 +2015,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
                       {/* Day Attached Resources */}
                       {day.resources && Array.isArray(day.resources) && day.resources.length > 0 && (
-                        <div className="pt-2 border-t border-purple-100/80 space-y-1.5">
+                        <div className="pt-2 border-t border-blue-100/80 space-y-1.5">
                           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
                             <Paperclip className="w-3 h-3 text-indigo-600" />
                             <span>Day Resources ({day.resources.length})</span>
@@ -1923,7 +2039,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                       )}
 
                       {day.submission?.evaluation?.comments && (
-                        <div className="pt-2 border-t border-purple-100 text-[11px] text-slate-600 italic">
+                        <div className="pt-2 border-t border-blue-100 text-[11px] text-slate-600 italic">
                           Feedback: &ldquo;{day.submission.evaluation.comments}&rdquo;
                         </div>
                       )}
@@ -1936,7 +2052,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
           {/* Section 2: AR/VR Developer Toolkit & SDK Reference Hub */}
           <div className="pro-card rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="flex items-center gap-2.5 border-b border-purple-100 pb-4">
+            <div className="flex items-center gap-2.5 border-b border-blue-100 pb-4">
               <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center border border-indigo-200">
                 <Compass className="w-5 h-5" />
               </div>
@@ -1953,16 +2069,16 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                   href={res.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pro-card-interactive rounded-2xl p-5 flex flex-col justify-between space-y-4 hover:border-purple-300 transition-all group"
+                  className="pro-card-interactive rounded-2xl p-5 flex flex-col justify-between space-y-4 hover:border-blue-300 transition-all group"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-purple-100 text-purple-900 rounded-md">
+                      <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-blue-100 text-blue-900 rounded-md">
                         {res.badge}
                       </span>
-                      <ExternalLink className="w-4 h-4 text-purple-400 group-hover:text-purple-700 transition-colors" />
+                      <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-blue-700 transition-colors" />
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm tracking-tight group-hover:text-purple-800 transition-colors">
+                    <h3 className="font-bold text-slate-900 text-sm tracking-tight group-hover:text-blue-800 transition-colors">
                       {res.title}
                     </h3>
                     <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -1970,7 +2086,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
                     </p>
                   </div>
 
-                  <span className="text-xs font-bold text-purple-700 flex items-center gap-1">
+                  <span className="text-xs font-bold text-blue-700 flex items-center gap-1">
                     <span>View Docs</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </span>
@@ -1981,6 +2097,36 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
 
         </div>
       )}
+
+      {/* Phase 2: Mobile Floating Sticky Check-In Bar */}
+      {(() => {
+        const fnActive = todayTask?.attendanceToday?.fnDetails?.status === 'OPEN' && !todayTask?.attendanceToday?.fn;
+        const anActive = todayTask?.attendanceToday?.anDetails?.status === 'OPEN' && !todayTask?.attendanceToday?.an;
+        const activeSession: 'FN' | 'AN' | null = fnActive ? 'FN' : anActive ? 'AN' : null;
+        if (!activeSession) return null;
+        const remaining = getSessionRemaining(activeSession === 'FN' ? todayTask?.attendanceToday?.fnDetails : todayTask?.attendanceToday?.anDetails);
+
+        return (
+          <div className="md:hidden fixed bottom-4 left-4 right-4 z-50">
+            <button
+              type="button"
+              onClick={() => handleMarkAttendance(activeSession)}
+              disabled={markingAttendance !== null}
+              className="w-full pro-button-primary py-3 px-4 rounded-2xl shadow-xl shadow-blue-600/30 font-bold text-xs flex items-center justify-between border border-blue-400/40 text-white cursor-pointer active:scale-98 transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-white animate-pulse" />
+                <span>Tap to Check In ({activeSession} Session)</span>
+              </div>
+              {remaining && (
+                <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-mono font-bold tracking-wider">
+                  {remaining.text} left
+                </span>
+              )}
+            </button>
+          </div>
+        );
+      })()}
 
     </div>
   );

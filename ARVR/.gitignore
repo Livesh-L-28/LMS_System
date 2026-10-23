@@ -48,3 +48,6 @@ next-env.d.ts
 prisma/*.backup
 prisma/sqlite-data-export.json
 /.private-s3-data/
+
+# UI backup for local rollbacks
+.backup-ui/
