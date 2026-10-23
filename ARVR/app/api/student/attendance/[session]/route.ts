@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
-import { getMidnightDate, getDetailedSessionStatus } from '@/lib/time';
+import { getMidnightDate, getDetailedSessionStatus, resolveBatchAttendanceWindows } from '@/lib/time';
 import { getCachedSystemSettings } from '@/lib/settings';
+import { getClientIp } from '@/lib/security';
+import { verifyAccessRestriction } from '@/lib/geofence';
 
 export async function POST(
   request: Request,
@@ -17,17 +19,61 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid attendance session. Must be FN or AN.' }, { status: 400 });
     }
 
+    // Safely parse JSON body if provided (for geolocation coordinates)
+    let reqBody: any = {};
+    try {
+      reqBody = await request.json();
+    } catch {}
+
     // Fetch system cutoff and window settings (Redis-cached with 60s TTL)
     const settingsMap = await getCachedSystemSettings();
 
-    const timezone = settingsMap.get('PROGRAM_TIMEZONE') || process.env.PROGRAM_TIMEZONE || 'Asia/Kolkata';
-    const fnStart = settingsMap.get('FN_START_TIME') || '08:45';
-    const fnCutoff = settingsMap.get('FN_CUTOFF') || '09:15';
-    const anStart = settingsMap.get('AN_START_TIME') || '13:00';
-    const anCutoff = settingsMap.get('AN_CUTOFF') || '13:30';
+    // 0. Access Restriction Verification (Geofence & WiFi)
+    const ip = getClientIp(request);
+    const accessCheck = verifyAccessRestriction({
+      clientIp: ip,
+      latitude:
+        typeof reqBody.latitude === 'number'
+          ? reqBody.latitude
+          : reqBody.latitude
+          ? parseFloat(reqBody.latitude)
+          : undefined,
+      longitude:
+        typeof reqBody.longitude === 'number'
+          ? reqBody.longitude
+          : reqBody.longitude
+          ? parseFloat(reqBody.longitude)
+          : undefined,
+      accuracy:
+        typeof reqBody.accuracy === 'number'
+          ? reqBody.accuracy
+          : reqBody.accuracy
+          ? parseFloat(reqBody.accuracy)
+          : undefined,
+      action: 'ATTENDANCE',
+      settings: settingsMap,
+    });
 
-    const startTime = sessionParam === 'FN' ? fnStart : anStart;
-    const cutoffTime = sessionParam === 'FN' ? fnCutoff : anCutoff;
+    if (!accessCheck.allowed) {
+      return NextResponse.json(
+        {
+          error:
+            accessCheck.reason ||
+            'Attendance marking restricted: You must be present inside campus and connected to the Academy WiFi.',
+          code: 'ACCESS_RESTRICTED',
+          details: {
+            distanceMeters: accessCheck.distanceMeters,
+            allowedRadiusMeters: accessCheck.allowedRadiusMeters,
+            networkPassed: accessCheck.networkPassed,
+            geofencePassed: accessCheck.geofencePassed,
+            clientIp: accessCheck.clientIp,
+          },
+        },
+        { status: 403 }
+      );
+    }
+
+    const timezone = settingsMap.get('PROGRAM_TIMEZONE') || process.env.PROGRAM_TIMEZONE || 'Asia/Kolkata';
     const now = new Date();
 
     // Default to true (enforced) unless explicitly disabled by admin
@@ -36,7 +82,7 @@ export async function POST(
 
     const todayDate = getMidnightDate(now, timezone);
 
-    // 1. Verify if this session is active for the student's batch today
+    // 1. Fetch student along with batch schedule and custom attendance timings
     const student = await prisma.student.findUnique({
       where: { id: user.id },
       include: {
@@ -47,6 +93,15 @@ export async function POST(
         },
       },
     });
+
+    // 2. Resolve batch-specific attendance window settings (with global system setting fallbacks)
+    const { fnStart, fnCutoff, anStart, anCutoff } = resolveBatchAttendanceWindows(
+      student?.batch,
+      settingsMap
+    );
+
+    const startTime = sessionParam === 'FN' ? fnStart : anStart;
+    const cutoffTime = sessionParam === 'FN' ? fnCutoff : anCutoff;
 
     if (student?.batch?.trainingCalendar) {
       const todayStr = todayDate.toISOString().split('T')[0];

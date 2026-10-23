@@ -11,10 +11,14 @@ export async function GET() {
   const checks: Record<string, any> = {};
   let isReady = true;
 
-  // 1. PostgreSQL Database Connectivity Check
+  // 1. Database Connectivity Check (MongoDB Atlas)
   const dbStart = Date.now();
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    if (typeof (prisma as any).$runCommandRaw === 'function') {
+      await (prisma as any).$runCommandRaw({ ping: 1 });
+    } else {
+      await prisma.systemSetting.findFirst({ select: { id: true } });
+    }
     checks.database = {
       status: 'ready',
       latencyMs: Date.now() - dbStart,

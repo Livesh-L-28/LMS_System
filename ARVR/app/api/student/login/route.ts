@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma, withPrismaRetry } from '@/lib/prisma';
 import { studentLoginSchema } from '@/lib/validation';
 import { comparePinOrPassword, createSession } from '@/lib/auth';
 import { checkDualRateLimit, recordFailedAttempt, resetRateLimit } from '@/lib/rateLimit';
 import { getClientIp, logSecurityEvent, dummyBcryptCompare, formatSafeError } from '@/lib/security';
+import { getCachedSystemSettings } from '@/lib/settings';
+import { verifyAccessRestriction } from '@/lib/geofence';
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
@@ -57,10 +59,72 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Fetch student record
-    const student = await prisma.student.findUnique({
-      where: { registerNo: normalizedRegNo },
+    // 2. Geofence & WiFi Network Access Restriction Verification
+    const settingsMap = await getCachedSystemSettings();
+    const accessCheck = verifyAccessRestriction({
+      clientIp: ip,
+      latitude:
+        typeof body.latitude === 'number'
+          ? body.latitude
+          : body.latitude
+          ? parseFloat(body.latitude)
+          : undefined,
+      longitude:
+        typeof body.longitude === 'number'
+          ? body.longitude
+          : body.longitude
+          ? parseFloat(body.longitude)
+          : undefined,
+      accuracy:
+        typeof body.accuracy === 'number'
+          ? body.accuracy
+          : body.accuracy
+          ? parseFloat(body.accuracy)
+          : undefined,
+      action: 'LOGIN',
+      settings: settingsMap,
     });
+
+    if (!accessCheck.allowed) {
+      logSecurityEvent({
+        type: 'UNAUTHORIZED_ACCESS',
+        ip,
+        userAgent,
+        targetIdentifier: normalizedRegNo,
+        actorRole: 'STUDENT',
+        details: {
+          reason: accessCheck.reason,
+          distanceMeters: accessCheck.distanceMeters,
+          allowedRadiusMeters: accessCheck.allowedRadiusMeters,
+          geofencePassed: accessCheck.geofencePassed,
+          networkPassed: accessCheck.networkPassed,
+        },
+      });
+
+      return NextResponse.json(
+        {
+          error:
+            accessCheck.reason ||
+            'Login restricted: You must be connected to the Academy WiFi network and present within campus boundaries.',
+          code: 'ACCESS_RESTRICTED',
+          details: {
+            distanceMeters: accessCheck.distanceMeters,
+            allowedRadiusMeters: accessCheck.allowedRadiusMeters,
+            networkPassed: accessCheck.networkPassed,
+            geofencePassed: accessCheck.geofencePassed,
+            clientIp: accessCheck.clientIp,
+          },
+        },
+        { status: 403 }
+      );
+    }
+
+    // 3. Fetch student record with connection retry resilience
+    const student = await withPrismaRetry(() =>
+      prisma.student.findUnique({
+        where: { registerNo: normalizedRegNo },
+      })
+    );
 
     if (!student) {
       // Side-channel timing attack mitigation: perform constant-time bcrypt compare

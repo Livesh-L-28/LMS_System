@@ -2,7 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const startTime = Date.now();
+  // Enforce HTTPS in Production Environment for public domains (301 Permanent Redirect)
+  if (process.env.NODE_ENV === 'production') {
+    const host = request.headers.get('host') || request.nextUrl.host || '';
+    const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+    const proto = request.headers.get('x-forwarded-proto');
+    if (!isLocalhost && proto === 'http') {
+      return NextResponse.redirect(`https://${host}${request.nextUrl.pathname}${request.nextUrl.search}`, 301);
+    }
+  }
+
 
   // 1. Correlation Tracking: Extract or generate unique Request ID
   const incomingRequestId = request.headers.get('x-request-id') || request.headers.get('traceparent');

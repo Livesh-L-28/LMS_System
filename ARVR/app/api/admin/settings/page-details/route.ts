@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
-import { invalidateSettingsCache } from '@/lib/settings';
+import { getCachedSystemSettings, invalidateSettingsCache } from '@/lib/settings';
 
 export const DEFAULT_PAGE_SETTINGS: Record<string, string> = {
   PAGE_TITLE: 'AR/VR ACADEMY',
@@ -16,15 +16,7 @@ export const DEFAULT_PAGE_SETTINGS: Record<string, string> = {
 
 export async function GET() {
   try {
-    const settings = await prisma.systemSetting.findMany({
-      where: {
-        key: {
-          in: Object.keys(DEFAULT_PAGE_SETTINGS),
-        },
-      },
-    });
-
-    const settingsMap = new Map(settings.map((s) => [s.key, s.value]));
+    const settingsMap = await getCachedSystemSettings();
 
     return NextResponse.json({
       success: true,

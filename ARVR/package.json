@@ -10,6 +10,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "npx tsx scripts/test-all-features.ts",
+    "test:production": "npx tsx scripts/test-production-live-simulation.ts",
+    "test:hardening": "npx tsx scripts/test-enterprise-hardening.ts",
     "test:s3": "npx tsx scripts/test-s3-upload.ts",
     "test:security": "npx tsx scripts/test-security-hardening.ts",
     "audit": "npm audit --audit-level=high",

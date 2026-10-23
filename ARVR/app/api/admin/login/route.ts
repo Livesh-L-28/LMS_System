@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma, withPrismaRetry } from '@/lib/prisma';
 import { userLoginSchema } from '@/lib/validation';
 import { comparePinOrPassword, createSession } from '@/lib/auth';
 import { checkDualRateLimit, recordFailedAttempt, resetRateLimit } from '@/lib/rateLimit';
 import { getClientIp, logSecurityEvent, dummyBcryptCompare, formatSafeError } from '@/lib/security';
+import { verifyTOTPCode, generateEmailOtp } from '@/lib/totp';
+import { logAdminAudit } from '@/lib/auditLog';
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
@@ -57,10 +59,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Fetch administrator account
-    const admin = await prisma.admin.findUnique({
-      where: { email: normalizedEmail },
-    });
+    // 2. Fetch administrator account with connection retry resilience
+    const admin = await withPrismaRetry(() =>
+      prisma.admin.findUnique({
+        where: { email: normalizedEmail },
+      })
+    );
 
     if (!admin) {
       // Side-channel timing attack mitigation: perform constant-time bcrypt compare
@@ -96,11 +100,95 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
-    // 4. Successful login: reset throttling counters
+    // 4. Two-Factor Authentication (2FA) verification
+    const twoFactorCode = (body.twoFactorCode || body.code || body.otp || '').toString().trim();
+    const is2FAEnforced = Boolean(
+      admin.twoFactorEnabled ||
+      admin.twoFactorSecret ||
+      process.env.ADMIN_FORCE_2FA === 'true'
+    );
+
+    if (is2FAEnforced) {
+      if (!twoFactorCode) {
+        // Generate secure 6-digit Email OTP fallback
+        const otpCode = generateEmailOtp();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+        await prisma.admin.update({
+          where: { id: admin.id },
+          data: {
+            tempTwoFactorCode: otpCode,
+            tempTwoFactorExpires: expiresAt,
+          },
+        });
+
+        console.log(`[Admin 2FA] Verification code dispatched for ${admin.email}: ${otpCode}`);
+
+        return NextResponse.json({
+          success: false,
+          requireTwoFactor: true,
+          email: admin.email,
+          message: 'Two-factor authentication code required. Please enter the 6-digit code from your authenticator app or email.',
+        });
+      }
+
+      // Verify submitted 2FA code (Check TOTP first, then temporary Email OTP)
+      let is2FAValid = false;
+      if (admin.twoFactorSecret) {
+        is2FAValid = verifyTOTPCode(admin.twoFactorSecret, twoFactorCode);
+      }
+
+      if (!is2FAValid && admin.tempTwoFactorCode && admin.tempTwoFactorExpires) {
+        const isNotExpired = new Date(admin.tempTwoFactorExpires) > new Date();
+        if (isNotExpired && admin.tempTwoFactorCode === twoFactorCode) {
+          is2FAValid = true;
+        }
+      }
+
+      if (!is2FAValid) {
+        await recordFailedAttempt(normalizedEmail, 900);
+
+        logSecurityEvent({
+          type: 'AUTH_LOGIN_FAILURE',
+          ip,
+          userAgent,
+          targetIdentifier: normalizedEmail,
+          actorRole: 'ADMIN',
+          details: { reason: 'INVALID_2FA_CODE' },
+        });
+
+        return NextResponse.json(
+          { error: 'Invalid or expired 2FA code. Please check your authenticator or email code.' },
+          { status: 401 }
+        );
+      }
+
+      // Clear consumed temporary code
+      await prisma.admin.update({
+        where: { id: admin.id },
+        data: {
+          tempTwoFactorCode: null,
+          tempTwoFactorExpires: null,
+        },
+      });
+
+      await logAdminAudit({
+        actorId: admin.id,
+        actorEmail: admin.email,
+        ipAddress: ip,
+        action: 'ADMIN_2FA_VERIFIED',
+        targetType: 'AUTH',
+        targetId: admin.id,
+        targetIdentifier: admin.email,
+        details: { method: admin.twoFactorSecret ? 'TOTP' : 'EMAIL_OTP' },
+      });
+    }
+
+    // 5. Successful login: reset throttling counters
     await resetRateLimit(`ip:${ip}`);
     await resetRateLimit(normalizedEmail);
 
-    // 5. Establish secure session
+    // 6. Establish secure session
     const sessionUser = {
       id: admin.id,
       role: 'ADMIN' as const,

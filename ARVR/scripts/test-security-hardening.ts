@@ -236,7 +236,28 @@ async function runSecurityAudit() {
   // -------------------------------------------------------------
   // TEST 6: IDOR / BOLA Authorization Enforcement
   // -------------------------------------------------------------
-  console.log('\n--- 6. IDOR / BOLA Authorization Enforcement ---');
+  // Ensure Student B exists for IDOR test
+  const batch = await prisma.batch.findFirst();
+  const bcrypt = await import('bcryptjs');
+  let createdStudentB = false;
+  let studentB = await prisma.student.findUnique({ where: { registerNo: '21CS002' } });
+  if (!studentB && batch) {
+    studentB = await prisma.student.create({
+      data: {
+        name: 'Student B',
+        registerNo: '21CS002',
+        email: 'studentb@test.edu',
+        contactNumber: '9999999999',
+        department: 'CS',
+        year: '3',
+        section: 'A',
+        batchId: batch.id,
+        pinHash: await bcrypt.hash('123456', 10),
+      },
+    });
+    createdStudentB = true;
+  }
+
   // Login as Student B (21CS002)
   const studentBLogin = await makeRequest({
     path: '/api/student/login',
@@ -260,6 +281,10 @@ async function runSecurityAudit() {
       idorRes.status === 403,
       `Status: ${idorRes.status}`
     );
+  }
+
+  if (createdStudentB) {
+    await prisma.student.deleteMany({ where: { registerNo: '21CS002' } });
   }
 
   // Student B attempting to access Admin Stats

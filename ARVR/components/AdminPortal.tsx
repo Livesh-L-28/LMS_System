@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  ShieldCheck, KeyRound, CheckCircle2, AlertCircle, Sparkles, RefreshCw, 
-  Users, Layers, Award, FileSpreadsheet, Plus, Calendar, Settings, Search, Download
+  ShieldCheck, KeyRound, CheckCircle2, AlertCircle, AlertTriangle, Sparkles, RefreshCw, 
+  Users, Layers, Award, FileSpreadsheet, Plus, Calendar, Settings, Search, Download,
+  Clock, ArrowLeftRight
 } from 'lucide-react';
 import { StatsCardsSkeleton, BatchCardsSkeleton, TableSkeleton, CurriculumSkeleton } from './LoadingSkeletons';
+import { formatTime12Hour } from '@/lib/time';
+import EnterpriseAlert from './EnterpriseAlert';
+import MorningWatchdogCard from './MorningWatchdogCard';
 
 interface AdminPortalProps {
   user: any;
@@ -31,6 +35,10 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
   const [loadingStudents, setLoadingStudents] = useState(true);
   const [loadingCalendar, setLoadingCalendar] = useState(false);
 
+  // Morning Watchdog State
+  const [watchdogReport, setWatchdogReport] = useState<any>(null);
+  const [loadingWatchdog, setLoadingWatchdog] = useState(false);
+
   // Google Drive OAuth Connection State
   const [driveInfo, setDriveInfo] = useState<any>(null);
   const [loadingDrive, setLoadingDrive] = useState(false);
@@ -54,6 +62,11 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
   const [newStartDate, setNewStartDate] = useState('2026-09-01');
   const [newEndDate, setNewEndDate] = useState('2026-09-30');
   const [newTrainingDays, setNewTrainingDays] = useState(10);
+  const [newBatchFnStart, setNewBatchFnStart] = useState('08:30');
+  const [newBatchFnCutoff, setNewBatchFnCutoff] = useState('09:00');
+  const [newBatchAnStart, setNewBatchAnStart] = useState('12:40');
+  const [newBatchAnCutoff, setNewBatchAnCutoff] = useState('13:10');
+  const [newBatchAttendanceMode, setNewBatchAttendanceMode] = useState<'default' | 'custom'>('default');
 
   // Calendar Day Form
   const [calDayNum, setCalDayNum] = useState(1);
@@ -73,8 +86,26 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
       fetchBatches();
       fetchStudents();
       fetchDriveInfo();
+      fetchWatchdogReport();
     }
   }, [user]);
+
+  const fetchWatchdogReport = async (runNow: boolean = false) => {
+    setLoadingWatchdog(true);
+    try {
+      const res = await fetch(`/api/cron/morning-watchdog${runNow ? '?runNow=true' : ''}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.report) {
+          setWatchdogReport(data.report);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching morning watchdog report', e);
+    } finally {
+      setLoadingWatchdog(false);
+    }
+  };
 
   const fetchDriveInfo = async () => {
     setLoadingDrive(true);
@@ -258,6 +289,26 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
+
+    if (newBatchAttendanceMode === 'custom') {
+      if (!newBatchFnStart || !newBatchFnCutoff || !newBatchAnStart || !newBatchAnCutoff) {
+        setErrorMsg('Please specify all Forenoon and Afternoon start and cutoff times.');
+        return;
+      }
+      if (newBatchFnStart >= newBatchFnCutoff) {
+        setErrorMsg(`Morning (FN) Start Time (${newBatchFnStart}) must be earlier than Cutoff Time (${newBatchFnCutoff}).`);
+        return;
+      }
+      if (newBatchAnStart >= newBatchAnCutoff) {
+        setErrorMsg(`Afternoon (AN) Start Time (${newBatchAnStart}) must be earlier than Cutoff Time (${newBatchAnCutoff}).`);
+        return;
+      }
+      if (newBatchFnCutoff > newBatchAnStart) {
+        setErrorMsg(`Morning (FN) Cutoff Time (${newBatchFnCutoff}) must be earlier than Afternoon (AN) Start Time (${newBatchAnStart}).`);
+        return;
+      }
+    }
+
     try {
       const res = await fetch('/api/admin/batches', {
         method: 'POST',
@@ -267,6 +318,10 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
           startDate: newStartDate,
           endDate: newEndDate,
           trainingDays: Number(newTrainingDays),
+          fnStartTime: newBatchAttendanceMode === 'default' ? null : newBatchFnStart,
+          fnCutoffTime: newBatchAttendanceMode === 'default' ? null : newBatchFnCutoff,
+          anStartTime: newBatchAttendanceMode === 'default' ? null : newBatchAnStart,
+          anCutoffTime: newBatchAttendanceMode === 'default' ? null : newBatchAnCutoff,
         }),
       });
       const data = await res.json();
@@ -349,9 +404,14 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
           </div>
 
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{errorMsg}</span>
+            <div className="mb-4">
+              <EnterpriseAlert
+                type="error"
+                message={errorMsg}
+                onDismiss={() => setErrorMsg('')}
+                durationMs={7000}
+                theme="dark"
+              />
             </div>
           )}
 
@@ -469,22 +529,76 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <span>{errorMsg}</span>
-        </div>
+        <EnterpriseAlert
+          type="error"
+          message={errorMsg}
+          onDismiss={() => setErrorMsg('')}
+          durationMs={7000}
+          theme="dark"
+        />
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3">
-          <CheckCircle2 className="w-5 h-5 shrink-0" />
-          <span>{successMsg}</span>
+        <EnterpriseAlert
+          type="success"
+          message={successMsg}
+          onDismiss={() => setSuccessMsg('')}
+          durationMs={4500}
+          theme="dark"
+        />
+      )}
+
+      {/* Morning Watchdog Alert Banner (Early Warning before classes start) */}
+      {watchdogReport && (!watchdogReport.allHealthy || watchdogReport.criticalCount > 0) && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-950/40 via-amber-950/30 to-rose-950/40 border border-rose-500/50 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-rose-900/60 text-rose-300 shrink-0 mt-0.5 sm:mt-0">
+              <AlertTriangle className="w-5 h-5 text-rose-400" />
+            </div>
+            <div>
+              <div className="text-sm font-extrabold text-white flex items-center gap-2">
+                Morning Watchdog Alert: Pre-Class Subsystem Issues Detected
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                  {watchdogReport.criticalCount > 0 ? `${watchdogReport.criticalCount} Critical` : `${watchdogReport.warningCount} Warnings`}
+                </span>
+              </div>
+              <p className="text-xs text-rose-200/80 font-medium mt-0.5">
+                {watchdogReport.subsystems?.googleDrive?.status === 'CRITICAL'
+                  ? 'Google Drive backup is disconnected. Student upload mirrors will fail until reconnected.'
+                  : 'One or more core services require admin attention before classes start at 8:30 AM.'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {watchdogReport.subsystems?.googleDrive?.status === 'CRITICAL' && (
+              <button
+                onClick={() => setAdminTab('settings')}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-xs transition-all inline-flex items-center gap-1.5 cursor-pointer"
+              >
+                Reconnect Drive
+              </button>
+            )}
+            <button
+              onClick={() => setAdminTab('overview')}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/40 shadow-xs transition-all cursor-pointer"
+            >
+              View Details
+            </button>
+          </div>
         </div>
       )}
 
       {/* TAB 1: OVERVIEW */}
       {adminTab === 'overview' && (
         <div className="space-y-6">
+          {/* Morning Watchdog Card */}
+          <MorningWatchdogCard
+            report={watchdogReport}
+            loading={loadingWatchdog}
+            onRunAudit={() => fetchWatchdogReport(true)}
+            onNavigateToDrive={() => setAdminTab('settings')}
+          />
+
           {loadingStats ? (
             <StatsCardsSkeleton count={4} theme="dark" />
           ) : (
@@ -586,9 +700,167 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
                 </div>
               </div>
 
+              {/* Attendance Window Timings */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                    <label className="block text-xs font-bold text-cyan-400">Attendance Timings</label>
+                  </div>
+                  <div className="inline-flex p-0.5 rounded-lg bg-slate-900 border border-slate-800 text-[10px] font-bold">
+                    <button
+                      type="button"
+                      onClick={() => setNewBatchAttendanceMode('default')}
+                      className={`px-2 py-1 rounded-md transition-colors ${
+                        newBatchAttendanceMode === 'default'
+                          ? 'bg-cyan-600 text-white font-bold'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Follow Default
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNewBatchAttendanceMode('custom')}
+                      className={`px-2 py-1 rounded-md transition-colors ${
+                        newBatchAttendanceMode === 'custom'
+                          ? 'bg-cyan-600 text-white font-bold'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Custom Timings
+                    </button>
+                  </div>
+                </div>
+
+                {newBatchAttendanceMode === 'default' ? (
+                  <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+                    <div className="text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span>Following Default Settings (08:30–09:00 / 12:40–13:10)</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500">
+                      Attendance windows will automatically inherit global default settings.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 pt-1">
+                    {/* Morning FN */}
+                    <div className="p-2.5 rounded-xl bg-slate-900/70 border border-slate-800/90 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-cyan-300 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                          Morning (FN) Window
+                        </span>
+                        {newBatchFnStart && newBatchFnCutoff && newBatchFnStart >= newBatchFnCutoff && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const s = newBatchFnStart;
+                              setNewBatchFnStart(newBatchFnCutoff);
+                              setNewBatchFnCutoff(s);
+                            }}
+                            className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-1 font-bold cursor-pointer"
+                          >
+                            <ArrowLeftRight className="w-2.5 h-2.5" />
+                            <span>Swap Times</span>
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <span className="text-[10px] text-slate-400 block mb-0.5">Start Time</span>
+                          <input
+                            type="time"
+                            value={newBatchFnStart}
+                            onChange={(e) => setNewBatchFnStart(e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white font-mono focus:border-cyan-500"
+                          />
+                          <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">
+                            {formatTime12Hour(newBatchFnStart)}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-slate-400 block mb-0.5">Cutoff Time</span>
+                          <input
+                            type="time"
+                            value={newBatchFnCutoff}
+                            onChange={(e) => setNewBatchFnCutoff(e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white font-mono focus:border-cyan-500"
+                          />
+                          <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">
+                            {formatTime12Hour(newBatchFnCutoff)}
+                          </span>
+                        </div>
+                      </div>
+                      {newBatchFnStart && newBatchFnCutoff && newBatchFnStart >= newBatchFnCutoff && (
+                        <p className="text-[10px] text-rose-400 font-semibold">
+                          ⚠️ Start time must be earlier than cutoff time
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Afternoon AN */}
+                    <div className="p-2.5 rounded-xl bg-slate-900/70 border border-slate-800/90 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-cyan-300 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                          Afternoon (AN) Window
+                        </span>
+                        {newBatchAnStart && newBatchAnCutoff && newBatchAnStart >= newBatchAnCutoff && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const s = newBatchAnStart;
+                              setNewBatchAnStart(newBatchAnCutoff);
+                              setNewBatchAnCutoff(s);
+                            }}
+                            className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-1 font-bold cursor-pointer"
+                          >
+                            <ArrowLeftRight className="w-2.5 h-2.5" />
+                            <span>Swap Times</span>
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <span className="text-[10px] text-slate-400 block mb-0.5">Start Time</span>
+                          <input
+                            type="time"
+                            value={newBatchAnStart}
+                            onChange={(e) => setNewBatchAnStart(e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white font-mono focus:border-cyan-500"
+                          />
+                          <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">
+                            {formatTime12Hour(newBatchAnStart)}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-slate-400 block mb-0.5">Cutoff Time</span>
+                          <input
+                            type="time"
+                            value={newBatchAnCutoff}
+                            onChange={(e) => setNewBatchAnCutoff(e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white font-mono focus:border-cyan-500"
+                          />
+                          <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">
+                            {formatTime12Hour(newBatchAnCutoff)}
+                          </span>
+                        </div>
+                      </div>
+                      {newBatchAnStart && newBatchAnCutoff && newBatchAnStart >= newBatchAnCutoff && (
+                        <p className="text-[10px] text-rose-400 font-semibold">
+                          ⚠️ Start time must be earlier than cutoff time
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <button
                 type="submit"
-                className="w-full py-2.5 px-4 rounded-xl bg-cyan-600 text-white font-medium text-xs hover:bg-cyan-500 transition-colors"
+                className="w-full py-2.5 px-4 rounded-xl bg-cyan-600 text-white font-medium text-xs hover:bg-cyan-500 transition-colors cursor-pointer"
               >
                 Create Batch
               </button>
@@ -621,9 +893,24 @@ export default function AdminPortal({ user, onLoginSuccess }: AdminPortalProps) 
                 {batches.map((b) => (
                   <div key={b.id} className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold text-white text-sm">{b.name}</h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        Training Days: <span className="text-slate-200">{b.trainingDays}</span>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-white text-sm">{b.name}</h3>
+                        {Boolean(b.fnStartTime || b.fnCutoffTime || b.anStartTime || b.anCutoffTime) ? (
+                          <span className="text-[10px] font-bold text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">
+                            Custom Timings
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                            Default Timings
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span>Training Days: <span className="text-slate-200">{b.trainingDays}</span></span>
+                        <span className="mx-1 text-slate-600">|</span>
+                        <span>FN: <span className="text-cyan-400 font-mono">{b.fnStartTime || '08:30'} ({formatTime12Hour(b.fnStartTime || '08:30')}) – {b.fnCutoffTime || '09:00'} ({formatTime12Hour(b.fnCutoffTime || '09:00')})</span></span>
+                        <span className="mx-1 text-slate-600">|</span>
+                        <span>AN: <span className="text-cyan-400 font-mono">{b.anStartTime || '12:40'} ({formatTime12Hour(b.anStartTime || '12:40')}) – {b.anCutoffTime || '13:10'} ({formatTime12Hour(b.anCutoffTime || '13:10')})</span></span>
                       </p>
                     </div>
                     <span className="px-3 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">

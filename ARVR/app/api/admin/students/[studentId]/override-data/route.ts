@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
 import { format } from 'date-fns';
+import { isValidObjectId } from '@/lib/validation';
+import { logAdminAudit } from '@/lib/auditLog';
+import { getClientIp } from '@/lib/security';
 
 export async function POST(
   request: Request,
@@ -9,7 +12,13 @@ export async function POST(
 ) {
   try {
     const { studentId } = await params;
-    await requireAuth(['ADMIN']);
+    const adminUser = await requireAuth(['ADMIN']);
+    const ip = getClientIp(request);
+
+    if (!isValidObjectId(studentId)) {
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 });
+    }
+
     const body = await request.json();
     const { action, score = 90, grade = 'O', level = 'Level 1 Foundation' } = body;
 
@@ -98,6 +107,17 @@ export async function POST(
         });
       }
 
+      await logAdminAudit({
+        actorId: adminUser.id,
+        actorEmail: adminUser.email,
+        ipAddress: ip,
+        action: 'OVERRIDE_ATTENDANCE',
+        targetType: 'STUDENT',
+        targetId: student.id,
+        targetIdentifier: student.registerNo || student.email,
+        details: { action, sessionsAdded, trainingDays: calendar.length },
+      });
+
       return NextResponse.json({
         success: true,
         message: `Granted 100% attendance! Added ${sessionsAdded} missing session(s) across ${calendar.length} training days.`,
@@ -142,6 +162,17 @@ export async function POST(
           });
         }
       }
+
+      await logAdminAudit({
+        actorId: adminUser.id,
+        actorEmail: adminUser.email,
+        ipAddress: ip,
+        action: 'OVERRIDE_TASKS_AND_EVALUATION',
+        targetType: 'STUDENT',
+        targetId: student.id,
+        targetIdentifier: student.registerNo || student.email,
+        details: { action, tasksAdded, score, grade: cleanGrade, level: cleanLevel },
+      });
 
       return NextResponse.json({
         success: true,
@@ -221,6 +252,17 @@ export async function POST(
           },
         });
       }
+
+      await logAdminAudit({
+        actorId: adminUser.id,
+        actorEmail: adminUser.email,
+        ipAddress: ip,
+        action: 'OVERRIDE_FULL_QUALIFICATION',
+        targetType: 'STUDENT',
+        targetId: student.id,
+        targetIdentifier: student.registerNo || student.email,
+        details: { action, certificateNo: certNo, score, grade: cleanGrade, level: cleanLevel },
+      });
 
       return NextResponse.json({
         success: true,

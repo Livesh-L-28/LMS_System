@@ -2,13 +2,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  ShieldCheck, KeyRound, CheckCircle2, AlertCircle, Sparkles, RefreshCw, 
+  ShieldCheck, KeyRound, CheckCircle2, AlertCircle, AlertTriangle, Sparkles, RefreshCw, 
   Users, Layers, Award, FileSpreadsheet, Plus, Calendar, Search, Star, BarChart3, FileText, Send, ExternalLink, UploadCloud,
   LayoutDashboard, CheckSquare, ChevronRight, ChevronLeft, UserPlus, Info, Edit, Eye, Filter, Check, X, FileCheck, BookOpen, Clock, Save, Settings, Trash2, GraduationCap,
-  Paperclip, FileUp, Link as LinkIcon, Download, ListChecks, XCircle, Globe
+  Paperclip, FileUp, Link as LinkIcon, Download, ListChecks, XCircle, Globe, MapPin, Wifi, Navigation, Shield, Radio, ArrowLeftRight
 } from 'lucide-react';
 import { LEVEL_CONFIG, generateBatchName, calculateEndDate, calculateExamDate, generateTrainingDaysCalendar, DEFAULT_CURRICULUM_BY_LEVEL, formatDateDisplay } from '@/lib/batchUtils';
+import { formatTime12Hour } from '@/lib/time';
 import { StatsCardsSkeleton, BatchCardsSkeleton, TableSkeleton, CurriculumSkeleton } from '@/components/LoadingSkeletons';
+import EnterpriseAlert from '@/components/EnterpriseAlert';
+import MorningWatchdogCard from '@/components/MorningWatchdogCard';
 
 interface StaffPortalProps {
   user: any;
@@ -23,8 +26,27 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const errParam = searchParams.get('drive_error');
+      if (errParam) {
+        return errParam === 'callback_failed' || errParam.includes('invalid_client')
+          ? 'Google Drive connection failed: Invalid Google Client ID or Secret. In Google Cloud Console, ensure you copied the OAuth Client Secret (starts with GOCSPX-), not your LMS password.'
+          : `Google Drive connection error: ${decodeURIComponent(errParam)}`;
+      }
+    }
+    return '';
+  });
+  const [successMsg, setSuccessMsg] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('drive_connected') === 'true') {
+        return 'Google Drive connected successfully!';
+      }
+    }
+    return '';
+  });
 
   const formatFriendlyError = (err: any, fallback: string = 'Operation failed') => {
     if (!err) return fallback;
@@ -66,12 +88,31 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   // Active Sub-Tab
-  const [staffTab, setStaffTab] = useState<'overview' | 'evaluations' | 'batches' | 'curriculum' | 'calendar' | 'certificates' | 'students' | 'settings'>('overview');
+  const [staffTab, setStaffTab] = useState<'overview' | 'evaluations' | 'batches' | 'curriculum' | 'calendar' | 'certificates' | 'students' | 'settings'>(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('drive_connected') === 'true' || searchParams.get('drive_error')) {
+        return 'settings';
+      }
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'curriculum') return 'curriculum';
+      if (hash === 'batches') return 'batches';
+      if (hash === 'students') return 'students';
+      if (hash === 'tasks' || hash === 'evaluations') return 'evaluations';
+      if (hash === 'certificates' || hash === 'reports') return 'certificates';
+      if (hash === 'settings') return 'settings';
+    }
+    return 'overview';
+  });
 
   // Shared Data State
   const [stats, setStats] = useState<any>(null);
   const [batches, setBatches] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
+
+  // Morning Watchdog State
+  const [watchdogReport, setWatchdogReport] = useState<any>(null);
+  const [loadingWatchdog, setLoadingWatchdog] = useState(false);
 
   // Batch selection for sub-views
   const [selectedBatchId, setSelectedBatchId] = useState('');
@@ -149,16 +190,15 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     rect: { top: number; bottom: number; left: number; right: number; width: number; height: number };
   } | null>(null);
   const [tipActiveFilter, setTipActiveFilter] = useState<'all' | 'completed' | 'missing'>('all');
-  const taskTipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleTaskNumberMouseEnter = (
     item: any,
     focus: 'submitted' | 'missing' | 'all',
     e: React.MouseEvent<HTMLElement>
   ) => {
-    if (taskTipTimeoutRef.current) {
-      clearTimeout(taskTipTimeoutRef.current);
-      taskTipTimeoutRef.current = null;
+    if (typeof window !== 'undefined' && (window as any).__taskTipTimeout) {
+      clearTimeout((window as any).__taskTipTimeout);
+      (window as any).__taskTipTimeout = null;
     }
     const rect = e.currentTarget.getBoundingClientRect();
     setTipActiveFilter('all');
@@ -181,15 +221,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   const handleTaskNumberMouseLeave = () => {
-    taskTipTimeoutRef.current = setTimeout(() => {
-      setHoveredTaskTip(null);
-    }, 200);
+    if (typeof window !== 'undefined') {
+      (window as any).__taskTipTimeout = setTimeout(() => {
+        setHoveredTaskTip(null);
+      }, 200);
+    }
   };
 
   const handleTooltipMouseEnter = () => {
-    if (taskTipTimeoutRef.current) {
-      clearTimeout(taskTipTimeoutRef.current);
-      taskTipTimeoutRef.current = null;
+    if (typeof window !== 'undefined' && (window as any).__taskTipTimeout) {
+      clearTimeout((window as any).__taskTipTimeout);
+      (window as any).__taskTipTimeout = null;
     }
   };
 
@@ -210,23 +252,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       else if (hash === 'settings') setStaffTab('settings');
     };
 
-    handleHashChange();
-
-    // Check for drive OAuth callback query params
+    // Clean up drive OAuth query params from URL if present
     if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get('drive_connected') === 'true') {
-        setStaffTab('settings');
-        showSuccess('Google Drive connected successfully!');
-        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-      } else if (searchParams.get('drive_error')) {
-        setStaffTab('settings');
-        const errParam = searchParams.get('drive_error') || '';
-        showError(
-          errParam === 'callback_failed' || errParam.includes('invalid_client')
-            ? 'Google Drive connection failed: Invalid Google Client ID or Secret. In Google Cloud Console, ensure you copied the OAuth Client Secret (starts with GOCSPX-), not your LMS password.'
-            : `Google Drive connection error: ${decodeURIComponent(errParam)}`
-        );
+      if (searchParams.get('drive_connected') || searchParams.get('drive_error')) {
         window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
       }
     }
@@ -438,6 +467,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const [createBatchName, setCreateBatchName] = useState<string>('');
   const [createDaysCount, setCreateDaysCount] = useState<number>(15);
   const [createLevelTasks, setCreateLevelTasks] = useState<{ dayNumber: number; taskTitle: string; taskDescription: string }[]>([]);
+  const [createFnStart, setCreateFnStart] = useState<string>('08:30');
+  const [createFnCutoff, setCreateFnCutoff] = useState<string>('09:00');
+  const [createAnStart, setCreateAnStart] = useState<string>('12:40');
+  const [createAnCutoff, setCreateAnCutoff] = useState<string>('13:10');
+  const [createAttendanceMode, setCreateAttendanceMode] = useState<'default' | 'custom'>('default');
 
   const [batchSearchQuery, setBatchSearchQuery] = useState('');
   const [filterLevel, setFilterLevel] = useState('All');
@@ -451,10 +485,17 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
   const [showBatchDetailsModal, setShowBatchDetailsModal] = useState(false);
   const [selectedBatchDetail, setSelectedBatchDetail] = useState<any | null>(null);
+  const [isEditingBatchTimings, setIsEditingBatchTimings] = useState<boolean>(false);
+  const [editBatchFnStart, setEditBatchFnStart] = useState<string>('08:30');
+  const [editBatchFnCutoff, setEditBatchFnCutoff] = useState<string>('09:00');
+  const [editBatchAnStart, setEditBatchAnStart] = useState<string>('12:40');
+  const [editBatchAnCutoff, setEditBatchAnCutoff] = useState<string>('13:10');
+  const [editBatchAttendanceMode, setEditBatchAttendanceMode] = useState<'default' | 'custom'>('default');
+  const [savingBatchTimings, setSavingBatchTimings] = useState<boolean>(false);
 
   // Settings & Task Configuration Modal State
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [settingsSectionTab, setSettingsSectionTab] = useState<'pageDetails' | 'attendance' | 'drive'>('pageDetails');
+  const [settingsSectionTab, setSettingsSectionTab] = useState<'pageDetails' | 'attendance' | 'drive' | 'accessControl'>('pageDetails');
 
   // Page & Branding Settings State
   const [pageTitle, setPageTitle] = useState(branding?.pageTitle || 'AR/VR ACADEMY');
@@ -519,6 +560,26 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const [driveCredsErrorMsg, setDriveCredsErrorMsg] = useState<string | null>(null);
   const [testResultMsg, setTestResultMsg] = useState<string | null>(null);
   const [testResultSuccess, setTestResultSuccess] = useState<boolean>(true);
+
+  // Access Control (Geofencing & Campus WiFi) State
+  const [accessGeofenceEnabled, setAccessGeofenceEnabled] = useState<boolean>(false);
+  const [accessCampusLat, setAccessCampusLat] = useState<string>('');
+  const [accessCampusLng, setAccessCampusLng] = useState<string>('');
+  const [accessRadiusMeters, setAccessRadiusMeters] = useState<number>(150);
+  const [accessWifiEnabled, setAccessWifiEnabled] = useState<boolean>(false);
+  const [accessWifiSsid, setAccessWifiSsid] = useState<string>('');
+  const [accessAllowedIps, setAccessAllowedIps] = useState<string>('');
+  const [accessScope, setAccessScope] = useState<'LOGIN_AND_ATTENDANCE' | 'LOGIN_ONLY' | 'ATTENDANCE_ONLY'>('LOGIN_AND_ATTENDANCE');
+  const [accessAllowLocalhost, setAccessAllowLocalhost] = useState<boolean>(true);
+  const [accessCurrentDetectedIp, setAccessCurrentDetectedIp] = useState<string>('');
+  const [loadingAccessSettings, setLoadingAccessSettings] = useState<boolean>(false);
+  const [savingAccessSettings, setSavingAccessSettings] = useState<boolean>(false);
+  const [capturingLocation, setCapturingLocation] = useState<boolean>(false);
+  const [locationCaptureSuccess, setLocationCaptureSuccess] = useState<string | null>(null);
+  const [wifiSetupSuccessMsg, setWifiSetupSuccessMsg] = useState<string | null>(null);
+  const [fetchingPublicIp, setFetchingPublicIp] = useState<boolean>(false);
+  const [accessSaveMsg, setAccessSaveMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
   const [loadingStats, setLoadingStats] = useState<boolean>(true);
   const [loadingBatches, setLoadingBatches] = useState<boolean>(true);
   const [loadingStudents, setLoadingStudents] = useState<boolean>(false);
@@ -587,6 +648,11 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     setCreateLevel(initialLvl);
     setCreateNoMode('automatic');
     setCreateBatchNo(autoNo);
+    setCreateAttendanceMode('default');
+    setCreateFnStart(settingsFnStart || '08:30');
+    setCreateFnCutoff(settingsFnCutoff || '09:00');
+    setCreateAnStart(settingsAnStart || '12:40');
+    setCreateAnCutoff(settingsAnCutoff || '13:10');
     const todayStr = new Date().toISOString().split('T')[0];
     setCreateStartDate(todayStr);
     fetchLevelConfigForCreate(initialLvl, todayStr, autoNo);
@@ -624,6 +690,21 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const handleCreateBatchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const isDefault = createAttendanceMode === 'default';
+      if (!isDefault) {
+        if (createFnStart && createFnCutoff && createFnStart >= createFnCutoff) {
+          setErrorMsg(`Morning (FN) Start Time (${createFnStart}) must be earlier than Cutoff Time (${createFnCutoff}).`);
+          return;
+        }
+        if (createAnStart && createAnCutoff && createAnStart >= createAnCutoff) {
+          setErrorMsg(`Afternoon (AN) Start Time (${createAnStart}) must be earlier than Cutoff Time (${createAnCutoff}).`);
+          return;
+        }
+        if (createFnCutoff && createAnStart && createFnCutoff > createAnStart) {
+          setErrorMsg(`Morning Cutoff Time (${createFnCutoff}) must be earlier than Afternoon Start Time (${createAnStart}).`);
+          return;
+        }
+      }
       const res = await fetch('/api/admin/batches', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -636,6 +717,10 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           trainingDays: createDaysCount,
           status: 'ACTIVE',
           curriculumStatus: 'Not Set',
+          fnStartTime: isDefault ? null : createFnStart,
+          fnCutoffTime: isDefault ? null : createFnCutoff,
+          anStartTime: isDefault ? null : createAnStart,
+          anCutoffTime: isDefault ? null : createAnCutoff,
         }),
       });
 
@@ -786,7 +871,9 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     }
   };
 
-  useEffect(() => {
+  const [prevBranding, setPrevBranding] = useState(branding);
+  if (prevBranding !== branding) {
+    setPrevBranding(branding);
     if (branding) {
       if (branding.pageTitle) setPageTitle(branding.pageTitle);
       if (branding.pageSubtitle) setPageSubtitle(branding.pageSubtitle);
@@ -797,7 +884,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
       if (branding.footerText) setFooterText(branding.footerText);
       if (branding.supportEmail) setSupportEmail(branding.supportEmail);
     }
-  }, [branding]);
+  }
 
   const fetchPageSettings = async () => {
     setLoadingPageSettings(true);
@@ -929,6 +1016,176 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     }
   };
 
+  const fetchAccessSettings = async () => {
+    setLoadingAccessSettings(true);
+    setAccessSaveMsg(null);
+    try {
+      const res = await fetch('/api/admin/settings/access-control');
+      const data = await parseResponseJson(res, 'Failed to load access control settings');
+      if (!res.ok) return;
+      setAccessGeofenceEnabled(Boolean(data.geofenceEnabled));
+      setAccessCampusLat(data.campusLat ? String(data.campusLat) : '');
+      setAccessCampusLng(data.campusLng ? String(data.campusLng) : '');
+      setAccessRadiusMeters(data.radiusMeters || 150);
+      setAccessWifiEnabled(Boolean(data.wifiEnabled));
+      setAccessWifiSsid(data.wifiSsid ? String(data.wifiSsid) : '');
+      setAccessAllowedIps(data.allowedIps || '');
+      setAccessScope(data.scope || 'LOGIN_AND_ATTENDANCE');
+      setAccessAllowLocalhost(data.allowLocalhost !== false);
+      if (data.currentDetectedIp) setAccessCurrentDetectedIp(data.currentDetectedIp);
+    } catch (err) {
+      console.warn('Failed to load access control settings:', err);
+    } finally {
+      setLoadingAccessSettings(false);
+    }
+  };
+
+  const handleSaveAccessSettings = async () => {
+    setSavingAccessSettings(true);
+    setAccessSaveMsg(null);
+    setWifiSetupSuccessMsg(null);
+    setErrorMsg('');
+    setSuccessMsg('');
+    try {
+      const res = await fetch('/api/admin/settings/access-control', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          geofenceEnabled: accessGeofenceEnabled,
+          campusLat: accessCampusLat,
+          campusLng: accessCampusLng,
+          radiusMeters: accessRadiusMeters,
+          wifiEnabled: accessWifiEnabled,
+          wifiSsid: accessWifiSsid,
+          allowedIps: accessAllowedIps,
+          scope: accessScope,
+          allowLocalhost: accessAllowLocalhost,
+        }),
+      });
+      const data = await parseResponseJson(res, 'Failed to save access control settings');
+      if (!res.ok) throw new Error(data.error || 'Failed to save access control settings');
+      setAccessSaveMsg({ type: 'success', text: data.message || 'Access control policy saved successfully!' });
+      showSuccess('✓ Geofencing and WiFi network restriction policy saved!');
+    } catch (err: any) {
+      setAccessSaveMsg({ type: 'error', text: err.message || 'Failed to save access control settings' });
+      showError(err, 'Error saving access control settings');
+    } finally {
+      setSavingAccessSettings(false);
+    }
+  };
+
+  const handleCaptureAdminCoordinates = () => {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+    setCapturingLocation(true);
+    setLocationCaptureSuccess(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude.toFixed(6);
+        const lng = pos.coords.longitude.toFixed(6);
+        setAccessCampusLat(lat);
+        setAccessCampusLng(lng);
+        setCapturingLocation(false);
+        setLocationCaptureSuccess(`Captured GPS coordinates: ${lat}, ${lng} (accuracy: ±${Math.round(pos.coords.accuracy)}m)`);
+      },
+      (err) => {
+        setCapturingLocation(false);
+        alert(`Location acquisition failed: ${err.message}. Please allow location permission in your browser.`);
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+  };
+
+  const handleAddCurrentIp = () => {
+    if (!accessCurrentDetectedIp) return;
+    const currentList = accessAllowedIps
+      .split(/[\n,]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!currentList.includes(accessCurrentDetectedIp)) {
+      currentList.push(accessCurrentDetectedIp);
+      setAccessAllowedIps(currentList.join(', '));
+      setWifiSetupSuccessMsg(`✓ Added current IP (${accessCurrentDetectedIp}) to whitelist.`);
+    }
+  };
+
+  const handleOneClickSetWifi = () => {
+    if (!accessCurrentDetectedIp) {
+      alert('Unable to detect current network IP yet. Please check your connection and refresh.');
+      return;
+    }
+    setAccessWifiEnabled(true);
+    if (!accessWifiSsid.trim()) {
+      setAccessWifiSsid('ARVR-Academy-WiFi');
+    }
+    const currentList = accessAllowedIps
+      .split(/[\n,]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!currentList.includes(accessCurrentDetectedIp)) {
+      currentList.push(accessCurrentDetectedIp);
+      setAccessAllowedIps(currentList.join(', '));
+    }
+    setWifiSetupSuccessMsg(`✓ Locked to current network (${accessCurrentDetectedIp})! Click "Save Access Control Policy" below to apply.`);
+  };
+
+  const handleSetOnlyCurrentIp = () => {
+    if (!accessCurrentDetectedIp) return;
+    setAccessWifiEnabled(true);
+    setAccessAllowedIps(accessCurrentDetectedIp);
+    if (!accessWifiSsid.trim()) {
+      setAccessWifiSsid('ARVR-Academy-WiFi');
+    }
+    setWifiSetupSuccessMsg(`✓ Whitelist set strictly to this network (${accessCurrentDetectedIp})! Remember to click Save.`);
+  };
+
+  const handleAddSubnetPreset = () => {
+    if (!accessCurrentDetectedIp) return;
+    const parts = accessCurrentDetectedIp.split('.');
+    if (parts.length === 4) {
+      const subnet = `${parts[0]}.${parts[1]}.${parts[2]}.0/24`;
+      const currentList = accessAllowedIps
+        .split(/[\n,]+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (!currentList.includes(subnet)) {
+        currentList.push(subnet);
+        setAccessAllowedIps(currentList.join(', '));
+        setWifiSetupSuccessMsg(`✓ Added entire subnet block ${subnet} to allowed list.`);
+      }
+    }
+  };
+
+  const handleFetchPublicWanIp = async () => {
+    setFetchingPublicIp(true);
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      if (data.ip) {
+        setAccessCurrentDetectedIp(data.ip);
+        setAccessWifiEnabled(true);
+        if (!accessWifiSsid.trim()) {
+          setAccessWifiSsid('ARVR-Academy-WiFi');
+        }
+        const currentList = accessAllowedIps
+          .split(/[\n,]+/)
+          .map((s) => s.trim())
+          .filter(Boolean);
+        if (!currentList.includes(data.ip)) {
+          currentList.push(data.ip);
+          setAccessAllowedIps(currentList.join(', '));
+        }
+        setWifiSetupSuccessMsg(`✓ Fetched real public router IP (${data.ip})! Remember to click "Save Access Control Policy" below.`);
+      }
+    } catch {
+      alert('Could not fetch public IP automatically. You can enter your router IP manually.');
+    } finally {
+      setFetchingPublicIp(false);
+    }
+  };
+
   const handleSaveDriveCredentials = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavingDriveCreds(true);
@@ -1026,6 +1283,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     setSettingsSectionTab('attendance');
     fetchAttendanceSettings();
     fetchDriveSettings();
+    fetchAccessSettings();
     handleTabSwitch('settings');
   };
 
@@ -1050,13 +1308,26 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   };
 
   useEffect(() => {
-    if (staffTab === 'curriculum') {
-      fetchSettingsTasks(settingsActiveLevel);
-    } else if (staffTab === 'settings') {
-      fetchAttendanceSettings();
-      fetchDriveSettings();
-    }
-  }, [staffTab]);
+    let ignore = false;
+    const loadTabData = async () => {
+      if (ignore) return;
+      if (staffTab === 'curriculum') {
+        await fetchSettingsTasks(settingsActiveLevel);
+      } else if (staffTab === 'settings') {
+        await Promise.allSettled([
+          fetchAttendanceSettings(),
+          fetchDriveSettings(),
+          fetchAccessSettings(),
+        ]);
+      } else if (staffTab === 'batches') {
+        await fetchAttendanceSettings();
+      }
+    };
+    loadTabData();
+    return () => {
+      ignore = true;
+    };
+  }, [staffTab, settingsActiveLevel]);
 
   const handleOpenAddLevelModal = () => {
     setNewLevelForm({ name: '', days: 10 });
@@ -1584,7 +1855,79 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
 
   const handleOpenBatchDetails = (batch: any) => {
     setSelectedBatchDetail(batch);
+    const hasCustomTimings = Boolean(batch.fnStartTime || batch.fnCutoffTime || batch.anStartTime || batch.anCutoffTime);
+    setEditBatchAttendanceMode(hasCustomTimings ? 'custom' : 'default');
+    setEditBatchFnStart(batch.fnStartTime || settingsFnStart || '08:30');
+    setEditBatchFnCutoff(batch.fnCutoffTime || settingsFnCutoff || '09:00');
+    setEditBatchAnStart(batch.anStartTime || settingsAnStart || '12:40');
+    setEditBatchAnCutoff(batch.anCutoffTime || settingsAnCutoff || '13:10');
+    setIsEditingBatchTimings(false);
     setShowBatchDetailsModal(true);
+  };
+
+  const handleSaveBatchTimings = async () => {
+    if (!selectedBatchDetail) return;
+    setSavingBatchTimings(true);
+    setErrorMsg('');
+    const isDefault = editBatchAttendanceMode === 'default';
+    if (!isDefault) {
+      if (editBatchFnStart && editBatchFnCutoff && editBatchFnStart >= editBatchFnCutoff) {
+        showError(`Morning (FN) Start Time (${editBatchFnStart}) must be earlier than Cutoff Time (${editBatchFnCutoff}).`);
+        setSavingBatchTimings(false);
+        return;
+      }
+      if (editBatchAnStart && editBatchAnCutoff && editBatchAnStart >= editBatchAnCutoff) {
+        showError(`Afternoon (AN) Start Time (${editBatchAnStart}) must be earlier than Cutoff Time (${editBatchAnCutoff}).`);
+        setSavingBatchTimings(false);
+        return;
+      }
+      if (editBatchFnCutoff && editBatchAnStart && editBatchFnCutoff > editBatchAnStart) {
+        showError(`Morning Cutoff Time (${editBatchFnCutoff}) must be earlier than Afternoon Start Time (${editBatchAnStart}).`);
+        setSavingBatchTimings(false);
+        return;
+      }
+    }
+    const payload = isDefault
+      ? {
+          fnStartTime: null,
+          fnCutoffTime: null,
+          anStartTime: null,
+          anCutoffTime: null,
+        }
+      : {
+          fnStartTime: editBatchFnStart,
+          fnCutoffTime: editBatchFnCutoff,
+          anStartTime: editBatchAnStart,
+          anCutoffTime: editBatchAnCutoff,
+        };
+    try {
+      const res = await fetch(`/api/admin/batches/${selectedBatchDetail.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update batch timings');
+
+      showSuccess(`✓ Attendance settings for "${selectedBatchDetail.name}" updated!`);
+      setSelectedBatchDetail((prev: any) => ({
+        ...prev,
+        fnStartTime: payload.fnStartTime,
+        fnCutoffTime: payload.fnCutoffTime,
+        anStartTime: payload.anStartTime,
+        anCutoffTime: payload.anCutoffTime,
+      }));
+      setIsEditingBatchTimings(false);
+
+      // Refresh batches list
+      const fetchRes = await fetch('/api/admin/batches');
+      const fetchJson = await fetchRes.json();
+      if (fetchJson.batches) setBatches(fetchJson.batches);
+    } catch (err: any) {
+      showError(err, 'Error updating batch timings');
+    } finally {
+      setSavingBatchTimings(false);
+    }
   };
 
   // Calendar Day Form
@@ -1686,14 +2029,24 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
   const isStaffLoggedIn = user && (user.role === 'ADMIN' || (user as any).role === 'TRAINER');
 
   useEffect(() => {
-    if (isStaffLoggedIn) {
-      fetchStats();
-      fetchBatches();
-      fetchStudents();
-      fetchActivities();
-      fetchConfiguredLevels();
-      fetchPageSettings();
-    }
+    let ignore = false;
+    const loadInitialStaffData = async () => {
+      if (!isStaffLoggedIn || ignore) return;
+      await Promise.allSettled([
+        fetchStats(),
+        fetchBatches(),
+        fetchStudents(),
+        fetchActivities(),
+        fetchConfiguredLevels(),
+        fetchPageSettings(),
+        fetchAttendanceSettings(),
+        fetchWatchdogReport(),
+      ]);
+    };
+    loadInitialStaffData();
+    return () => {
+      ignore = true;
+    };
   }, [user]);
 
   useEffect(() => {
@@ -1787,6 +2140,23 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
     }
   };
 
+
+  const fetchWatchdogReport = async (runNow: boolean = false) => {
+    setLoadingWatchdog(true);
+    try {
+      const res = await fetch(`/api/cron/morning-watchdog${runNow ? '?runNow=true' : ''}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.report) {
+          setWatchdogReport(data.report);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching morning watchdog report', e);
+    } finally {
+      setLoadingWatchdog(false);
+    }
+  };
 
   const fetchStats = async () => {
     setLoadingStats(true);
@@ -2212,9 +2582,13 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
           </div>
 
           {errorMsg && (
-            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-              <span>{errorMsg}</span>
+            <div className="mb-5">
+              <EnterpriseAlert
+                type="error"
+                message={errorMsg}
+                onDismiss={() => setErrorMsg('')}
+                durationMs={7000}
+              />
             </div>
           )}
 
@@ -2519,44 +2893,80 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
             </div>
 
           {errorMsg && (
-            <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-sm flex items-center justify-between gap-3 shadow-xs animate-in fade-in duration-150">
-              <div className="flex items-center gap-3 min-w-0">
-                <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
-                <span>{errorMsg}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setErrorMsg('')}
-                className="p-1 text-red-500 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors shrink-0 cursor-pointer"
-                title="Dismiss alert"
-                aria-label="Dismiss alert"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+            <EnterpriseAlert
+              type="error"
+              message={errorMsg}
+              onDismiss={() => setErrorMsg('')}
+              durationMs={7000}
+            />
           )}
 
           {successMsg && (
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center justify-between gap-3 shadow-xs animate-in fade-in duration-150">
-              <div className="flex items-center gap-3 min-w-0">
-                <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
-                <span>{successMsg}</span>
+            <EnterpriseAlert
+              type="success"
+              message={successMsg}
+              onDismiss={() => setSuccessMsg('')}
+              durationMs={4500}
+            />
+          )}
+
+          {/* Morning Watchdog Alert Banner (Early Warning before classes start) */}
+          {watchdogReport && (!watchdogReport.allHealthy || watchdogReport.criticalCount > 0) && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border border-rose-300 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-xl bg-rose-100 text-rose-700 shrink-0 mt-0.5 sm:mt-0 shadow-xs">
+                  <AlertTriangle className="w-5 h-5 text-rose-600" />
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-rose-950 flex items-center gap-2">
+                    Morning Watchdog Alert: Pre-Class Subsystem Issues Detected
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-200 text-rose-900 border border-rose-300">
+                      {watchdogReport.criticalCount > 0 ? `${watchdogReport.criticalCount} Critical` : `${watchdogReport.warningCount} Warnings`}
+                    </span>
+                  </div>
+                  <p className="text-xs text-rose-800/90 font-medium mt-0.5">
+                    {watchdogReport.subsystems?.googleDrive?.status === 'CRITICAL'
+                      ? 'Google Drive backup is disconnected. Student upload mirrors will fail until reconnected.'
+                      : 'One or more core services require admin attention before classes start at 8:30 AM.'}
+                  </p>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setSuccessMsg('')}
-                className="p-1 text-emerald-600 hover:text-emerald-900 hover:bg-emerald-100 rounded-lg transition-colors shrink-0 cursor-pointer"
-                title="Dismiss alert"
-                aria-label="Dismiss alert"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2 shrink-0">
+                {watchdogReport.subsystems?.googleDrive?.status === 'CRITICAL' && (
+                  <button
+                    onClick={() => {
+                      setStaffTab('settings');
+                      setSettingsSectionTab('drive');
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                  >
+                    Reconnect Drive
+                  </button>
+                )}
+                <button
+                  onClick={() => setStaffTab('overview')}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-rose-50 text-rose-800 border border-rose-300 shadow-xs transition-all cursor-pointer"
+                >
+                  View Details
+                </button>
+              </div>
             </div>
           )}
 
       {/* SUB-TAB 1: EXECUTIVE OVERVIEW */}
       {staffTab === 'overview' && (
         <div className="space-y-6">
+          {/* Morning Watchdog Card */}
+          <MorningWatchdogCard
+            report={watchdogReport}
+            loading={loadingWatchdog}
+            onRunAudit={() => fetchWatchdogReport(true)}
+            onNavigateToDrive={() => {
+              setStaffTab('settings');
+              setSettingsSectionTab('drive');
+            }}
+          />
+
           {loadingStats && !stats ? (
             <StatsCardsSkeleton count={3} />
           ) : (
@@ -3664,6 +4074,127 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                 />
               </div>
 
+              {/* Field 9: Batch Attendance Settings */}
+              <div className="p-4 rounded-2xl bg-purple-50/70 border border-purple-200 space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-purple-200/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-purple-700" />
+                    <span className="text-xs font-extrabold text-purple-950 uppercase tracking-wide">
+                      Attendance Window Schedule
+                    </span>
+                  </div>
+
+                  {/* Toggle: Follow Default vs Batch Attendance Settings */}
+                  <div className="inline-flex p-1 rounded-xl bg-purple-200/70 border border-purple-300 text-xs font-bold shadow-2xs self-start sm:self-auto">
+                    <button
+                      type="button"
+                      onClick={() => setCreateAttendanceMode('default')}
+                      className={`px-3 py-1.5 rounded-lg transition-all text-xs font-bold cursor-pointer flex items-center gap-1.5 ${
+                        createAttendanceMode === 'default'
+                          ? 'bg-purple-700 text-white shadow-xs'
+                          : 'text-purple-900 hover:text-purple-950 hover:bg-purple-100/60'
+                      }`}
+                    >
+                      <CheckCircle2 className={`w-3.5 h-3.5 ${createAttendanceMode === 'default' ? 'text-white' : 'text-purple-600'}`} />
+                      <span>Follow Default</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCreateAttendanceMode('custom')}
+                      className={`px-3 py-1.5 rounded-lg transition-all text-xs font-bold cursor-pointer flex items-center gap-1.5 ${
+                        createAttendanceMode === 'custom'
+                          ? 'bg-purple-700 text-white shadow-xs'
+                          : 'text-purple-900 hover:text-purple-950 hover:bg-purple-100/60'
+                      }`}
+                    >
+                      <Clock className={`w-3.5 h-3.5 ${createAttendanceMode === 'custom' ? 'text-white' : 'text-purple-600'}`} />
+                      <span>Custom Timings</span>
+                    </button>
+                  </div>
+                </div>
+
+                {createAttendanceMode === 'default' ? (
+                  <div className="p-3.5 rounded-xl bg-white border border-purple-200/90 shadow-2xs space-y-2.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Following System Default Attendance Settings</span>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-purple-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200 self-start sm:self-auto">
+                        FN: {settingsFnStart || '08:30'}–{settingsFnCutoff || '09:00'} | AN: {settingsAnStart || '12:40'}–{settingsAnCutoff || '13:10'}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
+                      Students in this batch will automatically adhere to the global system attendance schedule. Any future modifications in Admin Attendance Settings will apply dynamically without manual updates.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-[11px] text-slate-600 font-medium">
+                      Configure custom morning (FN) and afternoon (AN) attendance marking windows specifically for students in this batch:
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                      {/* Morning (FN) */}
+                      <div className="p-3 rounded-xl bg-white border border-purple-100 shadow-2xs space-y-2">
+                        <span className="text-[11px] font-bold text-purple-900 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-purple-600"></span>
+                          Morning (FN) Session
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Start Time</label>
+                            <input
+                              type="time"
+                              value={createFnStart}
+                              onChange={(e) => setCreateFnStart(e.target.value)}
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-slate-800 bg-purple-50/30"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Cutoff Time</label>
+                            <input
+                              type="time"
+                              value={createFnCutoff}
+                              onChange={(e) => setCreateFnCutoff(e.target.value)}
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-purple-950 bg-purple-50/30"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Afternoon (AN) */}
+                      <div className="p-3 rounded-xl bg-white border border-purple-100 shadow-2xs space-y-2">
+                        <span className="text-[11px] font-bold text-purple-900 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-purple-600"></span>
+                          Afternoon (AN) Session
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Start Time</label>
+                            <input
+                              type="time"
+                              value={createAnStart}
+                              onChange={(e) => setCreateAnStart(e.target.value)}
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-slate-800 bg-purple-50/30"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-slate-500 mb-1">Cutoff Time</label>
+                            <input
+                              type="time"
+                              value={createAnCutoff}
+                              onChange={(e) => setCreateAnCutoff(e.target.value)}
+                              className="w-full pro-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-purple-950 bg-purple-50/30"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* GENERATED TRAINING CALENDAR & DEFAULT CURRICULUM PREVIEW TABLE */}
               <div className="pt-2 space-y-2">
                 <div className="flex items-center justify-between">
@@ -4755,6 +5286,18 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <span>Save Attendance Settings</span>
                 </button>
               )}
+
+              {settingsSectionTab === 'accessControl' && (
+                <button
+                  type="button"
+                  disabled={savingAccessSettings}
+                  onClick={handleSaveAccessSettings}
+                  className="py-2.5 px-5 rounded-xl pro-button-primary text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 hover:scale-[1.01] transition-all cursor-pointer"
+                >
+                  {savingAccessSettings ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  <span>Save Access Control</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -4804,6 +5347,23 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               <ExternalLink className="w-4 h-4" />
               <span>Google Drive Storage Settings</span>
               <span className={`w-2 h-2 rounded-full ml-0.5 ${driveStorageInfo?.isConnected ? 'bg-emerald-500' : driveStorageInfo?.hasConnectionRecord ? 'bg-amber-500' : 'bg-rose-400'}`} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSettingsSectionTab('accessControl');
+                fetchAccessSettings();
+              }}
+              className={`py-2.5 px-5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                settingsSectionTab === 'accessControl'
+                  ? 'bg-purple-900 text-white shadow-md'
+                  : 'bg-purple-50/70 text-slate-700 hover:bg-purple-100/80 border border-purple-200/70'
+              }`}
+            >
+              <Shield className="w-4 h-4" />
+              <span>Campus Geofence & WiFi Security</span>
+              <span className={`w-2 h-2 rounded-full ml-0.5 ${accessGeofenceEnabled || accessWifiEnabled ? 'bg-emerald-500' : 'bg-slate-400'}`} />
             </button>
           </div>
 
@@ -5435,6 +5995,465 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
               </div>
             </div>
           )}
+
+          {/* TAB 4: ACCESS CONTROL (CAMPUS GEOFENCING & WIFI NETWORK RESTRICTIONS) */}
+          {settingsSectionTab === 'accessControl' && (
+            <div className="space-y-6">
+              <div className="pro-card rounded-2xl p-5 bg-purple-50/70 border border-purple-200 text-xs text-purple-950 leading-relaxed font-medium flex items-start gap-3">
+                <Shield className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+                <div>
+                  <strong className="block font-bold text-slate-900 mb-0.5">Enterprise Physical Campus Geofencing & Academy WiFi Security</strong>
+                  Ensure students can only authenticate and mark daily attendance when physically present inside the designated campus perimeter and connected to authorized academy WiFi networks. Includes a dedicated Localhost Testing Bypass so development workflows remain completely uninterrupted.
+                </div>
+              </div>
+
+              {accessSaveMsg && (
+                <div
+                  className={`p-4 rounded-2xl border text-xs font-bold flex items-center gap-2.5 ${
+                    accessSaveMsg.type === 'success'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : 'bg-rose-50 text-rose-800 border-rose-300'
+                  }`}
+                >
+                  {accessSaveMsg.type === 'success' ? (
+                    <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 shrink-0 text-rose-600" />
+                  )}
+                  <span>{accessSaveMsg.text}</span>
+                </div>
+              )}
+
+              {loadingAccessSettings ? (
+                <div className="py-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
+                  <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
+                  <span className="text-xs font-bold text-slate-700">Loading access control policy...</span>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* CARD 1: PHYSICAL CAMPUS GEOFENCING */}
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200/90 shadow-sm space-y-6">
+                    <div className="flex items-center justify-between border-b border-purple-100 pb-4 flex-wrap gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700">
+                          <MapPin className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-extrabold text-slate-900">Physical Campus Geofencing</h3>
+                          <p className="text-xs text-slate-500">
+                            Enforce GPS location boundaries using W3C Geolocation and Haversine spherical distance calculation
+                          </p>
+                        </div>
+                      </div>
+
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={accessGeofenceEnabled}
+                          onChange={(e) => setAccessGeofenceEnabled(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-900"></div>
+                        <span className="ml-3 text-xs font-bold text-slate-700">
+                          {accessGeofenceEnabled ? (
+                            <span className="text-purple-900 font-extrabold">Active</span>
+                          ) : (
+                            <span className="text-slate-400">Disabled</span>
+                          )}
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Campus Center Latitude</span>
+                            <span className="text-[10px] text-slate-400 font-mono font-normal">Decimal (-90 to 90)</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="e.g. 13.082680"
+                            value={accessCampusLat}
+                            onChange={(e) => setAccessCampusLat(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                          />
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Campus Center Longitude</span>
+                            <span className="text-[10px] text-slate-400 font-mono font-normal">Decimal (-180 to 180)</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="e.g. 80.270718"
+                            value={accessCampusLng}
+                            onChange={(e) => setAccessCampusLng(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 pt-1">
+                        <button
+                          type="button"
+                          disabled={capturingLocation}
+                          onClick={handleCaptureAdminCoordinates}
+                          className="py-2 px-4 rounded-xl bg-purple-50 border border-purple-300 text-purple-900 text-xs font-bold hover:bg-purple-100 transition-colors flex items-center gap-2 cursor-pointer shadow-2xs"
+                        >
+                          {capturingLocation ? (
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Navigation className="w-3.5 h-3.5" />
+                          )}
+                          <span>Capture My Current Coordinates</span>
+                        </button>
+                        {locationCaptureSuccess && (
+                          <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
+                            {locationCaptureSuccess}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 pt-2 border-t border-purple-100">
+                        <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                          <span>Allowed Campus Radius (Meters)</span>
+                          <span className="text-xs font-extrabold text-purple-900 font-mono">{accessRadiusMeters} meters</span>
+                        </label>
+                        <input
+                          type="number"
+                          min="10"
+                          max="5000"
+                          value={accessRadiusMeters}
+                          onChange={(e) => setAccessRadiusMeters(parseInt(e.target.value, 10) || 150)}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                        />
+                        <div className="flex flex-wrap items-center gap-2 pt-1">
+                          <span className="text-[11px] font-bold text-slate-500">Presets:</span>
+                          {[
+                            { label: '50m (Lab Room)', val: 50 },
+                            { label: '150m (Department Wing)', val: 150 },
+                            { label: '300m (Academic Block)', val: 300 },
+                            { label: '500m (Entire Campus)', val: 500 },
+                          ].map((p) => (
+                            <button
+                              key={p.val}
+                              type="button"
+                              onClick={() => setAccessRadiusMeters(p.val)}
+                              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                                accessRadiusMeters === p.val
+                                  ? 'bg-purple-900 text-white'
+                                  : 'bg-purple-50 text-purple-900 border border-purple-200 hover:bg-purple-100'
+                              }`}
+                            >
+                              {p.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CARD 2: ACADEMY WIFI NETWORK WHITELIST */}
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200/90 shadow-sm space-y-6">
+                    <div className="flex items-center justify-between border-b border-purple-100 pb-4 flex-wrap gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700">
+                          <Wifi className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-extrabold text-slate-900">Academy WiFi Network Verification</h3>
+                          <p className="text-xs text-slate-500">
+                            Configure the official WiFi network name and router egress IPs required for attendance
+                          </p>
+                        </div>
+                      </div>
+
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={accessWifiEnabled}
+                          onChange={(e) => setAccessWifiEnabled(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-900"></div>
+                        <span className="ml-3 text-xs font-bold text-slate-700">
+                          {accessWifiEnabled ? (
+                            <span className="text-purple-900 font-extrabold">Active</span>
+                          ) : (
+                            <span className="text-slate-400">Disabled</span>
+                          )}
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="space-y-5">
+                      {/* 1-CLICK EASY SETUP ASSISTANT */}
+                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-purple-50 via-indigo-50/40 to-purple-50/60 border border-purple-200 space-y-3.5">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-purple-700" />
+                            <span className="text-xs font-extrabold text-purple-950 uppercase tracking-wider">
+                              1-Click Easy WiFi Setup
+                            </span>
+                          </div>
+                          {accessCurrentDetectedIp && (
+                            <div className="flex items-center gap-2">
+                              {accessAllowedIps && accessAllowedIps.includes(accessCurrentDetectedIp) ? (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                  <span>Current IP Matches Whitelist</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                                  <AlertCircle className="w-3 h-3 text-amber-600" />
+                                  <span>Current IP Not in Whitelist</span>
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        <p className="text-xs text-slate-600 leading-relaxed">
+                          Connect your laptop or mobile to your <strong>Academy WiFi router</strong> right now, then click the button below. The system will automatically detect your router's egress IP and configure the network restrictions for you.
+                        </p>
+
+                        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                          <div className="space-y-0.5">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Your Current Detected Network IP:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-extrabold font-mono text-purple-950 bg-white/80 px-2.5 py-1 rounded-lg border border-purple-200 inline-block shadow-2xs">
+                                {accessCurrentDetectedIp || 'Resolving caller IP...'}
+                              </span>
+                              {(accessCurrentDetectedIp === '::1' || accessCurrentDetectedIp === '127.0.0.1' || accessCurrentDetectedIp.startsWith('127.')) && (
+                                <span className="text-[10px] font-bold text-purple-700 bg-purple-100/90 px-2 py-0.5 rounded-md border border-purple-200">
+                                  Localhost (::1)
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            {(accessCurrentDetectedIp === '::1' || accessCurrentDetectedIp === '127.0.0.1' || accessCurrentDetectedIp.startsWith('127.')) && (
+                              <button
+                                type="button"
+                                onClick={handleFetchPublicWanIp}
+                                disabled={fetchingPublicIp}
+                                className="py-2 px-3 rounded-xl bg-indigo-50 border border-indigo-300 text-indigo-900 font-bold text-xs hover:bg-indigo-100 transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                              >
+                                {fetchingPublicIp ? (
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Globe className="w-3.5 h-3.5" />
+                                )}
+                                <span>Fetch Real Public Router IP</span>
+                              </button>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={handleOneClickSetWifi}
+                              disabled={!accessCurrentDetectedIp}
+                              className="py-2 px-3.5 rounded-xl bg-purple-900 text-white font-extrabold text-xs hover:bg-purple-800 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                            >
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span>Set Current Network as Academy WiFi</span>
+                            </button>
+
+                            {accessCurrentDetectedIp && (
+                              <button
+                                type="button"
+                                onClick={handleAddCurrentIp}
+                                className="py-2 px-3 rounded-xl bg-white border border-purple-300 text-purple-900 font-bold text-xs hover:bg-purple-50 transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                                <span>Add IP</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {wifiSetupSuccessMsg && (
+                          <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span>{wifiSetupSuccessMsg}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* FIELD 1: OFFICIAL WIFI NAME (SSID) */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <Wifi className="w-3.5 h-3.5 text-purple-700" />
+                            <span>Official WiFi Network Name (SSID)</span>
+                          </span>
+                          <span className="text-[10px] text-purple-800 bg-purple-100/70 px-2 py-0.5 rounded font-semibold">
+                            Shown to students
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. ARVR-Academy-5G or Campus-Lab-WiFi"
+                          value={accessWifiSsid}
+                          onChange={(e) => setAccessWifiSsid(e.target.value)}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                        />
+                        <p className="text-[11px] text-slate-500 leading-relaxed">
+                          Students will see this exact name on their sign-in & attendance screens (e.g., <em>"Please connect to {accessWifiSsid || 'ARVR-Academy-WiFi'} to mark attendance"</em>).
+                        </p>
+                      </div>
+
+                      {/* FIELD 2: ALLOWED ROUTER EGRESS IPS OR CIDR SUBNETS */}
+                      <div className="space-y-1.5 pt-1">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <label className="text-xs font-bold text-slate-700">
+                            Allowed Router Egress Public IPs or CIDR Subnets
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={handleSetOnlyCurrentIp}
+                              disabled={!accessCurrentDetectedIp}
+                              className="text-[10px] font-bold text-purple-800 hover:text-purple-950 underline cursor-pointer disabled:opacity-50"
+                            >
+                              Lock Only to My IP
+                            </button>
+                            <span className="text-slate-300">•</span>
+                            <button
+                              type="button"
+                              onClick={handleAddSubnetPreset}
+                              disabled={!accessCurrentDetectedIp}
+                              className="text-[10px] font-bold text-purple-800 hover:text-purple-950 underline cursor-pointer disabled:opacity-50"
+                            >
+                              + Add /24 Subnet Block
+                            </button>
+                          </div>
+                        </div>
+                        <textarea
+                          rows={2}
+                          placeholder="e.g. 103.21.244.15, 122.164.88.0/24, 49.207.210.15"
+                          value={accessAllowedIps}
+                          onChange={(e) => setAccessAllowedIps(e.target.value)}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+                        />
+                        <p className="text-[11px] text-slate-500 leading-relaxed">
+                          <strong>Why router egress IP?</strong> Web browsers intentionally prevent web applications from querying private local WiFi network names (SSIDs) to protect user privacy. Whitelisting your academy's external router egress IP or CIDR block reliably guarantees student devices are actively routed through this WiFi.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CARD 3: ENFORCEMENT SCOPE & LOCALHOST TESTING BYPASS */}
+                  <div className="pro-card rounded-3xl p-6 bg-white border border-purple-200/90 shadow-sm space-y-6">
+                    <div className="border-b border-purple-100 pb-4">
+                      <h3 className="text-base font-extrabold text-slate-900">Enforcement Scope & Localhost Testing Mode</h3>
+                      <p className="text-xs text-slate-500">
+                        Choose which student actions require geofence/WiFi verification, and toggle safe localhost development mode
+                      </p>
+                    </div>
+
+                    <div className="space-y-5">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-700 block">Enforcement Scope</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          {[
+                            {
+                              id: 'LOGIN_AND_ATTENDANCE',
+                              title: 'Both Login & Attendance',
+                              desc: 'Enforce restrictions on both student portal sign-in and attendance recording.',
+                            },
+                            {
+                              id: 'LOGIN_ONLY',
+                              title: 'Student Login Only',
+                              desc: 'Only check network & location at the moment of sign in.',
+                            },
+                            {
+                              id: 'ATTENDANCE_ONLY',
+                              title: 'Attendance Only',
+                              desc: 'Allow login anywhere, but require campus WiFi & location to record attendance.',
+                            },
+                          ].map((scopeOption) => (
+                            <label
+                              key={scopeOption.id}
+                              onClick={() => setAccessScope(scopeOption.id as any)}
+                              className={`p-4 rounded-2xl border text-left cursor-pointer transition-all ${
+                                accessScope === scopeOption.id
+                                  ? 'bg-purple-50/80 border-purple-900 shadow-2xs'
+                                  : 'bg-white border-purple-200/70 hover:border-purple-300'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <input
+                                  type="radio"
+                                  name="accessScope"
+                                  value={scopeOption.id}
+                                  checked={accessScope === scopeOption.id}
+                                  onChange={() => setAccessScope(scopeOption.id as any)}
+                                  className="text-purple-900 focus:ring-purple-700"
+                                />
+                                <span className="text-xs font-extrabold text-slate-900">{scopeOption.title}</span>
+                              </div>
+                              <p className="text-[11px] text-slate-500 leading-snug pl-5">{scopeOption.desc}</p>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Localhost Bypass Toggle */}
+                      <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/90 flex items-start justify-between gap-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-extrabold text-amber-950">
+                              Allow Localhost Testing Bypass (<code className="font-mono text-purple-950">127.0.0.1</code> / <code className="font-mono text-purple-950">localhost</code>)
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900">
+                              Safe For Local Testing
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-amber-800 leading-relaxed font-medium">
+                            When enabled, requests originating from your local machine bypass IP subnet restrictions and allow empty coordinates so you can test features on localhost without being locked out. Once fully tested, you can leave it enabled or toggle it off before production deployment.
+                          </p>
+                        </div>
+
+                        <label className="relative inline-flex items-center cursor-pointer shrink-0 mt-1">
+                          <input
+                            type="checkbox"
+                            checked={accessAllowLocalhost}
+                            onChange={(e) => setAccessAllowLocalhost(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-900"></div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM ACTION BUTTON */}
+                  <div className="pro-card rounded-2xl p-4 bg-white border border-purple-200 flex items-center justify-between shadow-sm flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => handleTabSwitch('batches')}
+                      className="py-2.5 px-5 rounded-xl bg-purple-50 border border-purple-200 text-slate-700 text-xs font-bold hover:bg-purple-100 transition-colors cursor-pointer"
+                    >
+                      Back to Batches
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={savingAccessSettings}
+                      onClick={handleSaveAccessSettings}
+                      className="py-2.5 px-6 rounded-xl pro-button-primary text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 hover:scale-[1.01] transition-all cursor-pointer"
+                    >
+                      {savingAccessSettings ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                      <span>Save Access Control Policy</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -5537,6 +6556,296 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   <strong className="text-indigo-700 font-bold">{selectedBatchDetail.curriculumStatus || 'Not Set'}</strong>
                 </div>
               </div>
+
+              {/* Attendance Window Timings Section */}
+              {(() => {
+                const hasCustomTimings = Boolean(selectedBatchDetail.fnStartTime || selectedBatchDetail.fnCutoffTime || selectedBatchDetail.anStartTime || selectedBatchDetail.anCutoffTime);
+                const isFnInverted = Boolean(selectedBatchDetail.fnStartTime && selectedBatchDetail.fnCutoffTime && selectedBatchDetail.fnStartTime >= selectedBatchDetail.fnCutoffTime);
+                const isAnInverted = Boolean(selectedBatchDetail.anStartTime && selectedBatchDetail.anCutoffTime && selectedBatchDetail.anStartTime >= selectedBatchDetail.anCutoffTime);
+
+                const editFnInverted = Boolean(editBatchAttendanceMode === 'custom' && editBatchFnStart && editBatchFnCutoff && editBatchFnStart >= editBatchFnCutoff);
+                const editAnInverted = Boolean(editBatchAttendanceMode === 'custom' && editBatchAnStart && editBatchAnCutoff && editBatchAnStart >= editBatchAnCutoff);
+
+                return (
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-purple-50/80 to-indigo-50/80 border border-purple-200 space-y-3">
+                    <div className="flex items-center justify-between border-b border-purple-200/70 pb-2">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-purple-700" />
+                        <span className="font-extrabold text-purple-950 text-xs">
+                          Attendance Window Schedule
+                        </span>
+                        {!isEditingBatchTimings && (
+                          hasCustomTimings ? (
+                            <span className="text-[10px] font-bold text-purple-900 bg-purple-100/90 px-2 py-0.5 rounded-md border border-purple-300">
+                              Custom Timings
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-md border border-emerald-300">
+                              Follow Default
+                            </span>
+                          )
+                        )}
+                      </div>
+                      {!isEditingBatchTimings && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditBatchAttendanceMode(hasCustomTimings ? 'custom' : 'default');
+                            setEditBatchFnStart(selectedBatchDetail.fnStartTime || settingsFnStart || '08:30');
+                            setEditBatchFnCutoff(selectedBatchDetail.fnCutoffTime || settingsFnCutoff || '09:00');
+                            if (isAnInverted) {
+                              // Automatically auto-swap to correct order when opening edit
+                              setEditBatchAnStart(selectedBatchDetail.anCutoffTime);
+                              setEditBatchAnCutoff(selectedBatchDetail.anStartTime);
+                            } else {
+                              setEditBatchAnStart(selectedBatchDetail.anStartTime || settingsAnStart || '12:40');
+                              setEditBatchAnCutoff(selectedBatchDetail.anCutoffTime || settingsAnCutoff || '13:10');
+                            }
+                            setIsEditingBatchTimings(true);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-white border border-purple-200 text-purple-700 hover:text-purple-900 text-[10px] font-bold shadow-2xs transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <Edit className="w-3 h-3" />
+                          <span>Edit Timings</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {!isEditingBatchTimings ? (
+                      <div className="space-y-2 text-xs">
+                        {(isFnInverted || isAnInverted) && (
+                          <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-[11px] font-semibold flex items-center justify-between gap-2 shadow-2xs">
+                            <div className="flex items-center gap-1.5">
+                              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                              <span>
+                                {isAnInverted
+                                  ? `Invalid Afternoon Window (${selectedBatchDetail.anStartTime} – ${selectedBatchDetail.anCutoffTime}): Start time is after Cutoff time!`
+                                  : 'Invalid Morning Window: Start time is after Cutoff time!'}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditBatchAttendanceMode('custom');
+                                setEditBatchFnStart(selectedBatchDetail.fnStartTime || settingsFnStart || '08:30');
+                                setEditBatchFnCutoff(selectedBatchDetail.fnCutoffTime || settingsFnCutoff || '09:00');
+                                if (isAnInverted) {
+                                  setEditBatchAnStart(selectedBatchDetail.anCutoffTime);
+                                  setEditBatchAnCutoff(selectedBatchDetail.anStartTime);
+                                } else {
+                                  setEditBatchAnStart(selectedBatchDetail.anStartTime || settingsAnStart || '12:40');
+                                  setEditBatchAnCutoff(selectedBatchDetail.anCutoffTime || settingsAnCutoff || '13:10');
+                                }
+                                setIsEditingBatchTimings(true);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] shrink-0 transition-colors shadow-2xs cursor-pointer"
+                            >
+                              Fix Timings
+                            </button>
+                          </div>
+                        )}
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Morning (FN) Window:</span>
+                          <strong className={`font-mono px-2 py-0.5 rounded-md border text-[11px] flex items-center gap-1.5 ${
+                            isFnInverted ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-white text-purple-950 border-purple-200'
+                          }`}>
+                            <span>
+                              {selectedBatchDetail.fnStartTime || settingsFnStart || '08:30'} ({formatTime12Hour(selectedBatchDetail.fnStartTime || settingsFnStart || '08:30')}) – {selectedBatchDetail.fnCutoffTime || settingsFnCutoff || '09:00'} ({formatTime12Hour(selectedBatchDetail.fnCutoffTime || settingsFnCutoff || '09:00')})
+                            </span>
+                            {!selectedBatchDetail.fnStartTime && <span className="text-[10px] font-sans font-semibold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">(Default)</span>}
+                            {isFnInverted && <span className="text-[10px] font-sans font-bold text-rose-700 bg-rose-100 px-1 py-0.2 rounded border border-rose-300">Invalid</span>}
+                          </strong>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Afternoon (AN) Window:</span>
+                          <strong className={`font-mono px-2 py-0.5 rounded-md border text-[11px] flex items-center gap-1.5 ${
+                            isAnInverted ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-white text-purple-950 border-purple-200'
+                          }`}>
+                            <span>
+                              {selectedBatchDetail.anStartTime || settingsAnStart || '12:40'} ({formatTime12Hour(selectedBatchDetail.anStartTime || settingsAnStart || '12:40')}) – {selectedBatchDetail.anCutoffTime || settingsAnCutoff || '13:10'} ({formatTime12Hour(selectedBatchDetail.anCutoffTime || settingsAnCutoff || '13:10')})
+                            </span>
+                            {!selectedBatchDetail.anStartTime && !isAnInverted && <span className="text-[10px] font-sans font-semibold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">(Default)</span>}
+                            {isAnInverted && <span className="text-[10px] font-sans font-bold text-rose-700 bg-rose-100 px-1 py-0.2 rounded border border-rose-300">Invalid</span>}
+                          </strong>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 pt-1">
+                        {/* Toggle: Follow Default vs Custom Timings */}
+                        <div className="flex items-center justify-between gap-2 p-1 bg-purple-100/80 border border-purple-200/90 rounded-xl">
+                          <span className="text-[11px] font-bold text-purple-950 pl-2">Mode:</span>
+                          <div className="inline-flex rounded-lg bg-white/90 p-0.5 border border-purple-200 text-xs font-bold shadow-2xs">
+                            <button
+                              type="button"
+                              onClick={() => setEditBatchAttendanceMode('default')}
+                              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                                editBatchAttendanceMode === 'default'
+                                  ? 'bg-purple-700 text-white shadow-xs'
+                                  : 'text-purple-900 hover:text-purple-950 hover:bg-purple-50'
+                              }`}
+                            >
+                              <CheckCircle2 className={`w-3 h-3 ${editBatchAttendanceMode === 'default' ? 'text-white' : 'text-purple-600'}`} />
+                              <span>Follow Default</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditBatchAttendanceMode('custom')}
+                              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                                editBatchAttendanceMode === 'custom'
+                                  ? 'bg-purple-700 text-white shadow-xs'
+                                  : 'text-purple-900 hover:text-purple-950 hover:bg-purple-50'
+                              }`}
+                            >
+                              <Clock className={`w-3 h-3 ${editBatchAttendanceMode === 'custom' ? 'text-white' : 'text-purple-600'}`} />
+                              <span>Custom Timings</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {editBatchAttendanceMode === 'default' ? (
+                          <div className="p-3 rounded-xl bg-white border border-purple-200 space-y-2 text-xs">
+                            <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
+                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                              <span>Follow Default Attendance Settings</span>
+                            </div>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
+                              This batch will dynamically inherit the institution&apos;s default attendance window timings (FN: {settingsFnStart || '08:30'} ({formatTime12Hour(settingsFnStart || '08:30')}) – {settingsFnCutoff || '09:00'} ({formatTime12Hour(settingsFnCutoff || '09:00')}) | AN: {settingsAnStart || '12:40'} ({formatTime12Hour(settingsAnStart || '12:40')}) – {settingsAnCutoff || '13:10'} ({formatTime12Hour(settingsAnCutoff || '13:10')})). Any modifications saved in Settings &gt; Attendance will apply automatically.
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="space-y-2.5">
+                            {(editFnInverted || editAnInverted) && (
+                              <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-[11px] font-semibold space-y-1.5">
+                                {editFnInverted && (
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span>⚠️ Morning Start ({editBatchFnStart}) cannot be later than Cutoff ({editBatchFnCutoff})</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const temp = editBatchFnStart;
+                                        setEditBatchFnStart(editBatchFnCutoff);
+                                        setEditBatchFnCutoff(temp);
+                                      }}
+                                      className="px-2 py-0.5 rounded bg-rose-200 hover:bg-rose-300 text-rose-900 font-bold text-[10px] flex items-center gap-1 cursor-pointer"
+                                    >
+                                      <ArrowLeftRight className="w-3 h-3" />
+                                      <span>Swap FN</span>
+                                    </button>
+                                  </div>
+                                )}
+                                {editAnInverted && (
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span>⚠️ Afternoon Start ({editBatchAnStart}) cannot be later than Cutoff ({editBatchAnCutoff})</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const temp = editBatchAnStart;
+                                        setEditBatchAnStart(editBatchAnCutoff);
+                                        setEditBatchAnCutoff(temp);
+                                      }}
+                                      className="px-2 py-0.5 rounded bg-rose-200 hover:bg-rose-300 text-rose-900 font-bold text-[10px] flex items-center gap-1 cursor-pointer"
+                                    >
+                                      <ArrowLeftRight className="w-3 h-3" />
+                                      <span>Swap AN</span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="bg-white p-2.5 rounded-xl border border-purple-200 space-y-1.5">
+                                <span className="text-[10px] font-bold text-purple-900 block border-b border-purple-100 pb-1">
+                                  Morning (FN) Session
+                                </span>
+                                <div className="space-y-1.5">
+                                  <div>
+                                    <div className="flex justify-between items-center mb-0.5">
+                                      <label className="text-[9px] font-bold text-slate-500">Start Time</label>
+                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchFnStart)}</span>
+                                    </div>
+                                    <input
+                                      type="time"
+                                      value={editBatchFnStart}
+                                      onChange={(e) => setEditBatchFnStart(e.target.value)}
+                                      className="w-full pro-input rounded-md px-2 py-1 text-[11px] font-mono font-bold"
+                                    />
+                                  </div>
+                                  <div>
+                                    <div className="flex justify-between items-center mb-0.5">
+                                      <label className="text-[9px] font-bold text-slate-500">Cutoff Time</label>
+                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchFnCutoff)}</span>
+                                    </div>
+                                    <input
+                                      type="time"
+                                      value={editBatchFnCutoff}
+                                      onChange={(e) => setEditBatchFnCutoff(e.target.value)}
+                                      className="w-full pro-input rounded-md px-2 py-1 text-[11px] font-mono font-bold"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="bg-white p-2.5 rounded-xl border border-purple-200 space-y-1.5">
+                                <span className="text-[10px] font-bold text-purple-900 block border-b border-purple-100 pb-1">
+                                  Afternoon (AN) Session
+                                </span>
+                                <div className="space-y-1.5">
+                                  <div>
+                                    <div className="flex justify-between items-center mb-0.5">
+                                      <label className="text-[9px] font-bold text-slate-500">Start Time</label>
+                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchAnStart)}</span>
+                                    </div>
+                                    <input
+                                      type="time"
+                                      value={editBatchAnStart}
+                                      onChange={(e) => setEditBatchAnStart(e.target.value)}
+                                      className="w-full pro-input rounded-md px-2 py-1 text-[11px] font-mono font-bold"
+                                    />
+                                  </div>
+                                  <div>
+                                    <div className="flex justify-between items-center mb-0.5">
+                                      <label className="text-[9px] font-bold text-slate-500">Cutoff Time</label>
+                                      <span className="text-[9px] font-mono font-bold text-purple-700">{formatTime12Hour(editBatchAnCutoff)}</span>
+                                    </div>
+                                    <input
+                                      type="time"
+                                      value={editBatchAnCutoff}
+                                      onChange={(e) => setEditBatchAnCutoff(e.target.value)}
+                                      className="w-full pro-input rounded-md px-2 py-1 text-[11px] font-mono font-bold"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setIsEditingBatchTimings(false)}
+                            className="flex-1 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            disabled={savingBatchTimings || editFnInverted || editAnInverted}
+                            onClick={handleSaveBatchTimings}
+                            className="flex-1 py-1.5 rounded-lg pro-button-primary text-white text-xs font-bold shadow-xs flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {savingBatchTimings ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                            <span>Save Timings</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="flex gap-3 pt-2">
@@ -5545,7 +6854,7 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                   setShowBatchDetailsModal(false);
                   handleOpenCurriculumModal(selectedBatchDetail);
                 }}
-                className="flex-1 py-2.5 rounded-xl pro-button-primary text-white text-xs font-bold shadow-md flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 rounded-xl pro-button-primary text-white text-xs font-bold shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Configure Curriculum</span>
@@ -8294,19 +9603,33 @@ export default function StaffPortal({ user, onLoginSuccess, branding, onUpdateBr
                         </span>
                         {evaluatingTask.googleDriveFileId && (
                           <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold border border-emerald-300">
-                            Google Drive Verified
+                            Primary: Google Drive
                           </span>
                         )}
                       </div>
-                      <a
-                        href={evaluatingTask.screenshotUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-purple-700 hover:text-purple-950 underline font-mono text-xs flex items-center gap-1 font-bold bg-white px-3 py-1 rounded-xl border border-purple-200 shadow-2xs"
-                      >
-                        <span>[ View Submission ]</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                      <div className="flex items-center gap-2">
+                        {evaluatingTask.googleDriveFileId && (
+                          <a
+                            href={`https://drive.google.com/file/d/${evaluatingTask.googleDriveFileId}/view`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-emerald-700 hover:text-emerald-900 font-mono text-xs flex items-center gap-1 font-bold bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-xl border border-emerald-200 shadow-2xs transition-all"
+                            title="Open directly in Google Drive"
+                          >
+                            <span>Drive Link</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        <a
+                          href={evaluatingTask.screenshotUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-700 hover:text-purple-950 underline font-mono text-xs flex items-center gap-1 font-bold bg-white hover:bg-purple-50 px-3 py-1 rounded-xl border border-purple-200 shadow-2xs transition-all"
+                        >
+                          <span>[ View Submission ]</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 ) : (

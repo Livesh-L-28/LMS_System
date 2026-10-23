@@ -223,3 +223,72 @@ export function isAttendanceMatchingDate(
   return false;
 }
 
+/**
+ * Resolves effective attendance timings for a batch, falling back to global SystemSettings
+ * or program defaults if not configured on the batch.
+ */
+export function resolveBatchAttendanceWindows(
+  batch?: {
+    fnStartTime?: string | null;
+    fnCutoffTime?: string | null;
+    anStartTime?: string | null;
+    anCutoffTime?: string | null;
+  } | null,
+  globalSettings?: Map<string, string>
+): {
+  fnStart: string;
+  fnCutoff: string;
+  anStart: string;
+  anCutoff: string;
+  isCustomBatch: boolean;
+} {
+  const defaultFnStart = globalSettings?.get('FN_START_TIME') || DEFAULT_FN_START;
+  const defaultFnCutoff = globalSettings?.get('FN_CUTOFF') || DEFAULT_FN_CUTOFF;
+  const defaultAnStart = globalSettings?.get('AN_START_TIME') || DEFAULT_AN_START;
+  const defaultAnCutoff = globalSettings?.get('AN_CUTOFF') || DEFAULT_AN_CUTOFF;
+
+  let fnStart = batch?.fnStartTime || defaultFnStart;
+  let fnCutoff = batch?.fnCutoffTime || defaultFnCutoff;
+  let anStart = batch?.anStartTime || defaultAnStart;
+  let anCutoff = batch?.anCutoffTime || defaultAnCutoff;
+
+  // Sanity check: If morning window is inverted (start >= cutoff), self-heal
+  if (fnStart >= fnCutoff) {
+    if (fnCutoff < fnStart && fnCutoff >= '06:00') {
+      const temp = fnStart;
+      fnStart = fnCutoff;
+      fnCutoff = temp;
+    } else {
+      fnStart = defaultFnStart;
+      fnCutoff = defaultFnCutoff;
+    }
+  }
+
+  // Sanity check: If afternoon window is inverted (e.g. 15:09 - 13:10), self-heal
+  if (anStart >= anCutoff) {
+    if (anCutoff < anStart && anCutoff >= '11:00') {
+      const temp = anStart;
+      anStart = anCutoff;
+      anCutoff = temp;
+    } else {
+      anStart = defaultAnStart;
+      anCutoff = defaultAnCutoff;
+    }
+  }
+
+  const isCustomBatch = Boolean(
+    (batch?.fnStartTime && batch.fnStartTime !== defaultFnStart) ||
+    (batch?.fnCutoffTime && batch.fnCutoffTime !== defaultFnCutoff) ||
+    (batch?.anStartTime && batch.anStartTime !== defaultAnStart) ||
+    (batch?.anCutoffTime && batch.anCutoffTime !== defaultAnCutoff)
+  );
+
+  return {
+    fnStart,
+    fnCutoff,
+    anStart,
+    anCutoff,
+    isCustomBatch,
+  };
+}
+

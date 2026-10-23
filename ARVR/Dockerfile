@@ -39,7 +39,7 @@ COPY . .
 # Build-time environment configuration (no production secrets)
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL="postgresql://build_dummy:build_dummy@localhost:5432/build_dummy?schema=public"
+ENV DATABASE_URL="mongodb+srv://build_dummy:build_dummy@cluster0.dummy.mongodb.net/build_dummy?retryWrites=true&w=majority"
 ENV SESSION_SECRET="build_time_dummy_session_secret_32chars_min"
 
 # Compile Next.js with standalone output bundle

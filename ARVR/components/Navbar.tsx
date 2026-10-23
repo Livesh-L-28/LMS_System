@@ -16,26 +16,22 @@ interface NavbarProps {
 }
 
 export default function Navbar({ activeTab, setActiveTab, user, onLogout, branding }: NavbarProps) {
-  const [liveBranding, setLiveBranding] = React.useState({
-    pageTitle: branding?.pageTitle || 'AR/VR ACADEMY',
-    pageSubtitle: branding?.pageSubtitle || 'Spatial Computing & Immersive Training Hub',
-    pageBadge: branding?.pageBadge || 'ENTERPRISE',
-  });
+  const [eventBranding, setEventBranding] = React.useState<{
+    pageTitle?: string;
+    pageSubtitle?: string;
+    pageBadge?: string;
+  }>({});
 
-  React.useEffect(() => {
-    if (branding) {
-      setLiveBranding({
-        pageTitle: branding.pageTitle || 'AR/VR ACADEMY',
-        pageSubtitle: branding.pageSubtitle || 'Spatial Computing & Immersive Training Hub',
-        pageBadge: branding.pageBadge || 'ENTERPRISE',
-      });
-    }
-  }, [branding]);
+  const liveBranding = {
+    pageTitle: eventBranding.pageTitle ?? branding?.pageTitle ?? 'AR/VR ACADEMY',
+    pageSubtitle: eventBranding.pageSubtitle ?? branding?.pageSubtitle ?? 'Spatial Computing & Immersive Training Hub',
+    pageBadge: eventBranding.pageBadge ?? branding?.pageBadge ?? 'ENTERPRISE',
+  };
 
   React.useEffect(() => {
     const handleBrandingUpdate = (e: any) => {
       if (e.detail) {
-        setLiveBranding((prev) => ({
+        setEventBranding((prev) => ({
           ...prev,
           pageTitle: e.detail.pageTitle ?? prev.pageTitle,
           pageSubtitle: e.detail.pageSubtitle ?? prev.pageSubtitle,

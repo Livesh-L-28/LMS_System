@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
 import { generateCertificateExcel, CertificateExportRow } from '@/lib/excelExport';
 import { format } from 'date-fns';
+import { isValidObjectId } from '@/lib/validation';
 
 export async function GET(
   request: Request,
@@ -11,6 +12,10 @@ export async function GET(
   try {
     const { batchId } = await params;
     await requireAuth(['ADMIN']);
+
+    if (!isValidObjectId(batchId)) {
+      return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
+    }
 
     const batch = await prisma.batch.findUnique({
       where: { id: batchId },

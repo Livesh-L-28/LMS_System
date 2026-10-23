@@ -4,9 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   GraduationCap, KeyRound, Clock, CheckCircle2, AlertCircle,
   Upload, Send, Award, FileText, BarChart3, UserCheck, Sparkles, RefreshCw, ChevronRight, ExternalLink, BookOpen, Compass, Lock, Layers, Download,
-  Paperclip, ListChecks, X, LogOut
+  Paperclip, ListChecks, X, LogOut, MapPin, Wifi, Shield
 } from 'lucide-react';
 import { StatsCardsSkeleton } from '@/components/LoadingSkeletons';
+import EnterpriseAlert from '@/components/EnterpriseAlert';
 
 interface StudentPortalProps {
   user: any;
@@ -62,8 +63,75 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
   const [curriculumData, setCurriculumData] = useState<any>(null);
   const [loadingCurriculum, setLoadingCurriculum] = useState(false);
 
+  // Access Restriction & Geofencing State
+  const [accessPolicy, setAccessPolicy] = useState<{
+    geofenceEnabled: boolean;
+    wifiEnabled: boolean;
+    wifiSsid?: string;
+    scope: string;
+    clientIp: string;
+    isLocalhost: boolean;
+    wifiPassed: boolean;
+  } | null>(null);
+  const [locatingUser, setLocatingUser] = useState<boolean>(false);
+
+  const fetchAccessPolicy = async () => {
+    try {
+      const res = await fetch('/api/auth/access-status');
+      if (res.ok) {
+        const data = await res.json();
+        setAccessPolicy(data);
+      }
+    } catch (e) {
+      console.warn('Failed to load access status', e);
+    }
+  };
+
+  const getDeviceLocation = (): Promise<{ latitude: number; longitude: number; accuracy: number } | null> => {
+    return new Promise((resolve) => {
+      if (typeof window === 'undefined' || !navigator.geolocation) {
+        resolve(null);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          resolve({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            accuracy: pos.coords.accuracy,
+          });
+        },
+        (err) => {
+          console.warn('Geolocation capture failed or was denied:', err.message);
+          resolve(null);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 15000,
+        }
+      );
+    });
+  };
+
   useEffect(() => {
+    let ignore = false;
     fetchActiveBatches();
+    const loadAccessPolicy = async () => {
+      try {
+        const res = await fetch('/api/auth/access-status');
+        if (res.ok && !ignore) {
+          const data = await res.json();
+          setAccessPolicy(data);
+        }
+      } catch (e) {
+        console.warn('Failed to load access status', e);
+      }
+    };
+    loadAccessPolicy();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -133,10 +201,23 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
     setErrorMsg('');
     setSuccessMsg('');
     try {
+      let coords: { latitude?: number; longitude?: number; accuracy?: number } | null = null;
+      if (accessPolicy?.geofenceEnabled) {
+        setLocatingUser(true);
+        coords = await getDeviceLocation();
+        setLocatingUser(false);
+      }
+
       const res = await fetch('/api/student/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registerNo, pin }),
+        body: JSON.stringify({
+          registerNo,
+          pin,
+          latitude: coords?.latitude,
+          longitude: coords?.longitude,
+          accuracy: coords?.accuracy,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -147,6 +228,7 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
       setErrorMsg(err.message);
     } finally {
       setLoading(false);
+      setLocatingUser(false);
     }
   };
 
@@ -215,8 +297,19 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
     setSuccessMsg('');
     setAttendanceNote(null);
     try {
+      let coords: { latitude?: number; longitude?: number; accuracy?: number } | null = null;
+      if (accessPolicy?.geofenceEnabled) {
+        coords = await getDeviceLocation();
+      }
+
       const res = await fetch(`/api/student/attendance/${session}`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          latitude: coords?.latitude,
+          longitude: coords?.longitude,
+          accuracy: coords?.accuracy,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -265,48 +358,18 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
     try {
       let res;
       if (selectedFile) {
-        // 1. Request S3 Presigned Upload URL from backend
-        const presignedRes = await fetch('/api/student/task/presigned-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            trainingDayId: tDayId,
-            filename: selectedFile.name,
-            fileSize: selectedFile.size,
-            mimeType: selectedFile.type || 'application/octet-stream',
-          }),
-        });
+        // Direct upload to LMS server -> Google Drive Primary Storage
+        const formData = new FormData();
+        formData.append('trainingDayId', tDayId);
+        formData.append('file', selectedFile);
+        formData.append('description', taskDescription);
+        formData.append('originalFilename', selectedFile.name);
+        formData.append('fileSize', selectedFile.size.toString());
+        formData.append('mimeType', selectedFile.type || 'application/octet-stream');
 
-        const presignedData = await presignedRes.json();
-        if (!presignedRes.ok) {
-          throw new Error(presignedData.error || 'Failed to prepare secure upload');
-        }
-
-        // 2. Direct browser-to-S3 PUT upload
-        const s3UploadRes = await fetch(presignedData.uploadUrl, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': selectedFile.type || 'application/octet-stream',
-          },
-          body: selectedFile,
-        });
-
-        if (!s3UploadRes.ok) {
-          throw new Error('Direct upload to cloud storage failed. Please check your connection and try again.');
-        }
-
-        // 3. Confirm submission and store metadata in PostgreSQL
         res = await fetch('/api/student/task/submit', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            trainingDayId: tDayId,
-            s3Key: presignedData.s3Key,
-            originalFilename: selectedFile.name,
-            fileSize: selectedFile.size,
-            mimeType: selectedFile.type || 'application/octet-stream',
-            description: taskDescription,
-          }),
+          body: formData,
         });
       } else {
         res = await fetch('/api/student/task/submit', {
@@ -377,17 +440,75 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
             </div>
           </div>
 
+          {/* Access Policy Verification Badge */}
+          {(accessPolicy?.geofenceEnabled || accessPolicy?.wifiEnabled) && (
+            <div className="mb-5 p-3.5 rounded-2xl bg-purple-50/90 border border-purple-200/90 text-xs text-purple-900 flex items-start gap-3">
+              <Shield className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+              <div className="space-y-1.5 w-full">
+                <div className="font-bold flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span>Campus Network & Geofence Active</span>
+                    {accessPolicy.isLocalhost && (
+                      <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-purple-200 text-purple-800">
+                        Localhost Bypass Active
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <p className="text-[11px] text-purple-700 leading-snug">
+                  {accessPolicy.geofenceEnabled && accessPolicy.wifiEnabled
+                    ? `Student sign-in requires physical presence on campus and connection to "${accessPolicy.wifiSsid || 'Academy WiFi'}".`
+                    : accessPolicy.geofenceEnabled
+                    ? 'Student sign-in requires physical presence within designated campus coordinates.'
+                    : `Student sign-in requires connection to "${accessPolicy.wifiSsid || 'Academy WiFi'}".`}
+                </p>
+
+                {accessPolicy.wifiEnabled && (
+                  <div className="pt-1 flex items-center gap-2 flex-wrap">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold ${
+                      accessPolicy.wifiPassed
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                        : 'bg-amber-100 text-amber-800 border border-amber-300'
+                    }`}>
+                      <Wifi className="w-3.5 h-3.5" />
+                      <span>
+                        {accessPolicy.wifiPassed
+                          ? `Connected to ${accessPolicy.wifiSsid || 'Academy WiFi'}`
+                          : `Please connect to "${accessPolicy.wifiSsid || 'Academy WiFi'}"`}
+                      </span>
+                    </span>
+                  </div>
+                )}
+
+                {locatingUser && (
+                  <p className="text-[11px] text-purple-900 font-semibold flex items-center gap-1.5 pt-0.5">
+                    <RefreshCw className="w-3 h-3 animate-spin text-purple-700" />
+                    <span>Verifying device campus GPS location...</span>
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           {errorMsg && (
-            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-              <span>{errorMsg}</span>
+            <div className="mb-5">
+              <EnterpriseAlert
+                type="error"
+                message={errorMsg}
+                onDismiss={() => setErrorMsg('')}
+                durationMs={7000}
+              />
             </div>
           )}
 
           {successMsg && (
-            <div className="mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
-              <span>{successMsg}</span>
+            <div className="mb-5">
+              <EnterpriseAlert
+                type="success"
+                message={successMsg}
+                onDismiss={() => setSuccessMsg('')}
+                durationMs={4500}
+              />
             </div>
           )}
 
@@ -756,39 +877,21 @@ export default function StudentPortal({ user, onLoginSuccess, onLogout, onSwitch
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-sm flex items-center justify-between gap-3 shadow-xs animate-in fade-in duration-150">
-          <div className="flex items-center gap-3 min-w-0">
-            <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
-            <span>{errorMsg}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setErrorMsg('')}
-            className="p-1 text-red-500 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors shrink-0 cursor-pointer"
-            title="Dismiss alert"
-            aria-label="Dismiss alert"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+        <EnterpriseAlert
+          type="error"
+          message={errorMsg}
+          onDismiss={() => setErrorMsg('')}
+          durationMs={7000}
+        />
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center justify-between gap-3 shadow-xs animate-in fade-in duration-150">
-          <div className="flex items-center gap-3 min-w-0">
-            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
-            <span>{successMsg}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setSuccessMsg('')}
-            className="p-1 text-emerald-600 hover:text-emerald-900 hover:bg-emerald-100 rounded-lg transition-colors shrink-0 cursor-pointer"
-            title="Dismiss alert"
-            aria-label="Dismiss alert"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+        <EnterpriseAlert
+          type="success"
+          message={successMsg}
+          onDismiss={() => setSuccessMsg('')}
+          durationMs={4500}
+        />
       )}
 
       {/* Metrics Row */}

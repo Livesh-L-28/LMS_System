@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
-import { getMidnightDate, DEFAULT_TIMEZONE, getDetailedSessionStatus, getTodayDateString, isAttendanceMatchingDate } from '@/lib/time';
+import { getMidnightDate, DEFAULT_TIMEZONE, getDetailedSessionStatus, getTodayDateString, isAttendanceMatchingDate, resolveBatchAttendanceWindows } from '@/lib/time';
 import { getCachedSystemSettings } from '@/lib/settings';
 
 export async function GET(request: Request) {
@@ -89,10 +89,10 @@ export async function GET(request: Request) {
     const hasAnyAttendance = hasFN || hasAN || hasDayAttendance;
     const isUnlocked = hasAnyAttendance || Boolean(submission);
 
-    const fnStart = settingsMap.get('FN_START_TIME') || '08:45';
-    const fnCutoff = settingsMap.get('FN_CUTOFF') || '09:15';
-    const anStart = settingsMap.get('AN_START_TIME') || '13:00';
-    const anCutoff = settingsMap.get('AN_CUTOFF') || '13:30';
+    const { fnStart, fnCutoff, anStart, anCutoff } = resolveBatchAttendanceWindows(
+      student.batch,
+      settingsMap
+    );
     const now = new Date();
 
     const fnAttendance = todayAttendances.find((a) => a.session === 'FN');

@@ -44,11 +44,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid batch data' }, { status: 400 });
     }
 
-    const { name, batchNo, level, startDate, endDate, trainingDays, status, curriculumStatus } = parsed.data;
+    const {
+      name,
+      batchNo,
+      level,
+      startDate,
+      endDate,
+      trainingDays,
+      status,
+      curriculumStatus,
+      fnStartTime,
+      fnCutoffTime,
+      anStartTime,
+      anCutoffTime,
+    } = parsed.data;
 
     // Check unique batchNo
     if (batchNo) {
-      const existingNo = await prisma.batch.findUnique({ where: { batchNo } });
+      const existingNo = await prisma.batch.findFirst({ where: { batchNo } });
       if (existingNo) {
         return NextResponse.json({ error: `Batch No "${batchNo}" already exists.` }, { status: 409 });
       }
@@ -139,6 +152,10 @@ export async function POST(request: Request) {
         trainingDays,
         status: status || 'ACTIVE',
         curriculumStatus: 'Completed',
+        fnStartTime: fnStartTime || null,
+        fnCutoffTime: fnCutoffTime || null,
+        anStartTime: anStartTime || null,
+        anCutoffTime: anCutoffTime || null,
         trainingCalendar: {
           create: finalCalendarItems,
         },

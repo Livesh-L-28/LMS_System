@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Student {
-  id            String             @id @default(cuid())
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   registerNo    String             @unique
   contactNumber String
@@ -16,7 +16,7 @@ model Student {
   department    String
   year          String
   section       String
-  batchId       String
+  batchId       String             @db.ObjectId
   pinHash       String
   createdAt     DateTime           @default(now())
   attendances   Attendance[]
@@ -32,16 +32,20 @@ model Student {
 }
 
 model Admin {
-  id           String @id @default(cuid())
-  name         String
-  email        String @unique
-  passwordHash String
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  email                String    @unique
+  passwordHash         String
+  twoFactorEnabled     Boolean   @default(false)
+  twoFactorSecret      String?
+  tempTwoFactorCode    String?
+  tempTwoFactorExpires DateTime?
 }
 
 model Batch {
-  id                  String        @id @default(cuid())
+  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
   name                String        @unique
-  batchNo             String?       @unique
+  batchNo             String?
   level               String?       @default("Level 1")
   startDate           DateTime
   endDate             DateTime
@@ -49,13 +53,19 @@ model Batch {
   status              String        @default("ACTIVE")
   curriculumStatus    String?       @default("Not Set")
   googleDriveFolderId String?
+  fnStartTime         String?       @default("08:30")
+  fnCutoffTime        String?       @default("09:00")
+  anStartTime         String?       @default("12:40")
+  anCutoffTime        String?       @default("13:10")
   students            Student[]
   trainingCalendar    TrainingDay[]
+
+  @@index([batchNo])
 }
 
 model TrainingDay {
-  id              String           @id @default(cuid())
-  batchId         String
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  batchId         String           @db.ObjectId
   dayNumber       Int
   date            DateTime
   taskTitle       String
@@ -73,8 +83,8 @@ model TrainingDay {
 }
 
 model Attendance {
-  id        String   @id @default(cuid())
-  studentId String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentId String   @db.ObjectId
   date      DateTime
   session   String
   markedAt  DateTime @default(now())
@@ -86,15 +96,15 @@ model Attendance {
 }
 
 model TaskSubmission {
-  id                  String      @id @default(cuid())
-  studentId           String
-  trainingDayId       String
+  id                  String      @id @default(auto()) @map("_id") @db.ObjectId
+  studentId           String      @db.ObjectId
+  trainingDayId       String      @db.ObjectId
   screenshotUrl       String
   description         String?
   s3Key               String?
   s3Bucket            String?
   s3Region            String?
-  storageProvider     String?     @default("S3")
+  storageProvider     String?     @default("GOOGLE_DRIVE")
   googleDriveFileId   String?
   googleDriveFolderId String?
   originalFilename    String?
@@ -112,13 +122,14 @@ model TaskSubmission {
   @@index([trainingDayId])
   @@index([status])
   @@index([submittedAt])
+  @@index([googleDriveFileId])
   @@index([s3Key])
 }
 
 model Evaluation {
-  id            String         @id @default(cuid())
-  studentId     String
-  taskId        String         @unique
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  studentId     String         @db.ObjectId
+  taskId        String         @unique @db.ObjectId
   score         Int
   grade         String
   trainingLevel String
@@ -132,8 +143,8 @@ model Evaluation {
 }
 
 model Feedback {
-  id        String   @id @default(cuid())
-  studentId String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentId String   @db.ObjectId
   message   String
   createdAt DateTime @default(now())
   student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -143,8 +154,8 @@ model Feedback {
 }
 
 model CertificateRecord {
-  id                   String    @id @default(cuid())
-  studentId            String    @unique
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  studentId            String    @unique @db.ObjectId
   certificateNo        String    @unique
   finalGrade           String
   finalLevel           String
@@ -156,19 +167,18 @@ model CertificateRecord {
   attendancePctAtIssue Int?
   student              Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  @@index([studentId])
   @@index([completedAt])
 }
 
 model SystemSetting {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   key       String   @unique
   value     String
   updatedAt DateTime @updatedAt
 }
 
 model GoogleDriveConnection {
-  id                    String   @id @default(cuid())
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
   adminId               String?  @unique
   googleAccountEmail    String
   refreshTokenEncrypted String
@@ -176,4 +186,23 @@ model GoogleDriveConnection {
   connectedAt           DateTime @default(now())
   status                String   @default("CONNECTED")
   updatedAt             DateTime @updatedAt
+}
+
+model AuditLog {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  actorId          String?
+  actorEmail       String
+  actorRole        String   @default("ADMIN")
+  ipAddress        String?
+  action           String
+  targetType       String
+  targetId         String?
+  targetIdentifier String?
+  details          String?
+  createdAt        DateTime @default(now())
+
+  @@index([actorEmail])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([createdAt])
 }

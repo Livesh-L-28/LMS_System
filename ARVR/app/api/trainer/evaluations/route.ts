@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
 import { evaluationSchema } from '@/lib/validation';
+import { logAdminAudit } from '@/lib/auditLog';
+import { getClientIp } from '@/lib/security';
 
 export async function POST(request: Request) {
   try {
@@ -89,6 +91,25 @@ export async function POST(request: Request) {
       }
 
       return { evaluation, updatedTask, updatedCertificate };
+    });
+
+    await logAdminAudit({
+      actorId: user.id,
+      actorEmail: user.email,
+      ipAddress: getClientIp(request),
+      action: isFinalExam ? 'CHANGE_FINAL_EXAM_GRADE' : 'RECORD_TASK_EVALUATION',
+      targetType: 'EVALUATION',
+      targetId: result.evaluation.id,
+      targetIdentifier: task.student.registerNo || task.student.email,
+      details: {
+        studentId: task.studentId,
+        taskId,
+        score,
+        grade,
+        trainingLevel,
+        isFinalExam,
+        submissionStatus,
+      },
     });
 
     const successMessage = isFinalExam

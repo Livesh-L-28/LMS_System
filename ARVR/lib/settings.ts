@@ -27,7 +27,19 @@ function getRedis(): Redis | null {
  * Retrieves system settings from Redis cache or PostgreSQL database.
  * Prevents connection pool starvation during morning attendance and task rush windows.
  */
+let memoryCache: { data: Map<string, string>; expiresAt: number } | null = null;
+const MEMORY_CACHE_TTL_MS = 15000; // 15 seconds
+
+/**
+ * Retrieves system settings from Redis cache, in-memory cache, or PostgreSQL database.
+ * Prevents connection pool starvation during morning attendance and task rush windows.
+ */
 export async function getCachedSystemSettings(): Promise<Map<string, string>> {
+  const now = Date.now();
+  if (memoryCache && memoryCache.expiresAt > now) {
+    return memoryCache.data;
+  }
+
   const redis = getRedis();
 
   if (redis) {
@@ -35,7 +47,9 @@ export async function getCachedSystemSettings(): Promise<Map<string, string>> {
       const cached = await redis.get(CACHE_KEY);
       if (cached) {
         const parsed = JSON.parse(cached);
-        return new Map(Object.entries(parsed));
+        const map = new Map<string, string>(Object.entries(parsed));
+        memoryCache = { data: map, expiresAt: now + MEMORY_CACHE_TTL_MS };
+        return map;
       }
     } catch {
       // Fallback directly to Prisma
@@ -48,6 +62,9 @@ export async function getCachedSystemSettings(): Promise<Map<string, string>> {
     obj[s.key] = s.value;
   }
 
+  const map = new Map<string, string>(Object.entries(obj));
+  memoryCache = { data: map, expiresAt: now + MEMORY_CACHE_TTL_MS };
+
   if (redis) {
     try {
       await redis.set(CACHE_KEY, JSON.stringify(obj), 'EX', CACHE_TTL_SEC);
@@ -56,13 +73,14 @@ export async function getCachedSystemSettings(): Promise<Map<string, string>> {
     }
   }
 
-  return new Map(Object.entries(obj));
+  return map;
 }
 
 /**
  * Invalidates the cached system settings upon admin update.
  */
 export async function invalidateSettingsCache(): Promise<void> {
+  memoryCache = null;
   const redis = getRedis();
   if (redis) {
     try {

@@ -30,7 +30,7 @@ An enterprise-grade, full-stack spatial computing training management platform b
 
 - **Framework**: [Next.js 16 (App Router & Turbopack)](https://nextjs.org/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Database & ORM**: [Prisma ORM](https://www.prisma.io/) with [SQLite](https://www.sqlite.org/)
+- **Database & ORM**: [Prisma ORM (v6)](https://www.prisma.io/) with [MongoDB](https://www.mongodb.com/) (MongoDB Atlas / Replica Set)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) (Soft Lavender Light Theme Palette)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Authentication**: `iron-session` + `bcryptjs`
@@ -51,8 +51,9 @@ An enterprise-grade, full-stack spatial computing training management platform b
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
-- Node.js 18.x or higher
+- Node.js 20.x or higher
 - npm or yarn
+- MongoDB 4.4+ (MongoDB Atlas cluster or local replica set)
 
 ### 2. Installation & Setup
 
@@ -67,8 +68,8 @@ npm install
 # 3. Environment configuration
 cp .env.example .env
 
-# 4. Database Setup & Seeding
-npx prisma migrate deploy
+# 4. Database Schema Sync & Seeding
+npx prisma db push
 npx prisma db seed
 
 # 5. Start Development Server

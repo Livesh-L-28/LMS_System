@@ -1,6 +1,6 @@
 import path from 'path';
 import crypto from 'crypto';
-import { directUploadToS3, getBucketName, sanitizeFilename } from './s3';
+import { directUploadToS3, getBucketName } from './s3';
 
 /**
  * Uploads a file buffer directly to private AWS S3 storage.

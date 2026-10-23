@@ -16,9 +16,13 @@ if [ -n "$DATABASE_URL" ]; then
   RETRY_COUNT=0
   
   until node -e "
-    const url = new URL(process.env.DATABASE_URL);
+    const raw = process.env.DATABASE_URL || '';
+    if (raw.startsWith('mongodb+srv://') || raw.startsWith('mongodb://')) {
+      process.exit(0);
+    }
+    const url = new URL(raw);
     const net = require('net');
-    const port = url.port || 5432;
+    const port = url.port || (url.protocol.startsWith('mongo') ? 27017 : 5432);
     const host = url.hostname;
     const socket = net.createConnection(port, host, () => {
       socket.end();
@@ -40,19 +44,16 @@ else
   echo "⚠️  [Entrypoint] WARNING: DATABASE_URL not set."
 fi
 
-# 2. Database Migration Execution
+# 2. Database Schema Synchronization
 if [ "$SKIP_MIGRATIONS" != "true" ] && [ -n "$DATABASE_URL" ]; then
-  echo "[Entrypoint] Applying database schema migrations..."
-  if npx prisma migrate deploy; then
-    echo "✅ [Entrypoint] Database migrations applied successfully."
-    # Seed default system settings and admin account if newly deployed
-    echo "[Entrypoint] Verifying default administrative seed data..."
-    node prisma/seed.js || true
+  echo "[Entrypoint] Synchronizing database schema (prisma db push)..."
+  if npx prisma db push --skip-generate; then
+    echo "✅ [Entrypoint] Database schema synchronized successfully."
   else
-    echo "⚠️  [Entrypoint] Migration attempt failed. Continuing startup..."
+    echo "⚠️  [Entrypoint] Schema synchronization attempt failed. Continuing startup..."
   fi
 else
-  echo "[Entrypoint] Skipping database migrations (SKIP_MIGRATIONS=${SKIP_MIGRATIONS:-false})."
+  echo "[Entrypoint] Skipping database schema sync (SKIP_MIGRATIONS=${SKIP_MIGRATIONS:-false})."
 fi
 
 # 3. Process Execution & Signal Propagation

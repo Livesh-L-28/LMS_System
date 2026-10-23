@@ -8,7 +8,6 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import crypto from 'crypto';
 import path from 'path';
-import { Readable } from 'stream';
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 Megabytes
 
@@ -371,6 +370,15 @@ export async function verifyS3Object(options: {
         actualSize,
         actualMime,
         error: `Verified object size (${actualSize} bytes) is out of bounds.`,
+      };
+    }
+
+    if (expectedSize > 0 && Math.abs(actualSize - expectedSize) > 1024) {
+      return {
+        verified: false,
+        actualSize,
+        actualMime,
+        error: `Verified object size (${actualSize} bytes) differs significantly from expected size (${expectedSize} bytes).`,
       };
     }
 

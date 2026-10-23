@@ -10,7 +10,8 @@ export type SecurityEventType =
   | 'FILE_DOWNLOAD_ACCESS'
   | 'FILE_DOWNLOAD_BLOCKED'
   | 'INPUT_VALIDATION_FAILURE'
-  | 'SUSPICIOUS_REQUEST';
+  | 'SUSPICIOUS_REQUEST'
+  | 'MALWARE_DETECTED';
 
 export interface SecurityEvent {
   type: SecurityEventType;
@@ -97,10 +98,35 @@ export function logSecurityEvent(event: SecurityEvent): void {
 export function formatSafeError(error: any, contextDescription?: string): { error: string; details?: string } {
   const errMsg = error?.message || (typeof error === 'string' ? error : 'Unknown error');
   console.error(`[SERVER_ERROR] ${contextDescription || 'Unhandled Exception'}:`, error);
+
+  let userFriendlyError = 'An internal server error occurred. Please try again later.';
+
+  if (error?.code === 'P2024' || errMsg.includes('connection pool') || errMsg.includes('Timed out fetching')) {
+    userFriendlyError = 'Database is currently busy. Please wait a moment and try again.';
+  } else if (
+    error?.code === 'P1001' ||
+    errMsg.includes('connect ECONNREFUSED') ||
+    errMsg.includes("Can't reach database server")
+  ) {
+    userFriendlyError = 'Unable to reach the database server. Please check database connectivity.';
+  } else if (errMsg.includes('__TURBOPACK__') || errMsg.includes('invocation in')) {
+    userFriendlyError = 'A database request error occurred. Please try again.';
+  } else if (
+    errMsg.includes('password') ||
+    errMsg.includes('authentication') ||
+    errMsg.includes('relation') ||
+    errMsg.includes('FATAL') ||
+    errMsg.includes('postgres') ||
+    errMsg.includes('mongo') ||
+    errMsg.includes('public.')
+  ) {
+    userFriendlyError = 'An internal server error occurred. Please try again later.';
+  } else if (errMsg && !errMsg.includes('node_modules') && !errMsg.includes('prisma')) {
+    userFriendlyError = errMsg;
+  }
+
   return {
-    error: errMsg.includes('connect ECONNREFUSED')
-      ? 'Database connection failed. Please verify DATABASE_URL.'
-      : errMsg || 'An internal server error occurred. Please try again later.',
+    error: userFriendlyError,
     details: process.env.NODE_ENV !== 'production' ? errMsg : undefined,
   };
 }
@@ -113,4 +139,47 @@ const DUMMY_HASH = '$2a$10$7EqJtq98hPqEX7fNZaFWoO0VpI8Y.Gf5m0xH9N/X6o2G1aN9sB.8e
  */
 export async function dummyBcryptCompare(): Promise<void> {
   await bcrypt.compare('dummy_input_value', DUMMY_HASH);
+}
+
+/**
+ * Validates critical production security environment configuration.
+ * Fails fast if weak, default, or missing secrets are detected in production.
+ */
+export function validateProductionSecurityEnvironment(): {
+  valid: boolean;
+  warnings: string[];
+  errors: string[];
+} {
+  const warnings: string[] = [];
+  const errors: string[] = [];
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const sessionSecret = process.env.SESSION_SECRET || '';
+  if (!sessionSecret) {
+    errors.push('SESSION_SECRET is not defined. Session generation will fail.');
+  } else if (sessionSecret === 'arvr_secret_key_change_in_production_32chars_min') {
+    if (isProd) {
+      errors.push('CRITICAL: Default placeholder SESSION_SECRET is in use in production! Generate a 64-char key using "openssl rand -hex 32".');
+    } else {
+      warnings.push('NOTICE: Default placeholder SESSION_SECRET is in use (development only).');
+    }
+  } else if (sessionSecret.length < 32) {
+    errors.push('SESSION_SECRET must be at least 32 characters long for cryptographic security.');
+  }
+
+  const cronSecret = process.env.CRON_SECRET || '';
+  if (!cronSecret) {
+    if (isProd) {
+      warnings.push('CRON_SECRET is not set; falling back to SESSION_SECRET for scheduled cron watchdog authentication.');
+    }
+  } else if (cronSecret === sessionSecret) {
+    warnings.push('CRON_SECRET should be distinct from SESSION_SECRET for principle of least privilege.');
+  }
+
+  const dbUrl = process.env.DATABASE_URL || '';
+  if (dbUrl && !dbUrl.includes('retryWrites=true')) {
+    warnings.push('DATABASE_URL should include "retryWrites=true" for high-availability cloud resilience.');
+  }
+
+  return { valid: errors.length === 0, warnings, errors };
 }

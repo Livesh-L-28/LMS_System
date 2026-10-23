@@ -42,7 +42,7 @@ function getRedis(): Redis | null {
         redisWarningLogged = true;
       }
     });
-  } catch (err) {
+  } catch {
     redisAvailable = false;
   }
 
@@ -86,7 +86,7 @@ export async function checkRateLimit(
         }
         return { allowed: true, remainingSec, remainingAttempts: Math.max(0, maxAttempts - count) };
       }
-    } catch (err) {
+    } catch {
       // Fallback to local memory on Redis failure
     }
   }

@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
 import { calculateBatchMaxSessions } from '@/lib/batchUtils';
+import { isValidObjectId } from '@/lib/validation';
+import { logAdminAudit } from '@/lib/auditLog';
+import { getClientIp } from '@/lib/security';
 
 export async function GET(
   request: Request,
@@ -10,6 +13,10 @@ export async function GET(
   try {
     const { batchId } = await params;
     await requireAuth(['ADMIN']);
+
+    if (!isValidObjectId(batchId)) {
+      return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
+    }
 
     const batch = await prisma.batch.findUnique({
       where: { id: batchId },
@@ -41,6 +48,10 @@ export async function GET(
         trainingDays: batch.trainingDays,
         status: batch.status,
         studentCount: batch._count.students,
+        fnStartTime: batch.fnStartTime,
+        fnCutoffTime: batch.fnCutoffTime,
+        anStartTime: batch.anStartTime,
+        anCutoffTime: batch.anCutoffTime,
         maxSessions,
         trainingCalendar: batch.trainingCalendar,
       },
@@ -59,7 +70,13 @@ export async function PUT(
 ) {
   try {
     const { batchId } = await params;
-    await requireAuth(['ADMIN']);
+    const adminUser = await requireAuth(['ADMIN']);
+    const ip = getClientIp(request);
+
+    if (!isValidObjectId(batchId)) {
+      return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
+    }
+
     const body = await request.json();
 
     const { days } = body;
@@ -98,6 +115,21 @@ export async function PUT(
     });
 
     const maxSessions = calculateBatchMaxSessions(updatedCalendar, batch.trainingDays);
+
+    await logAdminAudit({
+      actorId: adminUser.id,
+      actorEmail: adminUser.email,
+      ipAddress: ip,
+      action: 'BATCH_SCHEDULE_UPDATE',
+      targetType: 'BATCH',
+      targetId: batch.id,
+      targetIdentifier: batch.batchNo || batch.name,
+      details: {
+        batchName: batch.name,
+        daysUpdated: days.length,
+        newMaxSessions: maxSessions,
+      },
+    });
 
     return NextResponse.json({
       success: true,

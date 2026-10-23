@@ -4,34 +4,107 @@ import path from 'path';
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 
-// Encryption setup for Refresh Token storage
-const ENCRYPTION_KEY = process.env.SESSION_SECRET || 'arvr_secret_key_change_in_production_32chars_min';
+// Encryption setup for Refresh Token storage (AES-256-GCM Authenticated Encryption)
+const ENCRYPTION_KEY =
+  process.env.DRIVE_TOKEN_ENCRYPTION_KEY ||
+  process.env.SESSION_SECRET ||
+  'arvr_secret_key_change_in_production_32chars_min';
 const key = crypto.createHash('sha256').update(ENCRYPTION_KEY).digest();
+const legacyKey = crypto.createHash('sha256').update('arvr_secret_key_change_in_production_32chars_min').digest();
 
+/**
+ * Encrypts sensitive OAuth token strings using AES-256-GCM authenticated AEAD.
+ * Output format: "gcm:<iv_hex>:<authTag_hex>:<ciphertext_hex>"
+ */
 export function encryptToken(text: string): string {
   if (!text) return '';
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+  const iv = crypto.randomBytes(12); // Standard 12-byte (96-bit) IV for AES-GCM
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
   let encrypted = cipher.update(text, 'utf8', 'hex');
   encrypted += cipher.final('hex');
-  return iv.toString('hex') + ':' + encrypted;
+  const authTag = cipher.getAuthTag();
+  return `gcm:${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted}`;
 }
 
+/**
+ * Decrypts sensitive OAuth token strings with multi-mode resilience:
+ * - Format "gcm:iv:tag:ciphertext" or 3 segments "iv:tag:ciphertext" => AES-256-GCM
+ * - Format 2 segments "iv:ciphertext" => Legacy AES-256-CBC with rotation fallback
+ * - Unformatted string => Plaintext fallback
+ */
 export function decryptToken(text: string): string {
   if (!text) return '';
-  // If plain text (e.g. env var or unencrypted legacy token)
   if (!text.includes(':')) return text;
-  try {
+
+  // 1. Check for AES-256-GCM with prefix
+  if (text.startsWith('gcm:')) {
     const parts = text.split(':');
-    const iv = Buffer.from(parts.shift()!, 'hex');
-    const encryptedText = parts.join(':');
-    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-    let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted;
-  } catch (e) {
-    return text;
+    if (parts.length === 4) {
+      const ivHex = parts[1];
+      const tagHex = parts[2];
+      const ciphertext = parts[3];
+
+      try {
+        const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(ivHex, 'hex'));
+        decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+        let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        return decrypted;
+      } catch {
+        // Fallback to legacy key with GCM
+        try {
+          const decipher = crypto.createDecipheriv('aes-256-gcm', legacyKey, Buffer.from(ivHex, 'hex'));
+          decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+          let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
+          decrypted += decipher.final('utf8');
+          return decrypted;
+        } catch {
+          return text;
+        }
+      }
+    }
   }
+
+  const parts = text.split(':');
+
+  // 2. Three parts without prefix: iv:tag:ciphertext
+  if (parts.length === 3) {
+    const [ivHex, tagHex, ciphertext] = parts;
+    try {
+      const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(ivHex, 'hex'));
+      decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+      let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
+      decrypted += decipher.final('utf8');
+      return decrypted;
+    } catch {
+      // Continue to fallback check
+    }
+  }
+
+  // 3. Two parts: Legacy AES-256-CBC (iv:ciphertext)
+  if (parts.length === 2) {
+    const iv = Buffer.from(parts[0], 'hex');
+    const encryptedText = parts[1];
+
+    try {
+      const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+      let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+      decrypted += decipher.final('utf8');
+      return decrypted;
+    } catch {
+      // Graceful Key Rotation Fallback: Attempt decryption with legacy key
+      try {
+        const legacyDecipher = crypto.createDecipheriv('aes-256-cbc', legacyKey, iv);
+        let decrypted = legacyDecipher.update(encryptedText, 'hex', 'utf8');
+        decrypted += legacyDecipher.final('utf8');
+        return decrypted;
+      } catch {
+        return text;
+      }
+    }
+  }
+
+  return text;
 }
 
 /**
@@ -174,7 +247,7 @@ export async function ensureRootFolder(drive: any, connectionId?: string): Promi
         where: { id: connectionId },
         data: { rootFolderId },
       });
-    } catch (e) {
+    } catch {
       // ignore non-critical db update error
     }
   }
@@ -218,7 +291,7 @@ export async function ensureBatchFolder(
           if (existingFolder.data && !existingFolder.data.trashed) {
             return batch.googleDriveFolderId;
           }
-        } catch (e) {
+        } catch {
           // Folder deleted or invalid, recreate
         }
       }
@@ -387,7 +460,7 @@ export async function uploadTaskSubmissionToDrive(options: {
           type: 'anyone',
         },
       });
-    } catch (permErr) {
+    } catch {
       // Ignore domain permission restriction errors
     }
 
@@ -438,3 +511,39 @@ export async function testAdminDriveConnection(): Promise<{ success: boolean; me
     };
   }
 }
+
+/**
+ * Streams a file from Google Drive by its fileId for direct browser streaming
+ */
+export async function getDriveFileStream(fileId: string): Promise<{
+  stream: Readable;
+  mimeType: string;
+  filename?: string;
+  size?: number;
+} | null> {
+  const { drive, error } = await getDriveClientForAdmin();
+  if (!drive || error) return null;
+
+  try {
+    const meta = await drive.files.get({
+      fileId,
+      fields: 'id, name, mimeType, size',
+    });
+
+    const response = await drive.files.get(
+      { fileId, alt: 'media' },
+      { responseType: 'stream' }
+    );
+
+    return {
+      stream: response.data as Readable,
+      mimeType: meta.data.mimeType || 'application/octet-stream',
+      filename: meta.data.name || undefined,
+      size: meta.data.size ? parseInt(meta.data.size, 10) : undefined,
+    };
+  } catch (err: any) {
+    console.error('Failed to stream Google Drive file:', err);
+    return null;
+  }
+}
+

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { registerSchema } from '@/lib/validation';
+import { registerSchema, isValidObjectId } from '@/lib/validation';
 import { hashPinOrPassword } from '@/lib/auth';
 import { formatSafeError } from '@/lib/security';
 
@@ -38,6 +38,10 @@ export async function POST(request: Request) {
     }
 
     // Check active batch
+    if (!isValidObjectId(data.batchId)) {
+      return NextResponse.json({ error: 'Selected training batch is inactive or does not exist' }, { status: 400 });
+    }
+
     const batch = await prisma.batch.findUnique({
       where: { id: data.batchId },
     });

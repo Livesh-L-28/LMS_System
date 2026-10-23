@@ -5,7 +5,7 @@ services:
     rootDir: ARVR
     plan: starter
     buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npm start
+    startCommand: npx prisma db push --skip-generate && npm start
     envVars:
       - key: NODE_ENV
         value: production

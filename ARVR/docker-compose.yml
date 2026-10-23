@@ -27,7 +27,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       HOSTNAME: "0.0.0.0"
-      DATABASE_URL: "postgresql://postgres:password@postgres:5432/arvr?schema=public"
+      DATABASE_URL: "mongodb://mongo:27017/arvr?replicaSet=rs0&directConnection=true"
       SESSION_SECRET: "${SESSION_SECRET:-complex_production_secret_at_least_32_characters_long}"
       REDIS_URL: "redis://redis:6379"
       AWS_REGION: "us-east-1"
@@ -41,7 +41,7 @@ services:
       SKIP_MIGRATIONS: "false"
       DB_WAIT_RETRIES: "30"
     depends_on:
-      postgres:
+      mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -57,24 +57,21 @@ services:
       start_period: 15s
 
   # ----------------------------------------------------------------------------
-  # 2. PostgreSQL 16 Enterprise Relational Database
+  # 2. MongoDB Document Database (Replica Set for Prisma transactions)
   # ----------------------------------------------------------------------------
-  postgres:
-    image: postgres:16-alpine
-    container_name: arvr-postgres
+  mongo:
+    image: mongo:7-jammy
+    container_name: arvr-mongo
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: arvr
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mongo-data:/data/db
     ports:
-      - "5432:5432"
+      - "27017:27017"
     networks:
       - arvr-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d arvr"]
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"try { rs.status().ok } catch(e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\""]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -150,8 +147,8 @@ services:
 # Persistent Storage Volumes
 # ------------------------------------------------------------------------------
 volumes:
-  postgres-data:
-    name: arvr_postgres_data
+  mongo-data:
+    name: arvr_mongo_data
   redis-data:
     name: arvr_redis_data
   minio-data:
@@ -164,4 +161,3 @@ networks:
   arvr-network:
     name: arvr_network
     driver: bridge
-arvr
