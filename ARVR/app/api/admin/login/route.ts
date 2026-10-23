@@ -60,11 +60,32 @@ export async function POST(request: Request) {
     }
 
     // 2. Fetch administrator account with connection retry resilience
-    const admin = await withPrismaRetry(() =>
+    let admin = await withPrismaRetry(() =>
       prisma.admin.findUnique({
         where: { email: normalizedEmail },
       })
     );
+
+    // Auto-initialize default administrator if the database is newly created and empty
+    if (!admin) {
+      try {
+        const totalAdmins = await prisma.admin.count();
+        if (totalAdmins === 0 && (normalizedEmail === 'admin@arvr.com' || normalizedEmail === 'arvr@admin.com')) {
+          const bcrypt = (await import('bcryptjs')).default;
+          const defaultHash = await bcrypt.hash('admin123', 10);
+          admin = await prisma.admin.create({
+            data: {
+              name: 'System Admin',
+              email: normalizedEmail,
+              passwordHash: defaultHash,
+            },
+          });
+          console.log(`[Auto-Seed] Initial administrative account provisioned for: ${normalizedEmail}`);
+        }
+      } catch (seedErr) {
+        console.warn('[Auto-Seed] Note: Could not auto-provision admin:', seedErr);
+      }
+    }
 
     if (!admin) {
       // Side-channel timing attack mitigation: perform constant-time bcrypt compare
