@@ -1,117 +1,337 @@
-# 🚀 AR/VR Spatial Computing Academy - Immersive Training Platform
+# 🥽 AR/VR Spatial Computing Academy (`LMS_System`)
 
-An enterprise-grade, full-stack spatial computing training management platform built with **Next.js 16 (Turbopack)**, **TypeScript**, **Prisma ORM**, and **Tailwind CSS**, featuring a clean **Soft Lavender Light Design System**.
+<div align="center">
+
+[![Live Deployment](https://img.shields.io/badge/🌐%20Live%20Staging-arvr--academy--staging.onrender.com-2563EB?style=for-the-badge&logo=render&logoColor=white)](https://arvr-academy-staging.onrender.com)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16.3.2%20(Turbopack)-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19.2.8-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-Cloud%20Replica%20Set-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind%20CSS-v4%20(Royal%20Cobalt)-4F46E5?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](../LICENSE)
+
+An enterprise-grade, full-stack spatial computing training management platform designed for hardware-bound AR/VR labs. Features physical geofenced attendance verification, zero-trust in-memory antivirus task submission, real-time curriculum timelines, split-pane evaluator grading, and automated certificate issuance.
+
+</div>
+
+---
+
+> ## 🚀 **HIGHLIGHTED LIVE DEMO**
+>
+> ### 🔗 **[https://arvr-academy-staging.onrender.com](https://arvr-academy-staging.onrender.com)**
+>
+> - **Deployment Host:** Render Web Service (Cloudflare CDN Edge)
+> - **SSL Security:** TLS 1.3 Valid 🔒
+> - **Current Health:** `HTTP 200 OK — Systems Fully Operational` 🟢
+> - **Direct Staff / Admin Deep Link:** [https://arvr-academy-staging.onrender.com#staff](https://arvr-academy-staging.onrender.com#staff)
+
+---
+
+## 🔑 Quick Demo Credentials
+
+Test the platform instantly with pre-seeded accounts:
+
+| Portal | Direct Access | Credentials | Recommended Testing Flow |
+| :--- | :--- | :--- | :--- |
+| **🎓 Student Learning Portal** | [Open Portal](https://arvr-academy-staging.onrender.com) | **Register No:** `21CS001`<br>**PIN:** `123456` | 1. View live ticking attendance countdown (FN / AN).<br>2. Check 10-day spatial computing roadmap.<br>3. Submit task screenshot in gated dropzone with antivirus badge. |
+| **🛡️ Staff & Evaluator Console** | [Open Staff Console](https://arvr-academy-staging.onrender.com#staff) | **Email:** `admin@arvr.com`<br>**Password:** `admin123` | 1. Open **Split-Pane Evaluation Drawer** on student submissions.<br>2. Grade with 1-click preset chips (`O`, `A+`, `A`, `B+`, etc.) & score slider.<br>3. Inspect **Morning Watchdog** diagnostics & batch settings. |
+
+> [!NOTE]
+> *Self-Healing Auto-Seed:* If deployed on a fresh database, accessing the admin portal with `admin@arvr.com` and `admin123` will automatically initialize the administrative role on first login. Students can also be enrolled via self-registration or bulk CSV import.
+
+---
+
+## 📑 Table of Contents
+
+- [Vision & Value Proposition](#-vision--value-proposition)
+- [Key Features & Capabilities](#-key-features--capabilities)
+  - [1. Student Portal & Learning Workspace](#1--student-portal--learning-workspace)
+  - [2. Staff & Evaluator Workspace](#2--staff--evaluator-workspace)
+  - [3. Enterprise Security & Zero-Trust Antivirus](#3--enterprise-security--zero-trust-antivirus)
+  - [4. Dual Multi-Cloud Storage (AWS S3 + Google Drive)](#4--dual-multi-cloud-storage-aws-s3--google-drive)
+  - [5. Automated Certificate Engine & Excel Export](#5--automated-certificate-engine--excel-export)
+  - [6. Automated 6:00 AM Morning Watchdog](#6--automated-600-am-morning-watchdog)
+- [System Architecture](#-system-architecture)
+- [Technology Stack](#-technology-stack)
+- [Spatial Computing Curriculum Roadmap](#-spatial-computing-curriculum-roadmap)
+- [Getting Started & Local Setup](#-getting-started--local-setup)
+- [Docker & Containerized Setup](#-docker--containerized-setup)
+- [Environment Configuration](#-environment-configuration)
+- [Automated Verification & Torture Test Suites](#-automated-verification--torture-test-suites)
+- [Google Drive Storage Integration Guide](#-google-drive-storage-integration-guide)
+- [Repository Structure](#-repository-structure)
+- [Complete Documentation Suite](#-complete-documentation-suite)
+- [License](#-license)
+
+---
+
+## 🎯 Vision & Value Proposition
+
+In spatial computing education (**Unity XR Interaction Toolkit**, **Meta Quest Passthrough**, **Apple visionOS**, and **WebXR**), physical presence in the hardware lab is non-negotiable. Real development involves head-mounted displays (HMDs), tracking cameras, hand interactors, and physical room boundaries.
+
+The **AR/VR Academy Platform** solves the integrity gap for institutions through three core operational pillars:
+
+```mermaid
+graph LR
+    subgraph Pillar1 ["1. Physical Campus Integrity"]
+        P1A["W3C Geolocation (<= 100m)"]
+        P1B["Campus Wi-Fi CIDR Validation"]
+        P1C["Live Ticking Session Badges"]
+    end
+
+    subgraph Pillar2 ["2. Gated Task Verification"]
+        P2A["Dual-Session Attendance Gate"]
+        P2B["Zero-Trust In-Memory Antivirus"]
+        P2C["Multi-Cloud Sync (S3 / Drive)"]
+    end
+
+    subgraph Pillar3 ["3. Evaluator Intelligence"]
+        P3A["Split-Pane Review Drawer"]
+        P3B["1-Click Preset Grade Chips"]
+        P3C["Automated Excel Gradebooks"]
+    end
+
+    Pillar1 --> Pillar2 --> Pillar3
+```
+
+1. **Physical Campus Integrity:** Eliminates remote spoofing using high-precision Haversine distance calculations ($\le 100\text{ m}$) coupled with campus subnet IP / CIDR verification.
+2. **Gated Task Verification:** Practical execution submissions remain strictly locked until the student has verified physical attendance for both Forenoon (**FN**) and Afternoon (**AN**) sessions.
+3. **Evaluator Intelligence:** Facilitates rapid instructor grading with side-by-side artifact inspection, score sliders, feedback chips, and automated batch certificate issuance.
 
 ---
 
 ## ✨ Key Features & Capabilities
 
-### 🎓 Student Portal & Learning Workspace
-- **Gated Practical Task Submission**: Task submission is unlocked **only after** both Morning (**FN**) and Afternoon (**AN**) attendance sessions are server-verified for the current day.
-- **Interactive Screenshot Upload**: Drag-and-drop practical execution screenshot dropzone supporting PNG, JPG, and WebP (up to 5MB) with real-time image preview and storage.
-- **Curriculum & AR/VR Developer SDK Hub**: Interactive multi-day training schedule preview (Day 1 to Day 10) with curated SDK documentation for **Unity XR Interaction Toolkit (XRI 3.0)**, **Meta Quest Passthrough**, **Unity AR Foundation (ARKit/ARCore)**, and **Spatial Computing Performance Targets (90 FPS)**.
-- **Automated Performance Tracking**: Real-time attendance rate (%), task completion index (%), evaluation score average (/100), and certificate eligibility tracking.
+### 1. 🎓 Student Portal & Learning Workspace
+- **Forenoon & Afternoon Attendance Windows:** Live countdown timers with session state badges (`SCHEDULED`, `OPEN`, `LOCKED`, `RECORDED`).
+- **Mobile 1-Tap Floating Attendance Bar:** Sticky action bar designed for student smartphones with instant location acquisition.
+- **Gated Practical Task Dropzone:** Drag-and-drop submission for PNG, JPG, and WebP (up to 5MB) screenshots and build artifacts. Automatically locked if daily attendance is missing.
+- **10-Day Spatial Computing Journey Roadmap:** Interactive multi-day syllabus timeline guiding students through setup, spatial audio, raycast interactors, image tracking, plane detection, and capstones.
+- **Live Progress Dashboard:** Real-time visual metrics for attendance percentage ($\ge 75\%$ certificate cutoff), completed tasks, average grade, and feedback status.
 
-### 🛡️ Unified Staff & Instructor Portal
-- **Interactive Task Evaluation & Grading**: Review student screenshot submissions, inspect student implementation notes, assign numerical scores ($0–100$), letter grades (`O`, `A+`, `A`, `B+`, `B`, `C`), training levels, and feedback.
-- **Bulk CSV Student Roster Import**: Enrol entire student classes in 1-click by pasting CSV roster data or uploading a `.csv` file with automatic duplicate detection.
-- **Batch Management & Calendar Builder**: Create training batches with start/end dates, assign trainers, and dynamically build daily practical task curricula.
-- **Automated Certificate Engine & Excel Export**: Verify attendance ($\ge 75\%$) and task completion rules to generate official certificate numbers and export complete batch records as downloadable `.xlsx` spreadsheets.
+### 2. 🛡️ Staff & Evaluator Workspace
+- **Split-Pane Evaluation Drawer:** Evaluators review high-resolution student screenshots side-by-side with evaluation controls.
+- **1-Click Grade Presets & Sliders:** Instant grading with preset chips (`O: 95`, `A+: 85`, `A: 75`, `B+: 65`, `B: 55`, `C: 45`) or fine-grained $0–100$ slider adjustments.
+- **Quick Feedback Chips:** Pre-built instructor commentary chips (e.g., *"Excellent VR Rig Setup"*, *"Inspect Collider Geometry"*, *"Optimize Frame Timing"*) for rapid turnaround.
+- **Batch Management & Calendar Engine:** Dynamic creation of cohorts with automatic weekend-exclusion date calculations and custom daily curriculum tasks.
+- **Bulk CSV Student Roster Import:** Enroll hundreds of students in seconds with CSV text pasting or file upload, complete with duplicate handling.
 
-### 🔐 Security & Production Hardening
-- **Password & PIN Hashing**: All student PINs, trainer passwords, and admin passwords are salt-hashed using **Bcrypt (10 rounds)**.
-- **Sliding IP Rate Limiting**: Endpoint protection on `/api/student/login`, `/api/trainer/login`, and `/api/admin/login` (5 attempts / 60-second window) to block brute-force attacks.
-- **Encrypted Session Cookies**: Managed via `iron-session` signed with 32-byte secret (`httpOnly: true`, `sameSite: 'lax'`).
-- **Path Traversal & Injection Defense**: Filename sanitization (`/[^a-zA-Z0-9_-]/g`), file extension white-listing, and Prisma parameterized query execution.
+### 3. 🔐 Enterprise Security & Zero-Trust Antivirus
+- **Zero-Trust In-Memory File Scanner:** Every uploaded screenshot is buffered in memory and scanned against:
+  - Standard EICAR antivirus test signatures.
+  - Windows executable headers (`MZ` / `PE`).
+  - Linux binary ELF headers (`\x7fELF`).
+- **Dual-Key Sliding-Window Rate Limiting:** Enforces both IP volumetric limits (20 req/min) and targeted account brute-force lockouts (5 failed attempts $\rightarrow$ 15-minute freeze).
+- **Salt-Hashed Credentials:** Student PINs and administrator passwords hashed using **Bcrypt (10 salt rounds)** with constant-time comparison.
+- **Encrypted Session Management:** Managed via `iron-session` utilizing 32-byte cryptographically signed cookies (`httpOnly: true`, `sameSite: 'lax'`).
+
+### 4. ☁️ Dual Multi-Cloud Storage (AWS S3 + Google Drive)
+- **Primary AWS S3 Storage:** Secure pre-signed URL generation and private bucket storage for enterprise compliance.
+- **Google Drive Integration (Direct OAuth 2.0):** Connect institution Google Drive accounts directly from the web UI without editing environment variables. Automatically creates and organizes files into `ARVR_Student_Submissions/{Batch_Name}/`.
+
+### 5. 📜 Automated Certificate Engine & Excel Export
+- **Eligibility Validation:** Enforces strict institutional rules (minimum $75\%$ attendance + all practical tasks completed) before enabling certification.
+- **Unique Serial Generation:** Generates tamper-proof certificate serial numbers (e.g. `ARVR-2026-B1-0042`).
+- **One-Click Batch Excel Export:** Generates complete batch performance spreadsheets (`.xlsx`) via `exceljs` with student details, attendance summaries, task scores, and final grades.
+
+### 6. ⏰ Automated 6:00 AM Morning Watchdog
+- **Self-Scheduling Background Daemon:** Node.js runtime worker initialized on startup (`instrumentation.ts`) executing daily at 6:00 AM.
+- **6 Critical Diagnostic Probes:**
+  1. Google Drive OAuth token validity & storage quota.
+  2. AWS S3 bucket write/read accessibility.
+  3. MongoDB Atlas replica set latency and connectivity.
+  4. Redis caching & rate-limit cluster status.
+  5. Active batch curriculum completeness.
+  6. Campus geofence coordinate and Wi-Fi CIDR configuration.
+- **Staff Diagnostics Console:** On-demand health audits and real-time status reporting directly within the Admin UI.
+
+---
+
+## 🏛️ System Architecture
+
+```mermaid
+flowchart TD
+    subgraph ClientLayer ["Client Layer (Web & Mobile)"]
+        Browser["Desktop & Mobile Browser"]
+        Geo["HTML5 W3C Geolocation"]
+    end
+
+    subgraph CDN ["CDN & Ingress"]
+        Cloudflare["Cloudflare Edge (SSL / TLS 1.3)"]
+        RenderEdge["Render Reverse Proxy"]
+    end
+
+    subgraph AppServer ["Next.js 16 Application Engine (Turbopack)"]
+        MW["Middleware (Security Headers & Route Protection)"]
+        Auth["iron-session (Encrypted 32-byte Cookies)"]
+        RateLimit["Dual-Key Sliding Window Rate Limiter"]
+        Scanner["Zero-Trust Antivirus & Executable Scanner"]
+        Routes["API Route Handlers (52 Routes / 69 Handlers)"]
+        Watchdog["Morning Watchdog 6:00 AM Daemon"]
+    end
+
+    subgraph DataStorage ["Data & Cloud Storage"]
+        Prisma["Prisma ORM 6.4"]
+        Mongo["MongoDB Atlas (Cloud Replica Set)"]
+        RedisCache["Redis (Throttling & Cache)"]
+        S3["AWS S3 Private Bucket"]
+        GDrive["Google Drive API v3 (OAuth 2.0)"]
+    end
+
+    Browser -->|HTTPS| Cloudflare --> RenderEdge --> MW
+    Geo -.->|Coordinates| Browser
+    MW --> RateLimit --> Auth --> Routes
+    Routes --> Scanner
+    Scanner -->|Safe Stream| S3
+    Scanner -->|Backup Stream| GDrive
+    Routes --> Prisma --> Mongo
+    RateLimit --> RedisCache
+    Watchdog --> Mongo
+    Watchdog --> S3
+    Watchdog --> GDrive
+```
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Framework**: [Next.js 16 (App Router & Turbopack)](https://nextjs.org/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Database & ORM**: [Prisma ORM (v6)](https://www.prisma.io/) with [MongoDB](https://www.mongodb.com/) (MongoDB Atlas / Replica Set)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (Soft Lavender Light Theme Palette)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Authentication**: `iron-session` + `bcryptjs`
-- **File Processing & Excel**: `exceljs`, `formidable`
-
----
-
-## 🔑 Demo Access Credentials
-
-| Role | Username / Email | Password / PIN | Portal Tab |
+| Domain | Technology | Version | Description |
 | :--- | :--- | :--- | :--- |
-| **🎓 Student** | `21CS001` | `123456` | Student Portal |
-| **👨‍🏫 Trainer** | `trainer@arvr.com` | `trainer123` | Staff / Instructor Portal |
-| **🛡️ Admin** | `admin@arvr.com` | `admin123` | Staff / Instructor Portal |
+| **Framework** | [Next.js](https://nextjs.org/) | `16.3.2` | App Router, Server Actions & Turbopack build engine |
+| **UI Library** | [React](https://react.dev/) | `19.2.8` | Component architecture & client rendering |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) | `5.x` | Strict end-to-end static typing |
+| **Database** | [MongoDB Atlas](https://www.mongodb.com/) | `4.4+ / 7.0` | Cloud-hosted 3-node replica set |
+| **ORM** | [Prisma](https://www.prisma.io/) | `6.4.0` | Declarative schema, type-safe queries, connection pool retry |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) | `v4` | Royal Cobalt (`#2563EB`) & Electric Indigo (`#4F46E5`) theme |
+| **Icons** | [Lucide React](https://lucide.dev/) | `1.33.0` | Clean enterprise icon system |
+| **Session** | [iron-session](https://github.com/vvo/iron-session) | `8.0.4` | Stateless encrypted session cookies |
+| **Password Hashing** | [bcryptjs](https://github.com/dcodeIO/bcrypt.js) | `3.0.3` | Salted credential cryptography (10 rounds) |
+| **Cloud Object Storage** | [@aws-sdk/client-s3](https://aws.amazon.com/sdk-for-javascript/) | `3.1129.0` | AWS S3 client & pre-signed URL generator |
+| **Google Cloud** | [googleapis](https://github.com/googleapis/google-api-nodejs-client) | `176.0.0` | Google Drive v3 REST OAuth 2.0 client |
+| **Caching & Limiting** | [ioredis](https://github.com/redis/ioredis) | `6.0.0` | High-performance distributed Redis client |
+| **Spreadsheets** | [exceljs](https://github.com/exceljs/exceljs) | `4.4.0` | Enterprise XLSX report generation |
+| **Validation** | [Zod](https://zod.dev/) | `4.4.3` | Schema validation on all inbound API payloads |
 
 ---
 
-## 🚀 Getting Started
+## 🕶️ Spatial Computing Curriculum Roadmap
+
+The platform integrates a structured 10-day hands-on curriculum:
+
+```
+Day 01: Unity VR Setup, OpenXR & XR Interaction Toolkit (XRI 3.0)
+Day 02: 3D Asset Pipeline, Physics Colliders & Spatial Audio Sources
+Day 03: Raycast Interactors, Direct Grab & Socket Snap Points
+Day 04: Augmented Reality Image Tracking (AR Foundation / ARKit / ARCore)
+Day 05: Surface Plane Detection, Meshing & Touch Hit Testing
+Day 06: Hand Tracking Gestures & Pinch Locomotion
+Day 07: Meta Quest Passthrough API & Mixed Reality Scene Understanding
+Day 08: Multi-User Spatial Networking & Synchronized Avatars
+Day 09: Spatial UI Design, World-Space Canvas & Ergonomics
+Day 10: Performance Optimization (Fixed Foveated Rendering, 90 FPS Capstone)
+```
+
+---
+
+## 💻 Getting Started & Local Setup
 
 ### 1. Prerequisites
-- Node.js 20.x or higher
-- npm or yarn
-- MongoDB 4.4+ (MongoDB Atlas cluster or local replica set)
+- **Node.js**: `20.x` or higher
+- **npm**: `10.x` or higher
+- **MongoDB**: MongoDB Atlas connection string or local MongoDB replica set
+- **Git**
 
-### 2. Installation & Setup
+### 2. Step-by-Step Installation
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/Livesh28/ARVR.git
+# 1. Navigate to project directory
 cd ARVR
 
-# 2. Install dependencies
+# 2. Install all dependencies (Turbopack + Next.js 16)
 npm install
 
-# 3. Environment configuration
+# 3. Configure environment variables
 cp .env.example .env
+# Edit .env with your DATABASE_URL and SESSION_SECRET
 
-# 4. Database Schema Sync & Seeding
+# 4. Generate Prisma Client & Sync Database
+npx prisma generate
 npx prisma db push
+
+# 5. Seed initial demo data (Batches, Demo Student, Admin)
 npx prisma db seed
 
-# 5. Start Development Server
+# 6. Start Turbopack development server
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser to access the live application.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ---
 
-## 📂 Project Architecture
+## 🐳 Docker & Containerized Setup
 
-```text
-arvrweb/
-├── app/
-│   ├── api/
-│   │   ├── admin/            # Admin endpoints (batches, stats, student import, certificate export)
-│   │   ├── auth/             # Session verification & logout
-│   │   ├── student/          # Student endpoints (attendance, task submit, progress, curriculum)
-│   │   └── trainer/          # Staff evaluation & batch review
-│   ├── globals.css           # Soft Lavender theme tokens & styling utilities
-│   ├── layout.tsx            # Root application layout
-│   └── page.tsx              # Main entry point & portal tab selector
-├── components/
-│   ├── Navbar.tsx            # Top enterprise navigation bar
-│   ├── StudentPortal.tsx     # Student workspace & curriculum hub
-│   └── StaffPortal.tsx       # Unified trainer/admin evaluation & control center
-├── lib/
-│   ├── auth.ts               # Session management & Bcrypt hashing
-│   ├── prisma.ts             # Global Prisma Client instance
-│   ├── rateLimit.ts          # IP sliding window rate limiter
-│   └── storage.ts            # Screenshot file storage & sanitization
-├── prisma/
-│   ├── schema.prisma         # Database schema & relations
-│   └── seed.ts               # Demo data seeder
-└── public/
-    └── uploads/              # Task submission screenshots repository
+The project includes an optimized multi-stage `Dockerfile` and `docker-compose.yml` for production-parity local execution:
+
+```bash
+# Run the entire stack (App + Redis + MinIO S3)
+docker compose up -d --build
+
+# View container logs
+docker compose logs -f app
+
+# Stop the stack
+docker compose down
+```
+
+The multi-stage container builds in three isolated phases:
+1. `deps`: Caches `package.json` and installs production dependencies.
+2. `builder`: Generates Prisma clients and compiles Next.js with Turbopack.
+3. `runner`: Minimal Alpine Linux execution environment with non-root user execution (`nextjs:nodejs`).
+
+---
+
+## ⚙️ Environment Configuration
+
+| Variable | Required | Description | Example |
+| :--- | :--- | :--- | :--- |
+| `NODE_ENV` | Yes | Runtime environment | `production` or `development` |
+| `DATABASE_URL` | Yes | MongoDB Atlas Replica Set connection string | `mongodb+srv://user:pass@cluster.mongodb.net/lmssystem?retryWrites=true&w=majority` |
+| `SESSION_SECRET` | Yes | 32+ character random string for iron-session | `openssl rand -base64 32` |
+| `REDIS_URL` | Optional | Redis instance for rate limiting and session tracking | `redis://localhost:6379` |
+| `AWS_REGION` | Optional | AWS S3 region for screenshot storage | `us-east-1` |
+| `AWS_ACCESS_KEY_ID` | Optional | AWS IAM access key ID | `AKIAIOSFODNN7EXAMPLE` |
+| `AWS_SECRET_ACCESS_KEY` | Optional | AWS IAM secret access key | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY` |
+| `AWS_S3_BUCKET_NAME` | Optional | Name of the private S3 bucket | `arvr-submissions-private` |
+| `GOOGLE_CLIENT_ID` | Optional | Google OAuth 2.0 Web Client ID | `*.apps.googleusercontent.com` |
+| `GOOGLE_CLIENT_SECRET` | Optional | Google OAuth 2.0 Web Client Secret | `GOCSPX-*` |
+
+---
+
+## 🧪 Automated Verification & Torture Test Suites
+
+The codebase includes 14 specialized automated verification scripts located in `scripts/`:
+
+```bash
+# Run comprehensive feature verification
+npm test
+
+# Run production live simulation (end-to-end student & admin lifecycles)
+npm run test:production
+
+# Run enterprise security hardening audit
+npm run test:security
+
+# Run S3 object storage upload test
+npm run test:s3
+
+# Run live staging audit against the deployed host
+npx tsx scripts/test-live-staging-audit.ts
 ```
 
 ---
 
-## ☁️ Google Drive Storage Integration Setup
+## ☁️ Google Drive Storage Integration Guide
 
 The platform supports automated student task screenshot uploads directly to the Admin's Google Drive inside an organized directory hierarchy (`ARVR_Student_Submissions/{Batch_Name}/`).
 
@@ -131,7 +351,7 @@ You can configure Google Drive API credentials **directly from the web applicati
 3. Click the blue **Enable** button.
 
 #### Step 3: Configure the OAuth Consent Screen
-1. In the left navigation menu, click **APIs & Services** > **OAuth consent screen** (or search for it).
+1. In the left navigation menu, click **APIs & Services** > **OAuth consent screen**.
 2. Choose **External** for User Type and click **Create**.
 3. **App Information**:
    - **App name**: `ARVR LMS` (or any custom name)
@@ -149,26 +369,94 @@ You can configure Google Drive API credentials **directly from the web applicati
 1. In the left menu, select **APIs & Services** > **Credentials**.
 2. At the top, click **+ CREATE CREDENTIALS** and choose **OAuth client ID**.
 3. Under **Application type**, choose **Web application**.
-4. **Name**: `ARVR LMS Web Client` (or any label).
-5. Scroll down to **Authorized redirect URIs**:
+4. **Name**: `ARVR LMS Web Client`.
+5. Under **Authorized redirect URIs**:
    - Click **+ ADD URI**.
-   - Paste the exact callback URI:
+   - For Production / Staging:
      ```text
-     https://lms-system-zfzc.onrender.com/api/google-drive/oauth/callback
+     https://arvr-academy-staging.onrender.com/api/google-drive/oauth/callback
      ```
-     *(Note: If running locally or on a custom domain, use `http://localhost:3000/api/google-drive/oauth/callback` or your custom domain).*
-6. Click **Create**.
-7. A dialog will appear displaying your **Client ID** (ends with `.apps.googleusercontent.com`) and **Client Secret**. Keep this window open or copy both values.
+   - For Local Development:
+     ```text
+     http://localhost:3000/api/google-drive/oauth/callback
+     ```
+6. Click **Create** and copy your **Client ID** and **Client Secret**.
 
 #### Step 5: Save & Connect in the LMS Web UI
-1. Log into the LMS Admin/Staff portal as an Administrator (`admin@arvr.com`).
+1. Log into the LMS Admin portal as an Administrator (`admin@arvr.com` / `admin123`).
 2. Go to the **Settings** / **Google Drive Storage Integration** tab.
 3. Paste your **Google Client ID** and **Google Client Secret** into the form.
-4. Click **Save API Credentials** (this securely stores them in the PostgreSQL `SystemSetting` table).
+4. Click **Save API Credentials**.
 5. Click **Connect Google Drive** — Google's consent screen will open. Select your Google account and grant permissions.
 6. The status badge will switch to **Connected ✓**, and all subsequent student submissions will automatically sync to your Drive.
 
 ---
 
+## 📂 Repository Structure
+
+```text
+ARVR/
+├── app/                                # Next.js App Router
+│   ├── api/                            # 52 API route files (69 endpoints)
+│   │   ├── admin/                      # Admin batch, settings, export, students
+│   │   ├── auth/                       # Session verification & logout
+│   │   ├── student/                    # Attendance, registration, progress, tasks
+│   │   └── google-drive/               # OAuth 2.0 callback & folder management
+│   ├── globals.css                     # Royal Cobalt & Electric Indigo design tokens
+│   ├── layout.tsx                      # Root layout & font injection
+│   └── page.tsx                        # Portal tab switcher & entrypoint
+├── components/                         # Enterprise React 19 UI components
+│   ├── Navbar.tsx                      # Top brand navigation & quick actions
+│   ├── StudentPortal.tsx               # Student learning & submission workspace
+│   ├── StaffPortal.tsx                 # Unified evaluation & administration center
+│   ├── MorningWatchdogCard.tsx         # 6:00 AM subsystem diagnostics console
+│   └── LoadingSkeletons.tsx            # High-fidelity loading states
+├── lib/                                # Enterprise shared libraries
+│   ├── auth.ts                         # iron-session & Bcrypt helpers
+│   ├── geofence.ts                     # Haversine distance & CIDR matching
+│   ├── prisma.ts                       # Prisma client with connection retry
+│   ├── rateLimit.ts                    # Dual-key sliding window rate limiting
+│   ├── security.ts                     # Zero-trust antivirus & ELF/MZ scanners
+│   └── storage.ts                      # S3 & Google Drive multi-cloud uploaders
+├── prisma/                             # Database schema & migrations
+│   ├── schema.prisma                   # 12 MongoDB collections & indices
+│   └── seed.ts                         # Demo batch, curriculum, student & admin seed
+├── scripts/                            # 14 Torture & verification test suites
+├── docs/                               # 32+ Reverse-Engineered Technical Guides
+├── Dockerfile                          # Production multi-stage Docker build
+├── docker-compose.yml                  # Local production-parity multi-container stack
+└── package.json                        # Project dependencies & build scripts
+```
+
+---
+
+## 📚 Complete Documentation Suite
+
+Comprehensive technical guides are available inside `docs/`:
+
+| Guide | Location | Highlights |
+| :--- | :--- | :--- |
+| **Executive Summary** | [`docs/EXECUTIVE_SUMMARY.md`](docs/EXECUTIVE_SUMMARY.md) | Platform assessment, metrics, core pillars |
+| **Documentation Index** | [`docs/DOCUMENTATION_INDEX.md`](docs/DOCUMENTATION_INDEX.md) | Complete index of all 32 technical specifications |
+| **System Architecture** | [`docs/architecture/SYSTEM_ARCHITECTURE.md`](docs/architecture/SYSTEM_ARCHITECTURE.md) | C4 diagrams, container models, network boundaries |
+| **REST API Reference** | [`docs/api/API_REFERENCE.md`](docs/api/API_REFERENCE.md) | Full endpoint contracts, request/response payloads |
+| **Database Dictionary** | [`docs/database/DATA_DICTIONARY.md`](docs/database/DATA_DICTIONARY.md) | MongoDB collections, fields, indexes, and relations |
+| **Security Architecture** | [`docs/security/SECURITY_ARCHITECTURE.md`](docs/security/SECURITY_ARCHITECTURE.md) | STRIDE threat model, zero-trust scanner, rate limits |
+| **Deployment Runbook** | [`docs/operations/RELEASE_RUNBOOK.md`](docs/operations/RELEASE_RUNBOOK.md) | Staging auto-deployments, Render setup, zero-downtime |
+| **Frontend Design** | [`docs/frontend/DESIGN_SYSTEM.md`](docs/frontend/DESIGN_SYSTEM.md) | Royal Cobalt & Electric Indigo palette & components |
+
+---
+
 ## 📄 License
-This project is licensed under the MIT License.
+
+This project is licensed under the **MIT License**.
+
+---
+
+<div align="center">
+
+**[Explore Live Demo 🌐](https://arvr-academy-staging.onrender.com)** &bull; **[Staff Portal 🛡️](https://arvr-academy-staging.onrender.com#staff)** &bull; **[GitHub Repository 🐙](https://github.com/Livesh28/LMS_System)**
+
+Crafted for next-generation spatial computing and immersive technology education.
+
+</div>
