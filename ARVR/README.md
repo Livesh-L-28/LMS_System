@@ -1,4 +1,4 @@
-# 🥽 AR/VR Spatial Computing Academy (`LMS_System`)
+# 🎓 LMS System — Enterprise Learning Management System
 
 <div align="center">
 
@@ -10,34 +10,24 @@
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind%20CSS-v4%20(Royal%20Cobalt)-4F46E5?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](../LICENSE)
 
-An enterprise-grade, full-stack spatial computing training management platform designed for hardware-bound AR/VR labs. Features physical geofenced attendance verification, zero-trust in-memory antivirus task submission, real-time curriculum timelines, split-pane evaluator grading, and automated certificate issuance.
+An enterprise-grade, full-stack **Learning Management System (LMS System)** built with **Next.js 16 (Turbopack)**, **TypeScript**, **MongoDB Atlas**, **Prisma ORM**, and **Tailwind CSS**. Features physical geofenced attendance verification, zero-trust in-memory antivirus task submission, interactive syllabus roadmap tracking, split-pane evaluator grading, and automated certificate issuance.
 
 </div>
 
 ---
 
-> ## 🚀 **HIGHLIGHTED LIVE DEMO**
+> ## 🚀 **HIGHLIGHTED LIVE DEMO & DEMO CREDENTIALS**
 >
-> ### 🔗 **[https://arvr-academy-staging.onrender.com](https://arvr-academy-staging.onrender.com)**
+> ### 🔗 **Live URL:** **[https://arvr-academy-staging.onrender.com](https://arvr-academy-staging.onrender.com)**
 >
-> - **Deployment Host:** Render Web Service (Cloudflare CDN Edge)
-> - **SSL Security:** TLS 1.3 Valid 🔒
-> - **Current Health:** `HTTP 200 OK — Systems Fully Operational` 🟢
-> - **Direct Staff / Admin Deep Link:** [https://arvr-academy-staging.onrender.com#staff](https://arvr-academy-staging.onrender.com#staff)
-
----
-
-## 🔑 Quick Demo Credentials
-
-Test the platform instantly with pre-seeded accounts:
-
-| Portal | Direct Access | Credentials | Recommended Testing Flow |
-| :--- | :--- | :--- | :--- |
-| **🎓 Student Learning Portal** | [Open Portal](https://arvr-academy-staging.onrender.com) | **Register No:** `21CS001`<br>**PIN:** `123456` | 1. View live ticking attendance countdown (FN / AN).<br>2. Check 10-day spatial computing roadmap.<br>3. Submit task screenshot in gated dropzone with antivirus badge. |
-| **🛡️ Staff & Evaluator Console** | [Open Staff Console](https://arvr-academy-staging.onrender.com#staff) | **Email:** `admin@arvr.com`<br>**Password:** `admin123` | 1. Open **Split-Pane Evaluation Drawer** on student submissions.<br>2. Grade with 1-click preset chips (`O`, `A+`, `A`, `B+`, etc.) & score slider.<br>3. Inspect **Morning Watchdog** diagnostics & batch settings. |
-
-> [!NOTE]
-> *Self-Healing Auto-Seed:* If deployed on a fresh database, accessing the admin portal with `admin@arvr.com` and `admin123` will automatically initialize the administrative role on first login. Students can also be enrolled via self-registration or bulk CSV import.
+> | Portal / Role | Direct Access Link | Username / Email | Password / PIN | Description & Recommended Flow |
+> | :--- | :--- | :--- | :--- | :--- |
+> | **🎓 Student Portal** | **[Open Student Portal](https://arvr-academy-staging.onrender.com)** | `21CS001` | `123456` | Check FN/AN countdown timers, verify geofenced attendance, view roadmap, and submit daily task screenshot in gated dropzone. |
+> | **🛡️ Staff & Admin Console** | **[Open Staff Console](https://arvr-academy-staging.onrender.com#staff)** | `admin@arvr.com` | `admin123` | Open **Split-Pane Evaluation Drawer**, grade submissions via 1-click preset chips (`O`, `A+`, `A`, etc.), inspect batch calendar & Morning Watchdog. |
+>
+> - **Deployment Host:** Render Web Service (Cloudflare Edge CDN)
+> - **SSL Security:** TLS 1.3 Active 🔒 &bull; **Health:** `HTTP 200 OK — Systems Fully Operational` 🟢
+> - **Self-Healing Auto-Seed:** If initialized on an empty database, accessing the admin console with `admin@arvr.com` and `admin123` automatically seeds the administrator account.
 
 ---
 
@@ -53,7 +43,7 @@ Test the platform instantly with pre-seeded accounts:
   - [6. Automated 6:00 AM Morning Watchdog](#6--automated-600-am-morning-watchdog)
 - [System Architecture](#-system-architecture)
 - [Technology Stack](#-technology-stack)
-- [Spatial Computing Curriculum Roadmap](#-spatial-computing-curriculum-roadmap)
+- [Curriculum & Practical Training Roadmap](#-curriculum--practical-training-roadmap)
 - [Getting Started & Local Setup](#-getting-started--local-setup)
 - [Docker & Containerized Setup](#-docker--containerized-setup)
 - [Environment Configuration](#-environment-configuration)
@@ -67,9 +57,9 @@ Test the platform instantly with pre-seeded accounts:
 
 ## 🎯 Vision & Value Proposition
 
-In spatial computing education (**Unity XR Interaction Toolkit**, **Meta Quest Passthrough**, **Apple visionOS**, and **WebXR**), physical presence in the hardware lab is non-negotiable. Real development involves head-mounted displays (HMDs), tracking cameras, hand interactors, and physical room boundaries.
+In rigorous practical education and technical laboratory training, physical presence is essential. The **LMS System** bridges campus presence with digital task verification, ensuring students complete practical assignments under verified instructor supervision.
 
-The **AR/VR Academy Platform** solves the integrity gap for institutions through three core operational pillars:
+The **LMS System** solves institutional credibility through three core operational pillars:
 
 ```mermaid
 graph LR
@@ -94,8 +84,8 @@ graph LR
     Pillar1 --> Pillar2 --> Pillar3
 ```
 
-1. **Physical Campus Integrity:** Eliminates remote spoofing using high-precision Haversine distance calculations ($\le 100\text{ m}$) coupled with campus subnet IP / CIDR verification.
-2. **Gated Task Verification:** Practical execution submissions remain strictly locked until the student has verified physical attendance for both Forenoon (**FN**) and Afternoon (**AN**) sessions.
+1. **Physical Campus Integrity:** Eliminates remote attendance spoofing using high-precision Haversine distance calculations ($\le 100\text{ m}$) coupled with campus subnet IP / CIDR verification.
+2. **Gated Task Verification:** Practical submissions remain strictly locked until the student has verified physical attendance for both Forenoon (**FN**) and Afternoon (**AN**) sessions.
 3. **Evaluator Intelligence:** Facilitates rapid instructor grading with side-by-side artifact inspection, score sliders, feedback chips, and automated batch certificate issuance.
 
 ---
@@ -106,13 +96,13 @@ graph LR
 - **Forenoon & Afternoon Attendance Windows:** Live countdown timers with session state badges (`SCHEDULED`, `OPEN`, `LOCKED`, `RECORDED`).
 - **Mobile 1-Tap Floating Attendance Bar:** Sticky action bar designed for student smartphones with instant location acquisition.
 - **Gated Practical Task Dropzone:** Drag-and-drop submission for PNG, JPG, and WebP (up to 5MB) screenshots and build artifacts. Automatically locked if daily attendance is missing.
-- **10-Day Spatial Computing Journey Roadmap:** Interactive multi-day syllabus timeline guiding students through setup, spatial audio, raycast interactors, image tracking, plane detection, and capstones.
+- **Interactive Syllabus Journey Roadmap:** Interactive multi-day syllabus timeline guiding students through setup, core modules, intermediate components, and capstone submissions.
 - **Live Progress Dashboard:** Real-time visual metrics for attendance percentage ($\ge 75\%$ certificate cutoff), completed tasks, average grade, and feedback status.
 
 ### 2. 🛡️ Staff & Evaluator Workspace
 - **Split-Pane Evaluation Drawer:** Evaluators review high-resolution student screenshots side-by-side with evaluation controls.
 - **1-Click Grade Presets & Sliders:** Instant grading with preset chips (`O: 95`, `A+: 85`, `A: 75`, `B+: 65`, `B: 55`, `C: 45`) or fine-grained $0–100$ slider adjustments.
-- **Quick Feedback Chips:** Pre-built instructor commentary chips (e.g., *"Excellent VR Rig Setup"*, *"Inspect Collider Geometry"*, *"Optimize Frame Timing"*) for rapid turnaround.
+- **Quick Feedback Chips:** Pre-built instructor commentary chips (e.g., *"Excellent Setup"*, *"Inspect Geometry & Assets"*, *"Optimize Performance Timing"*) for rapid turnaround.
 - **Batch Management & Calendar Engine:** Dynamic creation of cohorts with automatic weekend-exclusion date calculations and custom daily curriculum tasks.
 - **Bulk CSV Student Roster Import:** Enroll hundreds of students in seconds with CSV text pasting or file upload, complete with duplicate handling.
 
@@ -127,15 +117,15 @@ graph LR
 
 ### 4. ☁️ Dual Multi-Cloud Storage (AWS S3 + Google Drive)
 - **Primary AWS S3 Storage:** Secure pre-signed URL generation and private bucket storage for enterprise compliance.
-- **Google Drive Integration (Direct OAuth 2.0):** Connect institution Google Drive accounts directly from the web UI without editing environment variables. Automatically creates and organizes files into `ARVR_Student_Submissions/{Batch_Name}/`.
+- **Google Drive Integration (Direct OAuth 2.0):** Connect institution Google Drive accounts directly from the web UI without editing environment variables. Automatically creates and organizes files into `LMS_Student_Submissions/{Batch_Name}/`.
 
 ### 5. 📜 Automated Certificate Engine & Excel Export
 - **Eligibility Validation:** Enforces strict institutional rules (minimum $75\%$ attendance + all practical tasks completed) before enabling certification.
-- **Unique Serial Generation:** Generates tamper-proof certificate serial numbers (e.g. `ARVR-2026-B1-0042`).
+- **Unique Serial Generation:** Generates tamper-proof certificate serial numbers (e.g. `LMS-2026-B1-0042`).
 - **One-Click Batch Excel Export:** Generates complete batch performance spreadsheets (`.xlsx`) via `exceljs` with student details, attendance summaries, task scores, and final grades.
 
 ### 6. ⏰ Automated 6:00 AM Morning Watchdog
-- **Self-Scheduling Background Daemon:** Node.js runtime worker initialized on startup (`instrumentation.ts`) executing daily at 6:00 AM.
+- **Self-Scheduling Background Daemon:** Node.js runtime worker initialized on startup executing daily at 6:00 AM.
 - **6 Critical Diagnostic Probes:**
   1. Google Drive OAuth token validity & storage quota.
   2. AWS S3 bucket write/read accessibility.
@@ -214,21 +204,21 @@ flowchart TD
 
 ---
 
-## 🕶️ Spatial Computing Curriculum Roadmap
+## 📋 Curriculum & Practical Training Roadmap
 
-The platform integrates a structured 10-day hands-on curriculum:
+The platform integrates an interactive progressive milestone curriculum:
 
 ```
-Day 01: Unity VR Setup, OpenXR & XR Interaction Toolkit (XRI 3.0)
-Day 02: 3D Asset Pipeline, Physics Colliders & Spatial Audio Sources
-Day 03: Raycast Interactors, Direct Grab & Socket Snap Points
-Day 04: Augmented Reality Image Tracking (AR Foundation / ARKit / ARCore)
+Day 01: Environment Configuration, Tooling & Core Project Setup
+Day 02: Asset Pipelines, Object Systems & Interactive Audio Sources
+Day 03: Direct Raycast Interactors & Modular Snap Points
+Day 04: Visual Marker & Image Tracking Systems
 Day 05: Surface Plane Detection, Meshing & Touch Hit Testing
-Day 06: Hand Tracking Gestures & Pinch Locomotion
-Day 07: Meta Quest Passthrough API & Mixed Reality Scene Understanding
-Day 08: Multi-User Spatial Networking & Synchronized Avatars
-Day 09: Spatial UI Design, World-Space Canvas & Ergonomics
-Day 10: Performance Optimization (Fixed Foveated Rendering, 90 FPS Capstone)
+Day 06: Natural Input Gestures & Locomotion Navigation
+Day 07: Camera Passthrough & Scene Understanding Integration
+Day 08: Synchronized Multi-User Networking & Shared Spaces
+Day 09: Spatial UI Design, Ergonomic Canvas & Interaction Systems
+Day 10: Performance Optimization, Profiling & Capstone Evaluation
 ```
 
 ---
@@ -302,7 +292,7 @@ The multi-stage container builds in three isolated phases:
 | `AWS_REGION` | Optional | AWS S3 region for screenshot storage | `us-east-1` |
 | `AWS_ACCESS_KEY_ID` | Optional | AWS IAM access key ID | `AKIAIOSFODNN7EXAMPLE` |
 | `AWS_SECRET_ACCESS_KEY` | Optional | AWS IAM secret access key | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY` |
-| `AWS_S3_BUCKET_NAME` | Optional | Name of the private S3 bucket | `arvr-submissions-private` |
+| `AWS_S3_BUCKET_NAME` | Optional | Name of the private S3 bucket | `lms-submissions-private` |
 | `GOOGLE_CLIENT_ID` | Optional | Google OAuth 2.0 Web Client ID | `*.apps.googleusercontent.com` |
 | `GOOGLE_CLIENT_SECRET` | Optional | Google OAuth 2.0 Web Client Secret | `GOCSPX-*` |
 
@@ -333,7 +323,7 @@ npx tsx scripts/test-live-staging-audit.ts
 
 ## ☁️ Google Drive Storage Integration Guide
 
-The platform supports automated student task screenshot uploads directly to the Admin's Google Drive inside an organized directory hierarchy (`ARVR_Student_Submissions/{Batch_Name}/`).
+The platform supports automated student task screenshot uploads directly to the Admin's Google Drive inside an organized directory hierarchy (`LMS_Student_Submissions/{Batch_Name}/`).
 
 You can configure Google Drive API credentials **directly from the web application** without having to edit environment variables or redeploy backend containers.
 
@@ -342,7 +332,7 @@ You can configure Google Drive API credentials **directly from the web applicati
 #### Step 1: Create a Google Cloud Project
 1. Navigate to the **[Google Cloud Console](https://console.cloud.google.com/)** and log in with your desired Google account.
 2. In the top toolbar, click the **Project Dropdown** and select **New Project**.
-3. Enter a project name (e.g. `ARVR-LMS-Drive`) and click **Create**.
+3. Enter a project name (e.g. `LMS-System-Drive`) and click **Create**.
 4. Ensure your new project is selected in the top bar project selector.
 
 #### Step 2: Enable the Google Drive API
@@ -354,7 +344,7 @@ You can configure Google Drive API credentials **directly from the web applicati
 1. In the left navigation menu, click **APIs & Services** > **OAuth consent screen**.
 2. Choose **External** for User Type and click **Create**.
 3. **App Information**:
-   - **App name**: `ARVR LMS` (or any custom name)
+   - **App name**: `LMS System` (or any custom name)
    - **User support email**: Choose your email address
    - **Developer contact information**: Enter your email address
 4. Click **Save and Continue**.
@@ -369,7 +359,7 @@ You can configure Google Drive API credentials **directly from the web applicati
 1. In the left menu, select **APIs & Services** > **Credentials**.
 2. At the top, click **+ CREATE CREDENTIALS** and choose **OAuth client ID**.
 3. Under **Application type**, choose **Web application**.
-4. **Name**: `ARVR LMS Web Client`.
+4. **Name**: `LMS System Web Client`.
 5. Under **Authorized redirect URIs**:
    - Click **+ ADD URI**.
    - For Production / Staging:
@@ -422,7 +412,7 @@ ARVR/
 │   ├── schema.prisma                   # 12 MongoDB collections & indices
 │   └── seed.ts                         # Demo batch, curriculum, student & admin seed
 ├── scripts/                            # 14 Torture & verification test suites
-├── docs/                               # 32+ Reverse-Engineered Technical Guides
+├── docs/                               # 32+ Technical Reference Guides
 ├── Dockerfile                          # Production multi-stage Docker build
 ├── docker-compose.yml                  # Local production-parity multi-container stack
 └── package.json                        # Project dependencies & build scripts
@@ -457,6 +447,6 @@ This project is licensed under the **MIT License**.
 
 **[Explore Live Demo 🌐](https://arvr-academy-staging.onrender.com)** &bull; **[Staff Portal 🛡️](https://arvr-academy-staging.onrender.com#staff)** &bull; **[GitHub Repository 🐙](https://github.com/Livesh-L-28/LMS_System)**
 
-Crafted for next-generation spatial computing and immersive technology education.
+Enterprise Learning Management System &bull; LMS System
 
 </div>
