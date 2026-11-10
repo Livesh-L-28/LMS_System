@@ -244,7 +244,7 @@ Day 10: Performance Optimization (Fixed Foveated Rendering, 90 FPS Capstone)
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Livesh28/LMS_System.git
+git clone https://github.com/Livesh-L-28/LMS_System.git
 cd LMS_System/ARVR
 
 # 2. Install all dependencies (Turbopack + Next.js 16)
@@ -400,7 +400,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 <div align="center">
 
-**[Explore Live Demo 🌐](https://arvr-academy-staging.onrender.com)** &bull; **[Staff Portal 🛡️](https://arvr-academy-staging.onrender.com#staff)** &bull; **[GitHub Repository 🐙](https://github.com/Livesh28/LMS_System)**
+**[Explore Live Demo 🌐](https://arvr-academy-staging.onrender.com)** &bull; **[Staff Portal 🛡️](https://arvr-academy-staging.onrender.com#staff)** &bull; **[GitHub Repository 🐙](https://github.com/Livesh-L-28/LMS_System)**
 
 Crafted for next-generation spatial computing and immersive technology education.
 

@@ -455,7 +455,7 @@ This project is licensed under the **MIT License**.
 
 <div align="center">
 
-**[Explore Live Demo 🌐](https://arvr-academy-staging.onrender.com)** &bull; **[Staff Portal 🛡️](https://arvr-academy-staging.onrender.com#staff)** &bull; **[GitHub Repository 🐙](https://github.com/Livesh28/LMS_System)**
+**[Explore Live Demo 🌐](https://arvr-academy-staging.onrender.com)** &bull; **[Staff Portal 🛡️](https://arvr-academy-staging.onrender.com#staff)** &bull; **[GitHub Repository 🐙](https://github.com/Livesh-L-28/LMS_System)**
 
 Crafted for next-generation spatial computing and immersive technology education.
 
